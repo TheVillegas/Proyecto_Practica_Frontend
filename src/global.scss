@@ -37,10 +37,9 @@
 @import "@ionic/angular/css/palettes/dark.system.css";
 
 //Tipografia global del proyecto
-@import url('https://fonts.googleapis.com/css2?family=Inclusive+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 //Establecemos la tipografia global
-
+//Revisar debido a que no carga la tipografia original.
 :root {
-    --ion-font-family: 'Inclusive Sans', sans serif;
+    --ion-font-family: 'Inclusive Sans', sans-serif;
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -8,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomePage implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
+  }
+
+  busquedaALI() {
+    console.log("Redirigiendo a Busqueda ALI");
+    //this.router.navigate(["/busqueda-ali"]);
+  }
+
+  generarALI() {
+    console.log("Redirigiendo a Generar ALI");
+    //this.router.navigate(["/generar-ali"]);
   }
 
 }
