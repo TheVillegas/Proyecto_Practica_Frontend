@@ -21,14 +21,13 @@ export class HeaderComponent implements OnInit {
 
   generarALI() {
     console.log("Redirigiendo a Generar ALI");
-    //Faltaria agregar la dirreccion a la pagina
-    //this.router.navigate(["//(Nombre de la pagina)"]);
+    this.router.navigate(["/generar-ali-basico"]);
   }
 
   goToHome() {
     console.log("Redirigiendo a Home");
     //Faltaria agregar la dirreccion a la pagina
-    //this.router.navigate(["//(Nombre de la pagina)"]);
+    this.router.navigate(["/home"]);
   }
 
   goToLogin() {

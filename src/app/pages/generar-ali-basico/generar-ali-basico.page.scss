@@ -1,0 +1,34 @@
+.label-texto {
+    font-size: 20px;
+    display: block;
+    margin-top: 8px;
+    font-weight: 500;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.input-container {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 40px;
+
+
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    transition: border-color 0.3s ease;
+
+}
+
+.input-con-borde {
+    --padding-start: 0;
+    --padding-end: 0;
+    width: 100%;
+    width: 100%;
+}
+
+.botones {
+    float: right;
+}

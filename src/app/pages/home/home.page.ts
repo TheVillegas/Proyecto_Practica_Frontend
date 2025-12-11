@@ -21,7 +21,10 @@ export class HomePage implements OnInit {
 
   generarALI() {
     console.log("Redirigiendo a Generar ALI");
-    //this.router.navigate(["/generar-ali"]);
+    this.router.navigate(["/generar-ali-basico"]);
   }
+
+
+
 
 }

@@ -1,0 +1,36 @@
+<app-header></app-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card color="light">
+    <ion-card-content>
+      <form [formGroup]="formularioIngresoALI">
+        <ion-grid>
+          <ion-row class="fila-inputs">
+            <ion-col class="col-inputs">
+              <ion-label class="label-texto"> Ingrese ALI de Muestra</ion-label>
+              <div class="input-container">
+                <ion-input formControlName="aliMuestra" placeholder="Ingrese ALI de Muestra" class="input-con-borde">
+                </ion-input>
+                <ion-icon name="ellipse" color="danger" style="font-size: 10px; margin-right: 10px;"></ion-icon>
+              </div>
+            </ion-col>
+
+            <ion-col class="col-inputs">
+              <ion-label class="label-texto"> Ingrese Codigo SernaPesca u Otro</ion-label>
+              <div class="input-container">
+
+                <ion-input formControlName="codigoSerna" placeholder="Ingrese Código " class="input-con-borde">
+                </ion-input>
+              </div>
+            </ion-col>
+            <!--A la espera de mas elementos del ALI-->
+
+
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
+  <ion-button class="botones" color="secondary" (click)="confirmarCancelar()">Cancelar</ion-button>
+  <ion-button class="botones" color="primary" (click)="intentarEnviar()">Siguiente</ion-button>
+</ion-content>
