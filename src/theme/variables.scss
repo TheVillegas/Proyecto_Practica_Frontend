@@ -1,2 +1,153 @@
 // For information on how to create your own theme, please refer to:
 // https://ionicframework.com/docs/theming/
+/* src/theme/variables.scss */
+
+
+
+:root {
+
+
+
+    /* Azul 1 (#29588C) -> Lo llamaremos 'azul-oscuro' */
+
+    --ion-color-azul-oscuro: #29588C;
+
+    --ion-color-azul-oscuro-rgb: 41, 88, 140;
+
+    --ion-color-azul-oscuro-contrast: #ffffff;
+
+    --ion-color-azul-oscuro-contrast-rgb: 255, 255, 255;
+
+    /* Azul 2 (#006EB6) -> Este será tu 'primary' por defecto */
+
+    --ion-color-primary: #006EB6;
+
+    --ion-color-primary-rgb: 0, 110, 182;
+
+    --ion-color-primary-contrast: #ffffff;
+
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+
+    /* Azul 3 (#2A6DFF) -> Lo llamaremos 'azul-claro' */
+
+    --ion-color-azul-claro: #2A6DFF;
+
+    --ion-color-azul-claro-rgb: 42, 109, 255;
+
+    --ion-color-azul-claro-contrast: #ffffff;
+
+    --ion-color-azul-claro-contrast-rgb: 255, 255, 255;
+
+    /* Rojo 1 (#A75154) -> Lo llamaremos 'rojo-suave' */
+
+    --ion-color-rojo-suave: #A75154;
+
+    --ion-color-rojo-suave-rgb: 167, 81, 84;
+
+    --ion-color-rojo-suave-contrast: #ffffff;
+
+    --ion-color-rojo-suave-contrast-rgb: 255, 255, 255;
+
+    /* Rojo 2 (#BC3939) -> Este será tu 'secondary' por defecto */
+
+    --ion-color-secondary: #BC3939;
+
+    --ion-color-secondary-rgb: 188, 57, 57;
+
+    --ion-color-secondary-contrast: #ffffff;
+
+    --ion-color-secondary-contrast-rgb: 255, 255, 255;
+
+    /* Rojo 3 (#C41D1D) -> Lo llamaremos 'rojo-intenso' */
+
+    --ion-color-rojo-intenso: #C41D1D;
+
+    --ion-color-rojo-intenso-rgb: 196, 29, 29;
+
+    --ion-color-rojo-intenso-contrast: #ffffff;
+
+    --ion-color-rojo-intenso-contrast-rgb: 255, 255, 255;
+
+
+    /* Negro (#070707) */
+
+    --ion-color-dark: #070707;
+
+    --ion-color-dark-rgb: 7, 7, 7;
+
+    --ion-color-dark-contrast: #ffffff;
+
+    --ion-color-dark-contrast-rgb: 255, 255, 255;
+    /* Gris (#666666) */
+
+    --ion-color-medium: #666666;
+
+    --ion-color-medium-rgb: 102, 102, 102;
+
+    --ion-color-medium-contrast: #ffffff;
+
+    --ion-color-medium-contrast-rgb: 255, 255, 255;
+
+    /* Blanco Humo (#F4F4F4) */
+
+    --ion-color-light: #F4F4F4;
+
+    --ion-color-light-rgb: 244, 244, 244;
+
+    --ion-color-light-contrast: #000000;
+
+    --ion-color-light-contrast-rgb: 0, 0, 0;
+
+}
+
+
+
+//CLASES PARA USARLOS EN HTML
+
+.ion-color-azul-oscuro {
+
+    --ion-color-base: var(--ion-color-azul-oscuro);
+
+    --ion-color-base-rgb: var(--ion-color-azul-oscuro-rgb);
+
+    --ion-color-contrast: var(--ion-color-azul-oscuro-contrast);
+
+    --ion-color-contrast-rgb: var(--ion-color-azul-oscuro-contrast-rgb);
+
+}
+
+.ion-color-azul-claro {
+
+    --ion-color-base: var(--ion-color-azul-claro);
+
+    --ion-color-base-rgb: var(--ion-color-azul-claro-rgb);
+
+    --ion-color-contrast: var(--ion-color-azul-claro-contrast);
+
+    --ion-color-contrast-rgb: var(--ion-color-azul-claro-contrast-rgb);
+
+}
+
+.ion-color-rojo-suave {
+
+    --ion-color-base: var(--ion-color-rojo-suave);
+
+    --ion-color-base-rgb: var(--ion-color-rojo-suave-rgb);
+
+    --ion-color-contrast: var(--ion-color-rojo-suave-contrast);
+
+    --ion-color-contrast-rgb: var(--ion-color-rojo-suave-contrast-rgb);
+
+}
+
+.ion-color-rojo-intenso {
+
+    --ion-color-base: var(--ion-color-rojo-intenso);
+
+    --ion-color-base-rgb: var(--ion-color-rojo-intenso-rgb);
+
+    --ion-color-contrast: var(--ion-color-rojo-intenso-contrast);
+
+    --ion-color-contrast-rgb: var(--ion-color-rojo-intenso-contrast-rgb);
+
+}

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';;
 
 @Component({
   selector: 'app-header',
@@ -8,8 +9,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() { }
+
+  busquedaALI() {
+    console.log("Redirigiendo a Busqueda ALI");
+    //Faltaria agregar la dirreccion a la pagina
+    //this.router.navigate(["//(Nombre de la pagina)"]);
+  }
+
+  generarALI() {
+    console.log("Redirigiendo a Generar ALI");
+    //Faltaria agregar la dirreccion a la pagina
+    //this.router.navigate(["//(Nombre de la pagina)"]);
+  }
+
+  goToHome() {
+    console.log("Redirigiendo a Home");
+    //Faltaria agregar la dirreccion a la pagina
+    //this.router.navigate(["//(Nombre de la pagina)"]);
+  }
+
+  goToLogin() {
+    console.log("Redirigiendo a Login");
+    //Faltaria agregar la dirreccion a la pagina
+    //this.router.navigate(["//(Nombre de la pagina)"]);
+  }
+
+  //Aca podemos agregar mas funciones Para el Header cuando se amplie el proyecto.
 
 }
