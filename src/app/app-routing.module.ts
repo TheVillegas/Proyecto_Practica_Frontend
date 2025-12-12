@@ -15,6 +15,10 @@ const routes: Routes = [
     path: 'generar-ali-basico',
     loadChildren: () => import('./pages/generar-ali-basico/generar-ali-basico.module').then( m => m.GenerarALiBasicoPageModule)
   },
+  {
+    path: 'busqueda-ali',
+    loadChildren: () => import('./pages/busqueda-ali/busqueda-ali.module').then( m => m.BusquedaALIPageModule)
+  },
 ];
 
 @NgModule({

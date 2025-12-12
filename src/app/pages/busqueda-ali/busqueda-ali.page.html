@@ -1,0 +1,14 @@
+<app-header></app-header>
+<ion-content [fullscreen]="true">
+  <ion-searchbar class="buscador" placeholder="Ingrese el codigo de la muestra ALI"
+    (ionInput)="buscarALI($event)"></ion-searchbar>
+
+  <ion-accordion-group expand="inset">
+    <app-ali-item-accordeon *ngFor="let muestra of listaFiltrada" [muestra]="muestra"></app-ali-item-accordeon>
+  </ion-accordion-group>
+
+  <div *ngIf="listaFiltrada.length == 0" class="ion-text-center ion-padding ">
+    No se encontraron resultados
+  </div>
+
+</ion-content>

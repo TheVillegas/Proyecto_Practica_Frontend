@@ -16,7 +16,7 @@ export class HomePage implements OnInit {
 
   busquedaALI() {
     console.log("Redirigiendo a Busqueda ALI");
-    //this.router.navigate(["/busqueda-ali"]);
+    this.router.navigate(["/busqueda-ali"]);
   }
 
   generarALI() {

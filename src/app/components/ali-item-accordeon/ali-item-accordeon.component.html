@@ -1,0 +1,50 @@
+<ion-accordion value="item-{{muestra.ALIMuestra}}">
+  <ion-item slot="header" color="light" lines="none">
+    <ion-label class="titulo-ALI">
+      Muestra ALI : <strong>{{muestra.ALIMuestra}}</strong>
+    </ion-label>
+  </ion-item>
+
+  <div class="caja-contenedora" slot="content">
+    <ion-grid>
+      <ion-row class="header-row">
+        <ion-col size="12" size-md="7">
+          <h3 class="seccion-titulo">Link a Reportes : </h3>
+        </ion-col>
+        <ion-col size="12" size-md="5" class="columna-estados-header">
+          <h3 class="seccion-titulo text-center">Estado de los Reportes : </h3>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="fila-reporte">
+        <ion-col size="12" size-md="7" class="columna-link">
+          <div class="contenedor-links">
+            <ion-icon name="radio-button-off"></ion-icon>
+            <a href=" #" (click)="goToReporteTPA()">LINK A REPORTE TPA</a>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-md="5" class="columna-estado">
+          <div [class]="'estado-reporte ' + getColorEstado(muestra.estadoTPA)">
+            {{muestra.estadoTPA}}
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="fila-reporte">
+        <ion-col size="12" size-md="7" class="columna-link">
+          <div class="contenedor-links">
+            <ion-icon name="radio-button-off"></ion-icon>
+            <a href=" #">LINK A REPORTE RAM</a>
+          </div>
+        </ion-col>
+        <ion-col size="12" size-md="5" class="columna-estado">
+          <div [class]="'estado-reporte ' + getColorEstado(muestra.estadoRAM)">
+            {{muestra.estadoRAM}}
+          </div>
+        </ion-col>
+      </ion-row>
+      <!--Agregar mas Estados de los proximos reportes-->
+    </ion-grid>
+
+  </div>
+</ion-accordion>

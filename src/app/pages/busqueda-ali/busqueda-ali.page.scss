@@ -1,0 +1,14 @@
+.buscador {
+    --box-shadow: none;
+    border: 2px solid black;
+    border-radius: 30px;
+
+
+    margin: 20px auto;
+    width: 95%;
+    max-width: 800px;
+
+    //Puede que no funcione esto
+    --ion-color: #666;
+    --place-holder-color: #666;
+}

@@ -4,10 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { HomePageRoutingModule } from './home-routing.module';
+import { BusquedaALIPageRoutingModule } from './busqueda-ali-routing.module';
 
-import { HomePage } from './home.page';
-//Componentes o servicios a usar
+import { BusquedaALIPage } from './busqueda-ali.page';
 import { ComponentsModule } from 'src/app/components/components-module/components.module';
 
 @NgModule({
@@ -15,9 +14,9 @@ import { ComponentsModule } from 'src/app/components/components-module/component
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule,
+    BusquedaALIPageRoutingModule,
     ComponentsModule
   ],
-  declarations: [HomePage]
+  declarations: [BusquedaALIPage]
 })
-export class HomePageModule { }
+export class BusquedaALIPageModule { }

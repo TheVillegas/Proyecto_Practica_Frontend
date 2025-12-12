@@ -1,0 +1,94 @@
+.titulo-ALI {
+    font-size: 20px;
+    color: black;
+}
+
+.caja-contenedora {
+    background-color: #f9f9f9;
+}
+
+.seccion-titulo {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.header-row {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+
+.fila-reporte {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 12px 0;
+    align-items: center;
+    /* Vertically align link and badge */
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.contenedor-links {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 26px;
+
+    ion-icon {
+        font-size: 12px;
+        color: black;
+    }
+
+    a {
+        color: #333;
+        text-decoration: underline;
+        font-size: 14px;
+        font-weight: 500;
+    }
+}
+
+.columna-estados-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 10px;
+}
+
+.columna-estado {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 30px;
+}
+
+.estado-reporte {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 150px;
+    height: 26px;
+    border-radius: 13px;
+
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.badge-azul {
+    background-color: #006EB6;
+}
+
+.badge-gris {
+    background-color: #666666;
+}
+
+.badge-rojo {
+    background-color: #C41D1D;
+}

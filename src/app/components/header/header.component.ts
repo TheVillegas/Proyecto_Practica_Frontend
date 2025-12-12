@@ -15,8 +15,7 @@ export class HeaderComponent implements OnInit {
 
   busquedaALI() {
     console.log("Redirigiendo a Busqueda ALI");
-    //Faltaria agregar la dirreccion a la pagina
-    //this.router.navigate(["//(Nombre de la pagina)"]);
+    this.router.navigate(["/busqueda-ali"]);
   }
 
   generarALI() {

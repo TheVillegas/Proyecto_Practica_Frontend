@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { GenerarALiBasicoPageRoutingModule } from './generar-ali-basico-routing.module';
 
 import { GenerarALiBasicoPage } from './generar-ali-basico.page';
-import { ComponentsModule } from 'src/app/components/components.module';
+import { ComponentsModule } from 'src/app/components/components-module/components.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
