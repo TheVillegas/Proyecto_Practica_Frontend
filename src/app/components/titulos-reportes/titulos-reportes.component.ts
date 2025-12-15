@@ -21,7 +21,6 @@ export class TitulosReportesComponent implements OnInit {
 
 
   getColorEstado(estado: string): string {
-    if (!estado) return 'secondary';
     const estadoNorm = estado.toString().toUpperCase();
     switch (estadoNorm) {
       case 'VERIFICADO': return 'primary';

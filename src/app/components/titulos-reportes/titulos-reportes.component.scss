@@ -1,0 +1,48 @@
+.estiloTitulo {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
+    box-shadow: none;
+    text-align: center;
+
+    ion-card-header {
+        padding: 10px;
+    }
+
+    ion-card-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: white !important;
+    }
+
+    ion-card-subtitle {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8) !important;
+        margin-bottom: 2px;
+    }
+}
+
+.primary {
+    background-color: #007bff;
+
+    ion-card-title {
+        color: white;
+    }
+}
+
+.light {
+    background-color: #6666;
+
+    ion-card-title {
+        color: white;
+    }
+}
+
+.secondary {
+    background-color: #BC3939;
+
+    ion-card-title {
+        color: white;
+    }
+}
