@@ -1,0 +1,89 @@
+.header_label {
+    background-color: lightgray;
+}
+
+.contendor_label {
+    background-color: lightgray;
+}
+
+.ion-radio {
+    --border-radius: 5px;
+    --inner-border-radius: 5px;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.contendor_doble {
+    display: flex;
+    /* Pone los elementos en fila */
+    flex-direction: row;
+    /* Dirección horizontal */
+    align-items: center;
+    /* Los alinea verticalmente al centro */
+    gap: 8px;
+    /* <--- ESTO define qué tan "juntos" están (8px es un buen espacio) */
+    width: 100%;
+    margin-top: 5px;
+    /* Un respiro respecto al Label de arriba */
+}
+
+/* EL SELECT (Izquierda) */
+.selecionador_opciones {
+    width: 70%;
+    /* Le damos más espacio al nombre largo */
+
+    /* Estilo visual de "Cajita" */
+    border: 1px solid #c8c7cc;
+    /* Gris suave típico de Ionic */
+    border-radius: 4px;
+    /* Bordes redondeados */
+    background: white;
+    min-height: 45px;
+    /* Altura cómoda para el dedo */
+
+    /* Ajuste interno */
+    padding-left: 10px;
+}
+
+/* EL INPUT (Derecha) */
+.contenedor_input {
+    width: 30%;
+    /* El espacio restante para el código corto */
+
+    /* Mismo estilo visual para que hagan juego */
+    border: 1px solid #c8c7cc;
+    border-radius: 4px;
+    background: white;
+    min-height: 45px;
+
+    /* Ajuste interno de Ionic */
+    --padding-start: 10px;
+}
+
+/* Aplicamos el mismo estilo que usamos en la Clave Material Pesado */
+ion-select {
+    width: 100%;
+    max-width: 100%;
+
+    /* Estilo visual de caja */
+    border: 1px solid #c8c7cc;
+    border-radius: 4px;
+    background: white;
+    min-height: 45px;
+
+    /* Ajustes de espaciado interno */
+    padding-left: 10px;
+    padding-right: 10px;
+
+    /* Quitar línea inferior fea de Ionic */
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+}
+
+/* Ajuste para separar el label de la caja */
+ion-label[position="stacked"] {
+    margin-bottom: 8px;
+    font-weight: 600;
+    /* Un poco más gordita la letra del título */
+}

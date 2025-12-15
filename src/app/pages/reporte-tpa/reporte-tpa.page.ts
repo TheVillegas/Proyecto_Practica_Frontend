@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AliService } from 'src/app/services/ali-service';
+import { IonContent } from '@ionic/angular';
 
 @Component({
   selector: 'app-reporte-tpa',
@@ -12,6 +13,8 @@ export class ReporteTPAPage implements OnInit {
 
   codigoALI: string = '';
   estadoTPA: string = '';
+  estadoSeleccionado: string = '';
+  @ViewChild(IonContent, { static: false }) content!: IonContent;
   constructor(private route: ActivatedRoute, private aliService: AliService) { }
 
   ngOnInit() {
@@ -21,4 +24,14 @@ export class ReporteTPAPage implements OnInit {
     }
   }
 
+  cambiarEstado(event: any) {
+    this.estadoSeleccionado = event.detail.value || '';
+    console.log(this.estadoSeleccionado);
+  }
+  bajarAlFinal() {
+    this.content.scrollToBottom(500);
+  }
+  subirAlInicio() {
+    this.content.scrollToTop(500);
+  }
 }

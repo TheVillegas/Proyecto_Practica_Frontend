@@ -1,5 +1,157 @@
 <app-header></app-header>
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" [scrollY]="true">
   <app-titulos-reportes [codigoALI]="codigoALI" [estadoTPA]="estadoTPA"></app-titulos-reportes>
-  <p>Hola este es el reporte TPA de la muestra {{codigoALI}} y su estado es {{estadoTPA}}</p>
+  <ion-accordion-group>
+    <ion-accordion value="first" class="contenedor_label">
+      <ion-item slot="header" color="light">
+        <ion-label class="titulo_contenedor">ETAPA 1 : Almacenamiento de Muestra</ion-label>
+      </ion-item>
+      <div class="contenido_del_label" slot="content">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="auto" class="columna_del_contendido">
+              <ion-label>Lugar de Almacenamiento de la muestra</ion-label>
+              <ion-select placeholder="Seleccione un Lugar" class="selecionador_opciones">
+                <ion-select-option value="Freezer 33-M">Freezer 33-M</ion-select-option>
+                <ion-select-option value="Refrigerador 33-M">Refrigerador 33-M</ion-select-option>
+                <ion-select-option value="Mesón Siembra">Mesón Siembra</ion-select-option>
+                <ion-select-option value="Gabinete sala Transpaso">Gabinete sala Transpaso</ion-select-option>
+              </ion-select>
+            </ion-col>
+            <ion-col class="columna_del_contendido">
+              <ion-label>Observaciones de la Muestra</ion-label>
+              <ion-textarea class="seleccionador_de_texto"></ion-textarea>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-accordion>
+    <ion-accordion value="second" class="contenedor_label">
+      <ion-item slot="header" color="light">
+        <ion-label class="titulo_contenedor">ETAPA 2 : Recepcion de Muestra</ion-label>
+      </ion-item>
+      <div class="contenido_del_label" slot="content">
+        <ion-grid>
+          <ion-row>
+            <ion-col class="columna_del_contendido">
+              <ion-label>Responsable </ion-label>
+              <ion-select placeholder="Seleccione un Responsable" class="selecionador_opciones">
+                <ion-select-option value="Olaya">Olaya</ion-select-option>
+                <ion-select-option value="Jorge">Jorge</ion-select-option>
+                <ion-select-option value="Sandy">Sandy</ion-select-option>
+                <ion-select-option value="Pricilla">Pricilla</ion-select-option>
+              </ion-select>
+            </ion-col>
+            <ion-col class="columna_del_contendido">
+              <ion-label>Fecha de Preparacion</ion-label>
+              <ion-datetime-button datetime="calendarioIngreso"></ion-datetime-button>
+
+              <ion-modal [keepContentsMounted]="true">
+                <ng-template>
+                  <ion-datetime id="calendarioIngreso" presentation="date" [showDefaultButtons]="true" doneText="Listo"
+                    cancelText="Cancelar">
+                  </ion-datetime>
+                </ng-template>
+              </ion-modal>
+            </ion-col>
+            <ion-col class="columna_del_contendido">
+              <ion-label>Hora de inicio</ion-label>
+              <ion-datetime-button datetime="horaInicio"></ion-datetime-button>
+              <ion-modal [keepContentsMounted]="true">
+                <ng-template>
+                  <ion-datetime id="horaInicio" presentation="time" [showDefaultButtons]="true" doneText="Listo"
+                    cancelText="Cancelar">
+                  </ion-datetime>
+                </ng-template>
+              </ion-modal>
+            </ion-col>
+          </ion-row>
+          <hr class="linea_divisoria">
+          <ion-row>
+            <ion-col>
+              <ion-label>Hora de Pesado</ion-label>
+              <ion-datetime-button datetime="horaPesado"></ion-datetime-button>
+              <ion-modal [keepContentsMounted]="true">
+                <ng-template>
+                  <ion-datetime id="horaPesado" presentation="time" [showDefaultButtons]="true" doneText="Listo"
+                    cancelText="Cancelar">
+                  </ion-datetime>
+                </ng-template>
+              </ion-modal>
+            </ion-col>
+            <ion-col>
+              <ion-label>Numero de muestras</ion-label>
+              <ion-input class="contenedor_input"></ion-input>
+            </ion-col>
+            <ion-col>
+              <ion-label>Equipo y/o Instrumento</ion-label>
+              <ion-select placeholder="Seleccione un Equipo y/o Instrumento" class="selecionador_opciones">
+                <ion-select-option value="Balanza 74-M">Balanza 74-M</ion-select-option>
+                <ion-select-option value="Camara Flujo laminar 8-M">Camara Flujo laminar 8-M</ion-select-option>
+                <ion-select-option value="Balanza 6-M">Balanza 6-M</ion-select-option>
+                <ion-select-option value="Meson de Transpaso">Meson de Transpaso</ion-select-option>
+                <ion-select-option value="Balanza 99-M">Balanza 99-M</ion-select-option>
+                <ion-select-option value="Balanza 108-M">Balanza 108-M</ion-select-option>
+              </ion-select>
+            </ion-col>
+            <ion-col>
+              <ion-label>Lugar de Almacenamiento de la muestra</ion-label>
+              <ion-select placeholder="Seleccione un Equipo y/o Instrumento" class="selecionador_opciones">
+                <ion-select-option value="Freezer 33-M">Freezer 33-M</ion-select-option>
+                <ion-select-option value="Refrigerador 33-M">Refrigerador 33-M</ion-select-option>
+                <ion-select-option value="Gabinete sala Transpaso">Gabinete sala Transpaso</ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          <hr class="linea_divisoria">
+          <ion-row>
+            <ion-col>
+              <ion-label>Retiro o Pesado</ion-label>
+              <ion-radio-group [value]="estadoSeleccionado" (ionChange)="cambiarEstado($event)">
+                <ion-item>
+                  <ion-radio slot="start">Retiro</ion-radio>
+                  <ion-radio slot="start">Pesado</ion-radio>
+                </ion-item>
+              </ion-radio-group>
+            </ion-col>
+            <ion-col>
+              <ion-label>Clave Material Pesado</ion-label>
+              <div class="contendor_doble">
+                <ion-select placeholder="Seleccione la clave del material pesado" class="selecionador_opciones"
+                  interface="alert">
+                  <ion-select-option disabled="true">--- INSTRUMENTOS ---</ion-select-option>
+
+                  <ion-select-option value="cuchara">Cuchara</ion-select-option>
+                  <ion-select-option value="bisturi">Bisturí</ion-select-option>
+                  <ion-select-option value="pinzas">Pinzas</ion-select-option>
+
+
+                  <ion-select-option disabled="true">--- PIPETAS 1 ML ---</ion-select-option>
+
+                  <ion-select-option value="p1ml_1">&nbsp;&nbsp; Pipeta 1ML - Nº1</ion-select-option>
+                  <ion-select-option value="p1ml_2">&nbsp;&nbsp; Pipeta 1ML - Nº2</ion-select-option>
+                  <ion-select-option value="p1ml_3">&nbsp;&nbsp; Pipeta 1ML - Nº3</ion-select-option>
+                  <ion-select-option value="p1ml_4">&nbsp;&nbsp; Pipeta 1ML - Nº4</ion-select-option>
+                  <ion-select-option value="p1ml_5">&nbsp;&nbsp; Pipeta 1ML - Nº5</ion-select-option>
+                  <ion-select-option value="p1ml_6">&nbsp;&nbsp; Pipeta 1ML - Nº6</ion-select-option>
+
+
+                  <ion-select-option disabled="true">--- PIPETAS 10 ML ---</ion-select-option>
+
+                  <ion-select-option value="p10ml_1">&nbsp;&nbsp; Pipeta 10ML - Nº1</ion-select-option>
+                  <ion-select-option value="p10ml_2">&nbsp;&nbsp; Pipeta 10ML - Nº2</ion-select-option>
+                  <ion-select-option value="p10ml_3">&nbsp;&nbsp; Pipeta 10ML - Nº3</ion-select-option>
+                  <ion-select-option value="p10ml_4">&nbsp;&nbsp; Pipeta 10ML - Nº4</ion-select-option>
+                  <ion-select-option value="p10ml_5">&nbsp;&nbsp; Pipeta 10ML - Nº5</ion-select-option>
+                </ion-select>
+                <ion-input class="contenedor_input"></ion-input>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+
 </ion-content>
