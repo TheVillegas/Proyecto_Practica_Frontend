@@ -2,7 +2,7 @@
 <ion-content [fullscreen]="true" [scrollY]="true">
   <app-titulos-reportes [codigoALI]="codigoALI" [estadoTPA]="estadoTPA"></app-titulos-reportes>
   <ion-accordion-group>
-    <ion-accordion value="first" class="contenedor_label">
+    <ion-accordion value="etapa1" class="contenedor_label">
       <ion-item slot="header" color="light">
         <ion-label class="titulo_contenedor">ETAPA 1 : Almacenamiento de Muestra</ion-label>
       </ion-item>
@@ -26,9 +26,10 @@
         </ion-grid>
       </div>
     </ion-accordion>
-    <ion-accordion value="second" class="contenedor_label">
+    <ion-accordion *ngFor="let etapa2 of listaRepeticionesEtapa2; let i = index; let isLast=last" [value]="'etapa2'+ i"
+      class="contenedor_label">
       <ion-item slot="header" color="light">
-        <ion-label class="titulo_contenedor">ETAPA 2 : Recepcion de Muestra</ion-label>
+        <ion-label class="titulo_contenedor">ETAPA 2 : Recepcion de Muestra Analista {{i+1}} </ion-label>
       </ion-item>
       <div class="contenido_del_label" slot="content">
         <ion-grid>
@@ -44,12 +45,12 @@
             </ion-col>
             <ion-col class="columna_del_contendido">
               <ion-label>Fecha de Preparacion</ion-label>
-              <ion-datetime-button datetime="calendarioIngreso"></ion-datetime-button>
+              <ion-datetime-button [datetime]="'calendarioIngreso' + i"></ion-datetime-button>
 
               <ion-modal [keepContentsMounted]="true">
                 <ng-template>
-                  <ion-datetime id="calendarioIngreso" presentation="date" [showDefaultButtons]="true" doneText="Listo"
-                    cancelText="Cancelar">
+                  <ion-datetime [id]="'calendarioIngreso' + i" presentation="date" [showDefaultButtons]="true"
+                    doneText="Listo" cancelText="Cancelar">
                   </ion-datetime>
                 </ng-template>
               </ion-modal>
@@ -108,50 +109,67 @@
             <ion-col>
               <ion-label>Retiro o Pesado</ion-label>
               <ion-radio-group [value]="estadoSeleccionado" (ionChange)="cambiarEstado($event)">
-                <ion-item>
-                  <ion-radio slot="start">Retiro</ion-radio>
-                  <ion-radio slot="start">Pesado</ion-radio>
-                </ion-item>
+                <div class="contenedor-radios">
+                  <ion-radio value="Retiro" labelPlacement="end">Retiro</ion-radio>
+                  <ion-radio value="Pesado" labelPlacement="end">Pesado</ion-radio>
+                </div>
               </ion-radio-group>
             </ion-col>
             <ion-col>
               <ion-label>Clave Material Pesado</ion-label>
-              <div class="contendor_doble">
-                <ion-select placeholder="Seleccione la clave del material pesado" class="selecionador_opciones"
-                  interface="alert">
-                  <ion-select-option disabled="true">--- INSTRUMENTOS ---</ion-select-option>
+              <div *ngFor="let material of etapa2.listaMateriales ; let i=index; trackBy: trackById"
+                class="fila_dinamica">
+                <div class="contendor_doble">
+                  <ion-select [(ngModel)]="material.tipoMaterial" placeholder="Seleccione la clave del material pesado"
+                    class="selecionador_opciones" interface="alert">
+                    <ion-select-option disabled="true">--- INSTRUMENTOS ---</ion-select-option>
 
-                  <ion-select-option value="cuchara">Cuchara</ion-select-option>
-                  <ion-select-option value="bisturi">Bisturí</ion-select-option>
-                  <ion-select-option value="pinzas">Pinzas</ion-select-option>
-
-
-                  <ion-select-option disabled="true">--- PIPETAS 1 ML ---</ion-select-option>
-
-                  <ion-select-option value="p1ml_1">&nbsp;&nbsp; Pipeta 1ML - Nº1</ion-select-option>
-                  <ion-select-option value="p1ml_2">&nbsp;&nbsp; Pipeta 1ML - Nº2</ion-select-option>
-                  <ion-select-option value="p1ml_3">&nbsp;&nbsp; Pipeta 1ML - Nº3</ion-select-option>
-                  <ion-select-option value="p1ml_4">&nbsp;&nbsp; Pipeta 1ML - Nº4</ion-select-option>
-                  <ion-select-option value="p1ml_5">&nbsp;&nbsp; Pipeta 1ML - Nº5</ion-select-option>
-                  <ion-select-option value="p1ml_6">&nbsp;&nbsp; Pipeta 1ML - Nº6</ion-select-option>
+                    <ion-select-option value="cuchara">Cuchara</ion-select-option>
+                    <ion-select-option value="bisturi">Bisturí</ion-select-option>
+                    <ion-select-option value="pinzas">Pinzas</ion-select-option>
 
 
-                  <ion-select-option disabled="true">--- PIPETAS 10 ML ---</ion-select-option>
+                    <ion-select-option disabled="true">--- PIPETAS 1 ML ---</ion-select-option>
 
-                  <ion-select-option value="p10ml_1">&nbsp;&nbsp; Pipeta 10ML - Nº1</ion-select-option>
-                  <ion-select-option value="p10ml_2">&nbsp;&nbsp; Pipeta 10ML - Nº2</ion-select-option>
-                  <ion-select-option value="p10ml_3">&nbsp;&nbsp; Pipeta 10ML - Nº3</ion-select-option>
-                  <ion-select-option value="p10ml_4">&nbsp;&nbsp; Pipeta 10ML - Nº4</ion-select-option>
-                  <ion-select-option value="p10ml_5">&nbsp;&nbsp; Pipeta 10ML - Nº5</ion-select-option>
-                </ion-select>
-                <ion-input class="contenedor_input"></ion-input>
+                    <ion-select-option value="22-M">&nbsp;&nbsp; Pipeta 22-M</ion-select-option>
+                    <ion-select-option value="23-M">&nbsp;&nbsp; Pipeta 23-M</ion-select-option>
+                    <ion-select-option value="72-M">&nbsp;&nbsp; Pipeta 72-M</ion-select-option>
+                    <ion-select-option value="98-M">&nbsp;&nbsp; Pipeta 98-M</ion-select-option>
+                    <ion-select-option value="100-M">&nbsp;&nbsp; Pipeta 100-M</ion-select-option>
+                    <ion-select-option value="102-M">&nbsp;&nbsp; Pipeta 102-M</ion-select-option>
+
+
+                    <ion-select-option disabled="true">--- PIPETAS 10 ML ---</ion-select-option>
+
+                    <ion-select-option value="32-M">&nbsp;&nbsp; Pipeta 32-M</ion-select-option>
+                    <ion-select-option value="75-M">&nbsp;&nbsp; Pipeta 75-M</ion-select-option>
+                    <ion-select-option value="94-M">&nbsp;&nbsp; Pipeta 94-M</ion-select-option>
+                    <ion-select-option value="103-M">&nbsp;&nbsp; Pipeta 103-M</ion-select-option>
+                    <ion-select-option value="106-M">&nbsp;&nbsp; Pipeta 106-M</ion-select-option>
+                  </ion-select>
+                  <ion-input [(ngModel)]="material.codigoMaterial" class="contendor_input"></ion-input>
+                </div>
+              </div>
+              <div class="ion-text-right ion-padding-top">
+                <ion-button fill="clear" size="small" (click)="agregarMaterial(i)">
+                  <ion-icon name="add-circle" slot="start"></ion-icon>
+                  Agregar otro material
+                </ion-button>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="isLast">
+            <ion-col size="12">
+              <div class="ion-padding-top">
+                <ion-button expand="block" fill="outline" (click)="agregarRepeticion()">
+                  <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+                  Agregar Otro Analista
+                </ion-button>
               </div>
             </ion-col>
           </ion-row>
         </ion-grid>
-
       </div>
     </ion-accordion>
   </ion-accordion-group>
-
 </ion-content>

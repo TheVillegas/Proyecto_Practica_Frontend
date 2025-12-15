@@ -1,89 +1,194 @@
-.header_label {
-    background-color: lightgray;
+.estiloTitulo {
+    margin: 0 !important;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    text-align: center;
+
+    ion-card-header {
+        padding: 10px;
+    }
+
+    ion-card-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: white !important;
+    }
+
+    ion-card-subtitle {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.8) !important;
+        margin-bottom: 2px;
+    }
 }
 
-.contendor_label {
-    background-color: lightgray;
+.badge-azul {
+    background-color: #007cc0;
+    --background: #007cc0;
 }
 
-.ion-radio {
-    --border-radius: 5px;
-    --inner-border-radius: 5px;
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
+.badge-gris {
+    background-color: #7a7a7a;
+    --background: #7a7a7a;
+}
+
+.badge-rojo {
+    background-color: #d32f2f;
+    --background: #d32f2f;
+}
+
+
+ion-content {
+    --background: #f4f5f7;
+}
+
+ion-grid {
+    padding: 10px;
+}
+
+.contenedor_label {
+    background: white;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+}
+
+/* Cabecera del acordeón */
+ion-accordion ion-item[slot="header"] {
+    --background: #f9fafb;
+    /* Gris muy clarito, casi blanco */
+    --min-height: 55px;
+    --border-width: 0;
+}
+
+/* Título de la etapa */
+.titulo_contenedor {
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
+    letter-spacing: 0.5px;
+}
+
+.contenido_del_label {
+    background: white;
+    padding: 15px;
+}
+
+ion-input,
+ion-select,
+ion-textarea {
+    --padding-start: 12px;
+    --padding-end: 12px;
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    --background: #ffffff;
+
+    /* Borde gris para que parezca caja */
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+
+    font-size: 14px;
+    color: #4b5563;
+    margin-top: 5px;
+    min-height: 45px;
+}
+
+ion-label {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    margin-bottom: 4px;
+}
+
+/*
+
+ion-datetime-button {
+    
+    width: 100%;
+
+    &::part(native) {
+        background: #ffffff;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        color: #4b5563;
+        padding-left: 10px;
+        padding-right: 10px;
+        justify-content: flex-start;
+        height: 45px;
+    }
+}
+*/
+
+ion-datetime-button {
+    /* 1. Esto le dice al componente principal que se alinee al inicio (izquierda) */
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 0;
+    /* Aseguramos que no tenga margen izquierdo */
+
+    /* 2. Esto entra al "Shadow DOM" (la parte interna del botón) */
+    &::part(native) {
+        /* Alinea el texto/números internamente a la izquierda */
+        justify-content: flex-start;
+        text-align: left;
+
+        /* Si quieres que el botón sea compacto (solo el tamaño del texto) */
+        width: fit-content;
+
+        /* O si prefieres que sea ancho completo pero con texto a la izquierda: */
+        /* width: 100%; 
+
+
+        /* Quita espacio extra a la izquierda si lo hay */
+    }
+}
+
+.fila_dinamica {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .contendor_doble {
     display: flex;
-    /* Pone los elementos en fila */
-    flex-direction: row;
-    /* Dirección horizontal */
-    align-items: center;
-    /* Los alinea verticalmente al centro */
-    gap: 8px;
-    /* <--- ESTO define qué tan "juntos" están (8px es un buen espacio) */
     width: 100%;
-    margin-top: 5px;
-    /* Un respiro respecto al Label de arriba */
+    gap: 8px;
 }
 
-/* EL SELECT (Izquierda) */
 .selecionador_opciones {
     width: 70%;
-    /* Le damos más espacio al nombre largo */
-
-    /* Estilo visual de "Cajita" */
-    border: 1px solid #c8c7cc;
-    /* Gris suave típico de Ionic */
-    border-radius: 4px;
-    /* Bordes redondeados */
-    background: white;
-    min-height: 45px;
-    /* Altura cómoda para el dedo */
-
-    /* Ajuste interno */
-    padding-left: 10px;
 }
 
-/* EL INPUT (Derecha) */
-.contenedor_input {
+.contendor_input {
     width: 30%;
-    /* El espacio restante para el código corto */
-
-    /* Mismo estilo visual para que hagan juego */
-    border: 1px solid #c8c7cc;
-    border-radius: 4px;
-    background: white;
-    min-height: 45px;
-
-    /* Ajuste interno de Ionic */
-    --padding-start: 10px;
 }
 
-/* Aplicamos el mismo estilo que usamos en la Clave Material Pesado */
-ion-select {
-    width: 100%;
-    max-width: 100%;
-
-    /* Estilo visual de caja */
-    border: 1px solid #c8c7cc;
-    border-radius: 4px;
-    background: white;
-    min-height: 45px;
-
-    /* Ajustes de espaciado interno */
-    padding-left: 10px;
-    padding-right: 10px;
-
-    /* Quitar línea inferior fea de Ionic */
-    --padding-top: 10px;
-    --padding-bottom: 10px;
+.linea_divisoria {
+    border: 0;
+    border-top: 1px solid #e5e7eb;
+    margin: 20px 0;
 }
 
-/* Ajuste para separar el label de la caja */
-ion-label[position="stacked"] {
-    margin-bottom: 8px;
-    font-weight: 600;
-    /* Un poco más gordita la letra del título */
+.contenedor-radios {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* Los centra verticalmente */
+    gap: 30px;
+    /* Espacio entre "Retiro" y "Pesado" */
+    margin-top: 10px;
+    /* Un poco de aire arriba */
+    padding-left: 5px;
+    /* Ajuste leve */
+}
+
+ion-radio {
+    font-size: 14px;
+    --color: #4b5563;
+    --color-checked: #2563eb;
+    z-index: 10;
 }
