@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { AliService } from 'src/app/services/ali-service';
 
 @Component({
   selector: 'app-reporte-tpa',
@@ -10,10 +11,14 @@ import { ActivatedRoute } from '@angular/router';
 export class ReporteTPAPage implements OnInit {
 
   codigoALI: string = '';
-  constructor(private route: ActivatedRoute) { }
+  estadoTPA: string = '';
+  constructor(private route: ActivatedRoute, private aliService: AliService) { }
 
   ngOnInit() {
     this.codigoALI = this.route.snapshot.paramMap.get('codigoALI')!;
+    if (this.codigoALI) {
+      this.estadoTPA = this.aliService.getEstadoTPA(parseInt(this.codigoALI));
+    }
   }
 
 }

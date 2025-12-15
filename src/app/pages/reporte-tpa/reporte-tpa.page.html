@@ -1,4 +1,5 @@
 <app-header></app-header>
 <ion-content [fullscreen]="true">
-  <p>Hola este es el reporte TPA de la muestra {{codigoALI}} </p>
+  <app-titulos-reportes [codigoALI]="codigoALI" [estadoTPA]="estadoTPA"></app-titulos-reportes>
+  <p>Hola este es el reporte TPA de la muestra {{codigoALI}} y su estado es {{estadoTPA}}</p>
 </ion-content>

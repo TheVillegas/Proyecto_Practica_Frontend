@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ALI } from '../../interfaces/ali';
+import { AliService } from '../../services/ali-service';
+
 
 @Component({
   selector: 'app-busqueda-ali',
@@ -8,28 +10,21 @@ import { ALI } from '../../interfaces/ali';
   standalone: false
 })
 export class BusquedaALIPage implements OnInit {
-  listaMuestras: ALI[] = [
-    { ALIMuestra: 1, CodigoSerna: 123456, estadoTPA: 'Verificado', estadoRAM: 'No realizado' },
-    { ALIMuestra: 2, CodigoSerna: 654321, estadoTPA: 'Borrador', estadoRAM: 'Borrador' },
-    { ALIMuestra: 3, CodigoSerna: 111111, estadoTPA: 'No realizado', estadoRAM: 'Borrador' },
-    { ALIMuestra: 1432, CodigoSerna: 2222, estadoTPA: 'Borrador', estadoRAM: 'Verificado' },
-  ];
+  listaMuestras: ALI[] = [];
 
-  listaFiltrada: any[] = [];
+  listaFiltrada: ALI[] = [];
 
-  constructor() { }
+  constructor(private aliService: AliService) { }
 
   ngOnInit() {
+    this.listaMuestras = this.aliService.getMuestras();
     this.listaFiltrada = this.listaMuestras;
   }
 
   buscarALI(event: any) {
-    const textoBusqueda = event.target.value;
-
-    if (textoBusqueda && textoBusqueda.trim() !== '') {
-      this.listaFiltrada = this.listaMuestras.filter(muestra => {
-        return (muestra.ALIMuestra.toString().toLowerCase().indexOf(textoBusqueda.toLowerCase()) > -1);
-      });
+    const texto = event.target.value;
+    if (texto && texto.trim() !== '') {
+      this.listaFiltrada = this.listaMuestras.filter(muestra => muestra.ALIMuestra.toString().includes(texto));
     } else {
       this.listaFiltrada = this.listaMuestras;
     }

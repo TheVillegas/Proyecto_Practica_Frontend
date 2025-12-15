@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { HeaderComponent } from '../header/header.component';
 import { ALIItemAccordeonComponent } from '../ali-item-accordeon/ali-item-accordeon.component';
+import { TitulosReportesComponent } from '../titulos-reportes/titulos-reportes.component';
 
 @NgModule({
     declarations: [
         HeaderComponent,
-        ALIItemAccordeonComponent
+        ALIItemAccordeonComponent,
+        TitulosReportesComponent
     ],
     imports: [
         CommonModule,
@@ -15,7 +17,8 @@ import { ALIItemAccordeonComponent } from '../ali-item-accordeon/ali-item-accord
     ],
     exports: [
         HeaderComponent,
-        ALIItemAccordeonComponent
+        ALIItemAccordeonComponent,
+        TitulosReportesComponent
     ]
 })
 export class ComponentsModule { }
