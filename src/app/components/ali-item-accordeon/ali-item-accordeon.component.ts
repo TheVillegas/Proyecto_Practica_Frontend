@@ -39,8 +39,7 @@ export class ALIItemAccordeonComponent implements OnInit {
   goToReporteTPA() {
     console.log("Redirigiendo a Reporte TPA");
     console.log(this.muestra.ALIMuestra);
-    //this.router.navigate([""])
-    this.router.navigate(["/home", this.muestra.ALIMuestra]);
+    this.router.navigate(["/reporte-tpa", this.muestra.ALIMuestra]);
   }
 
 }

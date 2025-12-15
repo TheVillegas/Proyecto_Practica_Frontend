@@ -13,11 +13,15 @@ const routes: Routes = [
   },
   {
     path: 'generar-ali-basico',
-    loadChildren: () => import('./pages/generar-ali-basico/generar-ali-basico.module').then( m => m.GenerarALiBasicoPageModule)
+    loadChildren: () => import('./pages/generar-ali-basico/generar-ali-basico.module').then(m => m.GenerarALiBasicoPageModule)
   },
   {
     path: 'busqueda-ali',
-    loadChildren: () => import('./pages/busqueda-ali/busqueda-ali.module').then( m => m.BusquedaALIPageModule)
+    loadChildren: () => import('./pages/busqueda-ali/busqueda-ali.module').then(m => m.BusquedaALIPageModule)
+  },
+  {
+    path: 'reporte-tpa/:codigoALI',
+    loadChildren: () => import('./pages/reporte-tpa/reporte-tpa.module').then(m => m.ReporteTPAPageModule)
   },
 ];
 
