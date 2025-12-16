@@ -18,7 +18,7 @@ export class ReporteTPAPage implements OnInit {
   listaRepeticionesEtapa2: any[] = [
     { id: 0, reposable: "", listaMateriales: [{ id: 0, tipoMaterial: "", codigoMaterial: "" }] }
   ];
-  listaLimpieza: string[] = [];
+  listaLimpieza: any[] = [];
   etapaActual: string = 'etapa1';
   opcionesMateriales: any[] = [];
   listaLugares: any[] = [];
@@ -36,6 +36,7 @@ export class ReporteTPAPage implements OnInit {
     this.listaLugares = this.aliService.getLugaresAlmacenamiento();
     this.listaResponsables = this.aliService.getResponsables();
     this.listaEquipos = this.aliService.getEquiposInstrumentos();
+    this.listaLimpieza = this.aliService.getChecklistLimpieza();
   }
 
   cambiarEstado(event: any) {
