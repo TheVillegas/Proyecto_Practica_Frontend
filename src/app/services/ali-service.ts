@@ -68,7 +68,7 @@ export class AliService {
       { id: 1, nombre: 'Olaya' },
       { id: 2, nombre: 'Jorge' },
       { id: 3, nombre: 'Sandy' },
-      { id: 4, nombre: 'Pricilla' },
+      { id: 4, nombre: 'Priscila' },
       { id: 5, nombre: 'Matias' }
     ];
   }
@@ -93,6 +93,47 @@ export class AliService {
       { id: 5, nombre: 'Balanza 6-M/99-M', seleccionado: false, bloqueado: false },
       { id: 6, nombre: 'Gabinete', seleccionado: false, bloqueado: false },
       { id: 7, nombre: 'Desinfectante en aerosol', seleccionado: true, bloqueado: true }
+    ];
+  }
+
+  getMaterialSiembra() {
+    return [
+      { id: 1, nombre: 'Puntas 1 ML' },
+      { id: 2, nombre: 'Puntas 10ML' },
+      { id: 3, nombre: 'Placas estériles 57cm2/150mm' },
+      { id: 4, nombre: 'Asas Drigalsky' },
+      { id: 5, nombre: 'Blender' },
+      { id: 6, nombre: 'Bolsas estériles' },
+      { id: 7, nombre: 'Probeta 250 ML' },
+      { id: 8, nombre: 'Probeta 100 ML' }
+    ];
+  }
+
+  getEquiposSiembra() {
+    return [
+      { id: 1, nombre: 'Baño-5m', seleccionado: false },
+      { id: 2, nombre: 'Homogenizador 12-m', seleccionado: false },
+      { id: 3, nombre: 'Cuenta colonias 9-M', seleccionado: false },
+      { id: 4, nombre: 'Cuenta Colonias 101-m', seleccionado: false },
+      { id: 5, nombre: 'pHmetro 93-m', seleccionado: false },
+      { id: 6, nombre: 'pipetas desechables', seleccionado: false },
+      { id: 7, nombre: 'Otros', seleccionado: false, texto: '' }
+    ];
+  }
+
+  getDiluyentes() {
+    return [
+      { id: 1, nombre: 'AP 0,1 90ml' },
+      { id: 2, nombre: 'AP 0,1 99ml' },
+      { id: 3, nombre: 'AP 0,1 450ml' },
+      { id: 4, nombre: 'AP 0,1 225ml' },
+      { id: 5, nombre: 'AP 0,1 500ml' },
+      { id: 6, nombre: 'AP 0,1 tubosml' },
+      { id: 7, nombre: 'PBS 450 ml' },
+      { id: 8, nombre: 'SPS 225 ml' },
+      { id: 9, nombre: 'SPS Tubos' },
+      { id: 10, nombre: 'SPS sa 90ml' },
+      { id: 11, nombre: 'SPS sa tubos' }
     ];
   }
 }

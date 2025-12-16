@@ -152,6 +152,7 @@
         <ion-label class="titulo_contenedor">Etapa 3 : Limpieza General</ion-label>
       </ion-item>
       <div class="contenido_del_label" slot="content">
+        <ion-label>Items de Limpieza</ion-label>
         <ion-list>
           <ion-item *ngFor="let item of listaLimpieza">
             <ion-checkbox slot="start" label-placement="end" [disabled]="item.bloqueado"
@@ -160,6 +161,206 @@
             </ion-checkbox>
           </ion-item>
         </ion-list>
+        <ion-row>
+          <ion-col>
+            <ion-label>Observaciones</ion-label>
+            <ion-textarea></ion-textarea>
+          </ion-col>
+        </ion-row>
+      </div>
+    </ion-accordion>
+    <ion-accordion *ngFor="let etapa4 of listaRepeticionesEtapa4; let i = index; let isLast = last"
+      [value]="'etapa4' + i" class="contenedor_label">
+      <ion-item slot="header" color="light">
+        <ion-label class="titulo_contenedor">Etapa 4: Retiro de Muestras Pesadas {{i+1}}</ion-label>
+      </ion-item>
+      <div class="contenido_del_label" slot="content">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-label>Responsable</ion-label>
+              <ion-select placeholder="Seleccione un responsable" class="selecionador_opciones"
+                [(ngModel)]="etapa4.responsable">
+                <ion-select-option *ngFor="let responsable of listaResponsables" [value]="responsable.nombre">
+                  {{responsable.nombre}}
+                </ion-select-option>
+              </ion-select>
+            </ion-col>
+            <ion-col>
+              <ion-label>Fecha</ion-label>
+              <ion-datetime-button [datetime]="'fechaRetiroMuestra' + i"></ion-datetime-button>
+              <ion-modal [keepContentsMounted]="true">
+                <ng-template>
+                  <ion-datetime [id]="'fechaRetiroMuestra' + i" presentation="date" [showDefaultButtons]="true"
+                    doneText="Listo" cancelText="Cancelar" [(ngModel)]="etapa4.fecha">
+                  </ion-datetime>
+                </ng-template>
+              </ion-modal>
+            </ion-col>
+            <ion-col>
+              <ion-label>Hora de Inicio</ion-label>
+              <ion-datetime-button [datetime]="'horaInicioEtapa4' + i"></ion-datetime-button>
+              <ion-modal [keepContentsMounted]="true">
+                <ng-template>
+                  <ion-datetime [id]="'horaInicioEtapa4' + i" presentation="time" [showDefaultButtons]="true"
+                    doneText="Listo" cancelText="Cancelar" [(ngModel)]="etapa4.horaInicio">
+                  </ion-datetime>
+                </ng-template>
+              </ion-modal>
+            </ion-col>
+            <ion-col>
+              <ion-label>Observaciones</ion-label>
+              <ion-textarea [(ngModel)]="etapa4.analisisARealizar"></ion-textarea>
+            </ion-col>
+            <ion-col size="12" *ngIf="isLast">
+              <div class="ion-padding-top">
+                <ion-button expand="block" fill="outline" (click)="agregarRepeticionEtapa4()">
+                  <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+                  Agregar Otro Analista
+                </ion-button>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-accordion>
+    <ion-accordion value="etapa5" class="contenedor_label">
+      <ion-item slot="header" color="light">
+        <ion-label class="titulo_contenedor">Etapa 5 : Materiales y Equipos de Siembra</ion-label>
+      </ion-item>
+      <div class="contenido_del_label" slot="content">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="5">
+              <ion-grid class="sin-padding">
+                <ion-row>
+                  <ion-col size="6">
+                    <ion-label class="subtitulo">Material Usado :</ion-label>
+                  </ion-col>
+                  <ion-col size="6">
+                    <ion-label class="subtitulo">Codigo del Material</ion-label>
+                  </ion-col>
+                </ion-row>
+
+                <div *ngFor="let material of listaMaterialSiembra; let i = index" class="fila_material">
+                  <ion-row>
+                    <ion-col size="6">
+                      <ion-select placeholder="Seleccione" class="selecionador_opciones_small"
+                        [(ngModel)]="material.nombre">
+                        <ion-select-option *ngFor="let opcion of opcionesMaterialSiembra" [value]="opcion.nombre">
+                          {{opcion.nombre}}
+                        </ion-select-option>
+                      </ion-select>
+                    </ion-col>
+                    <ion-col size="6">
+                      <ion-input placeholder="Código" class="contendor_input_small"
+                        [(ngModel)]="material.codigoMaterialSiembra">
+                      </ion-input>
+                    </ion-col>
+                  </ion-row>
+                </div>
+
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-button fill="clear" size="small" (click)="agregarMaterialSiembra()">
+                      <ion-icon name="add-circle" slot="start"></ion-icon>
+                      Agregar Material
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-col>
+            <ion-col size="4">
+              <ion-label class="subtitulo">Equipo e Instrumento</ion-label>
+              <ion-list class="lista_equipos">
+                <ion-item *ngFor="let equipo of listaEquiposSiembra">
+                  <ion-checkbox slot="start" label-placement="end" [(ngModel)]="equipo.seleccionado">
+                    {{equipo.nombre}}
+                  </ion-checkbox>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+            <ion-col size="3">
+              <ion-label class="subtitulo">Otros Equipos e Instrumentos</ion-label>
+              <ion-textarea></ion-textarea>
+            </ion-col>
+          </ion-row>
+          <hr class="linea_divisoria">
+          <ion-row>
+            <ion-col size="12">
+              <ion-label class="subtitulo">Diluyentes</ion-label>
+              <div *ngFor="let diluyente of listaDiluyentes; let i = index" class="fila_material">
+                <ion-grid class="sin-padding">
+                  <ion-row class="ion-justify-content-center">
+                    <ion-col size="5">
+                      <ion-label>Diluyente</ion-label>
+                      <ion-select placeholder="Seleccione" class="selecionador_opciones_small"
+                        [(ngModel)]="diluyente.nombre">
+                        <ion-select-option *ngFor="let opcion of opcionesDiluyentes" [value]="opcion.nombre">
+                          {{opcion.nombre}}
+                        </ion-select-option>
+                      </ion-select>
+                    </ion-col>
+                    <ion-col size="5">
+                      <ion-label>Código Diluyente</ion-label>
+                      <ion-input placeholder="Código" class="contendor_input_small"
+                        [(ngModel)]="diluyente.codigoDiluyente">
+                      </ion-input>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </div>
+              <div class="ion-text-center ion-padding-top">
+                <ion-button fill="clear" size="small" (click)="agregarDiluyente()">
+                  <ion-icon name="add-circle" slot="start"></ion-icon>
+                  Agregar Diluyente
+                </ion-button>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-accordion>
+    <ion-accordion value="etapa6" class="contenedor_label">
+      <ion-item slot="header" color="light">
+        <ion-label class="titulo_contenedor">Etapa 6 : Observaciones y Firma</ion-label>
+      </ion-item>
+      <div class="contenido_del_label" slot="content">
+        <ion-grid>
+          <ion-row>
+            <!-- COLUMNA 1: FIRMA (Izquierda) -->
+            <ion-col size="6">
+              <div class="zona-firma-final">
+                <ion-label class="titulo-firma">Firma de la Coordinadora de Área</ion-label>
+
+                <div class="caja-upload" (click)="inputFirma.click()" [class.tiene-imagen]="firmaCoordinador">
+
+                  <div *ngIf="!firmaCoordinador" class="contenido-vacio">
+                    <ion-icon name="cloud-upload-outline" class="icono-upload"></ion-icon>
+                    <p>Toque aquí para adjuntar firma</p>
+                  </div>
+
+                  <div *ngIf="firmaCoordinador" class="vista-previa">
+                    <img [src]="firmaCoordinador" alt="Firma Coordinadora" />
+                    <div class="capa-eliminar">
+                      <span>Cambiar Firma</span>
+                    </div>
+                  </div>
+
+                </div>
+                <input #inputFirma type="file" accept="image/*" (change)="cargarFirmaCoordinador($event)"
+                  style="display: none;" />
+              </div>
+            </ion-col>
+
+            <!-- COLUMNA 2: OBSERVACIONES (Derecha) -->
+            <ion-col size="6">
+              <ion-label class="subtitulo">Observaciones</ion-label>
+              <ion-textarea class="textarea_observaciones_final" placeholder="Ingrese observaciones aquí..."
+                [(ngModel)]="observaciones"></ion-textarea>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </div>
     </ion-accordion>
   </ion-accordion-group>

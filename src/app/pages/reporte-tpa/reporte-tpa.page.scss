@@ -103,24 +103,7 @@ ion-label {
     margin-bottom: 4px;
 }
 
-/*
 
-ion-datetime-button {
-    
-    width: 100%;
-
-    &::part(native) {
-        background: #ffffff;
-        border: 1px solid #d1d5db;
-        border-radius: 6px;
-        color: #4b5563;
-        padding-left: 10px;
-        padding-right: 10px;
-        justify-content: flex-start;
-        height: 45px;
-    }
-}
-*/
 
 ion-datetime-button {
     /* 1. Esto le dice al componente principal que se alinee al inicio (izquierda) */
@@ -191,4 +174,117 @@ ion-radio {
     --color: #4b5563;
     --color-checked: #2563eb;
     z-index: 10;
+}
+
+/* Estilos Etapa 5 */
+.subtitulo {
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.selecionador_opciones_small,
+.contendor_input_small {
+    width: 100%;
+    margin: 0;
+    height: 40px;
+    font-size: 13px;
+    min-height: 40px;
+    --padding-top: 5px;
+    --padding-bottom: 5px;
+}
+
+.fila_material {
+    margin-bottom: 8px;
+}
+
+.lista_equipos {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.item_equipo ion-checkbox {
+    font-size: 13px;
+    --size: 18px;
+}
+
+.boton_agregar_mas {
+    margin-top: 10px;
+    height: 35px;
+    width: 50px;
+    --border-radius: 6px;
+}
+
+.zona-firma-final {
+    padding: 0 10px;
+    background-color: white;
+    margin-top: 0;
+}
+
+.titulo-firma {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.caja-upload {
+    width: 100%;
+    height: 120px;
+    background-color: #f3f4f6;
+    border: 2px solid #8b5cf6;
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+
+    &:active {
+        opacity: 0.8;
+        background-color: #e5e7eb;
+    }
+}
+
+.contenido-vacio {
+    text-align: center;
+    color: #4b5563;
+
+    .icono-upload {
+        font-size: 40px;
+        color: #8b5cf6;
+        margin-bottom: 5px;
+    }
+
+    p {
+        margin: 0;
+        font-size: 12px;
+        font-weight: 500;
+    }
+}
+
+.vista-previa {
+    width: 100%;
+    height: 100%;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+.textarea_observaciones_final {
+    height: 120px !important;
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    border-radius: 8px;
+    margin-top: 0;
 }
