@@ -18,7 +18,12 @@ export class ReporteTPAPage implements OnInit {
   listaRepeticionesEtapa2: any[] = [
     { id: 0, reposable: "", listaMateriales: [{ id: 0, tipoMaterial: "", codigoMaterial: "" }] }
   ];
+  listaLimpieza: string[] = [];
   etapaActual: string = 'etapa1';
+  opcionesMateriales: any[] = [];
+  listaLugares: any[] = [];
+  listaResponsables: any[] = [];
+  listaEquipos: any[] = [];
 
   constructor(private route: ActivatedRoute, private aliService: AliService) { }
 
@@ -27,6 +32,10 @@ export class ReporteTPAPage implements OnInit {
     if (this.codigoALI) {
       this.estadoTPA = this.aliService.getEstadoTPA(parseInt(this.codigoALI));
     }
+    this.opcionesMateriales = this.aliService.getMaterialesPesados();
+    this.listaLugares = this.aliService.getLugaresAlmacenamiento();
+    this.listaResponsables = this.aliService.getResponsables();
+    this.listaEquipos = this.aliService.getEquiposInstrumentos();
   }
 
   cambiarEstado(event: any) {
@@ -62,6 +71,10 @@ export class ReporteTPAPage implements OnInit {
       ]
     });
     console.log(this.listaRepeticionesEtapa2);
+    const nuevoIndice = this.listaRepeticionesEtapa2.length - 1;
+    const nombreNuevoAnalista = 'etapa2' + nuevoIndice;
+    this.seccionActual = nombreNuevoAnalista;
+    this.agregarMaterial(nuevoIndice);
   }
   agregarMaterial(indexAnalista: number) {
     // Buscamos al analista específico y le empujamos a SU lista
@@ -75,4 +88,8 @@ export class ReporteTPAPage implements OnInit {
     return item.id;
   }
 
+  agregarLimpieza(instrumento: string) {
+    this.listaLimpieza.push(instrumento);
+    console.log(this.listaLimpieza);
+  }
 }

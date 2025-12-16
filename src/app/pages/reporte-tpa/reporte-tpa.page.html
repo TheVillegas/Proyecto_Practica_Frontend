@@ -1,7 +1,7 @@
 <app-header></app-header>
 <ion-content [fullscreen]="true" [scrollY]="true">
   <app-titulos-reportes [codigoALI]="codigoALI" [estadoTPA]="estadoTPA"></app-titulos-reportes>
-  <ion-accordion-group>
+  <ion-accordion-group [value]="seccionActual">
     <ion-accordion value="etapa1" class="contenedor_label">
       <ion-item slot="header" color="light">
         <ion-label class="titulo_contenedor">ETAPA 1 : Almacenamiento de Muestra</ion-label>
@@ -12,10 +12,9 @@
             <ion-col size="auto" class="columna_del_contendido">
               <ion-label>Lugar de Almacenamiento de la muestra</ion-label>
               <ion-select placeholder="Seleccione un Lugar" class="selecionador_opciones">
-                <ion-select-option value="Freezer 33-M">Freezer 33-M</ion-select-option>
-                <ion-select-option value="Refrigerador 33-M">Refrigerador 33-M</ion-select-option>
-                <ion-select-option value="Mesón Siembra">Mesón Siembra</ion-select-option>
-                <ion-select-option value="Gabinete sala Transpaso">Gabinete sala Transpaso</ion-select-option>
+                <ion-select-option *ngFor="let lugar of listaLugares" [value]="lugar.nombre">
+                  {{ lugar.nombre }}
+                </ion-select-option>
               </ion-select>
             </ion-col>
             <ion-col class="columna_del_contendido">
@@ -37,10 +36,9 @@
             <ion-col class="columna_del_contendido">
               <ion-label>Responsable </ion-label>
               <ion-select placeholder="Seleccione un Responsable" class="selecionador_opciones">
-                <ion-select-option value="Olaya">Olaya</ion-select-option>
-                <ion-select-option value="Jorge">Jorge</ion-select-option>
-                <ion-select-option value="Sandy">Sandy</ion-select-option>
-                <ion-select-option value="Pricilla">Pricilla</ion-select-option>
+                <ion-select-option *ngFor="let responsable of listaResponsables" [value]="responsable.nombre">
+                  {{ responsable.nombre }}
+                </ion-select-option>
               </ion-select>
             </ion-col>
             <ion-col class="columna_del_contendido">
@@ -87,20 +85,18 @@
             <ion-col>
               <ion-label>Equipo y/o Instrumento</ion-label>
               <ion-select placeholder="Seleccione un Equipo y/o Instrumento" class="selecionador_opciones">
-                <ion-select-option value="Balanza 74-M">Balanza 74-M</ion-select-option>
-                <ion-select-option value="Camara Flujo laminar 8-M">Camara Flujo laminar 8-M</ion-select-option>
-                <ion-select-option value="Balanza 6-M">Balanza 6-M</ion-select-option>
-                <ion-select-option value="Meson de Transpaso">Meson de Transpaso</ion-select-option>
-                <ion-select-option value="Balanza 99-M">Balanza 99-M</ion-select-option>
-                <ion-select-option value="Balanza 108-M">Balanza 108-M</ion-select-option>
+                <ion-select-option *ngFor="let equipo of listaEquipos" [value]="equipo.nombre">
+                  {{ equipo.nombre }}
+                </ion-select-option>
               </ion-select>
             </ion-col>
             <ion-col>
               <ion-label>Lugar de Almacenamiento de la muestra</ion-label>
               <ion-select placeholder="Seleccione un Equipo y/o Instrumento" class="selecionador_opciones">
-                <ion-select-option value="Freezer 33-M">Freezer 33-M</ion-select-option>
-                <ion-select-option value="Refrigerador 33-M">Refrigerador 33-M</ion-select-option>
-                <ion-select-option value="Gabinete sala Transpaso">Gabinete sala Transpaso</ion-select-option>
+                <ion-select-option *ngFor="let lugar of listaLugares" [value]="lugar.nombre"
+                  [disabled]="lugar.nombre === 'Mesón Siembra'">
+                  {{ lugar.nombre }}
+                </ion-select-option>
               </ion-select>
             </ion-col>
           </ion-row>
@@ -122,30 +118,10 @@
                 <div class="contendor_doble">
                   <ion-select [(ngModel)]="material.tipoMaterial" placeholder="Seleccione la clave del material pesado"
                     class="selecionador_opciones" interface="alert">
-                    <ion-select-option disabled="true">--- INSTRUMENTOS ---</ion-select-option>
-
-                    <ion-select-option value="cuchara">Cuchara</ion-select-option>
-                    <ion-select-option value="bisturi">Bisturí</ion-select-option>
-                    <ion-select-option value="pinzas">Pinzas</ion-select-option>
-
-
-                    <ion-select-option disabled="true">--- PIPETAS 1 ML ---</ion-select-option>
-
-                    <ion-select-option value="22-M">&nbsp;&nbsp; Pipeta 22-M</ion-select-option>
-                    <ion-select-option value="23-M">&nbsp;&nbsp; Pipeta 23-M</ion-select-option>
-                    <ion-select-option value="72-M">&nbsp;&nbsp; Pipeta 72-M</ion-select-option>
-                    <ion-select-option value="98-M">&nbsp;&nbsp; Pipeta 98-M</ion-select-option>
-                    <ion-select-option value="100-M">&nbsp;&nbsp; Pipeta 100-M</ion-select-option>
-                    <ion-select-option value="102-M">&nbsp;&nbsp; Pipeta 102-M</ion-select-option>
-
-
-                    <ion-select-option disabled="true">--- PIPETAS 10 ML ---</ion-select-option>
-
-                    <ion-select-option value="32-M">&nbsp;&nbsp; Pipeta 32-M</ion-select-option>
-                    <ion-select-option value="75-M">&nbsp;&nbsp; Pipeta 75-M</ion-select-option>
-                    <ion-select-option value="94-M">&nbsp;&nbsp; Pipeta 94-M</ion-select-option>
-                    <ion-select-option value="103-M">&nbsp;&nbsp; Pipeta 103-M</ion-select-option>
-                    <ion-select-option value="106-M">&nbsp;&nbsp; Pipeta 106-M</ion-select-option>
+                    <ion-select-option *ngFor="let opcion of opcionesMateriales" [value]="opcion.valor"
+                      [disabled]="opcion.esTitulo">
+                      {{ opcion.nombre }}
+                    </ion-select-option>
                   </ion-select>
                   <ion-input [(ngModel)]="material.codigoMaterial" class="contendor_input"></ion-input>
                 </div>
@@ -166,6 +142,20 @@
                   Agregar Otro Analista
                 </ion-button>
               </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-accordion>
+    <ion-accordion value="etapa3" class="contenedor_label">
+      <ion-item slot="header" color="light">
+        <ion-label class="titulo_contenedor">Etapa 3 : Limpieza General</ion-label>
+      </ion-item>
+      <div class="contenido_del_label" slot="content">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-label>Utencilio de Limpiza utilizado</ion-label>
             </ion-col>
           </ion-row>
         </ion-grid>
