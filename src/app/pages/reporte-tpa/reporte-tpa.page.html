@@ -11,7 +11,8 @@
           <ion-row>
             <ion-col size="auto" class="columna_del_contendido">
               <ion-label>Lugar de Almacenamiento de la muestra</ion-label>
-              <ion-select placeholder="Seleccione un Lugar" class="selecionador_opciones">
+              <ion-select placeholder="Seleccione un Lugar" class="selecionador_opciones"
+                [disabled]="formularioBloqueado" [(ngModel)]="lugarAlmacenamientoEtapa1">
                 <ion-select-option *ngFor="let lugar of listaLugares" [value]="lugar.nombre">
                   {{ lugar.nombre }}
                 </ion-select-option>
@@ -19,7 +20,8 @@
             </ion-col>
             <ion-col class="columna_del_contendido">
               <ion-label>Observaciones de la Muestra</ion-label>
-              <ion-textarea class="seleccionador_de_texto"></ion-textarea>
+              <ion-textarea class="seleccionador_de_texto" [disabled]="formularioBloqueado"
+                [(ngModel)]="observacionesEtapa1"></ion-textarea>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -35,7 +37,8 @@
           <ion-row>
             <ion-col class="columna_del_contendido">
               <ion-label>Responsable </ion-label>
-              <ion-select placeholder="Seleccione un Responsable" class="selecionador_opciones">
+              <ion-select placeholder="Seleccione un Responsable" class="selecionador_opciones"
+                [disabled]="formularioBloqueado" [(ngModel)]="etapa2.responsable">
                 <ion-select-option *ngFor="let responsable of listaResponsables" [value]="responsable.nombre">
                   {{ responsable.nombre }}
                 </ion-select-option>
@@ -43,23 +46,24 @@
             </ion-col>
             <ion-col class="columna_del_contendido">
               <ion-label>Fecha de Preparacion</ion-label>
-              <ion-datetime-button [datetime]="'calendarioIngreso' + i"></ion-datetime-button>
+              <ion-datetime-button [datetime]="'calendarioIngreso' + i"
+                [disabled]="formularioBloqueado"></ion-datetime-button>
 
               <ion-modal [keepContentsMounted]="true">
                 <ng-template>
                   <ion-datetime [id]="'calendarioIngreso' + i" presentation="date" [showDefaultButtons]="true"
-                    doneText="Listo" cancelText="Cancelar">
+                    doneText="Listo" cancelText="Cancelar" [(ngModel)]="etapa2.fechaPreparacion">
                   </ion-datetime>
                 </ng-template>
               </ion-modal>
             </ion-col>
             <ion-col class="columna_del_contendido">
               <ion-label>Hora de inicio</ion-label>
-              <ion-datetime-button datetime="horaInicio"></ion-datetime-button>
+              <ion-datetime-button datetime="horaInicio" [disabled]="formularioBloqueado"></ion-datetime-button>
               <ion-modal [keepContentsMounted]="true">
                 <ng-template>
                   <ion-datetime id="horaInicio" presentation="time" [showDefaultButtons]="true" doneText="Listo"
-                    cancelText="Cancelar">
+                    cancelText="Cancelar" [(ngModel)]="etapa2.horaInicio">
                   </ion-datetime>
                 </ng-template>
               </ion-modal>
@@ -69,22 +73,24 @@
           <ion-row>
             <ion-col>
               <ion-label>Hora de Pesado</ion-label>
-              <ion-datetime-button datetime="horaPesado"></ion-datetime-button>
+              <ion-datetime-button datetime="horaPesado" [disabled]="formularioBloqueado"></ion-datetime-button>
               <ion-modal [keepContentsMounted]="true">
                 <ng-template>
                   <ion-datetime id="horaPesado" presentation="time" [showDefaultButtons]="true" doneText="Listo"
-                    cancelText="Cancelar">
+                    cancelText="Cancelar" [(ngModel)]="etapa2.horaPesado">
                   </ion-datetime>
                 </ng-template>
               </ion-modal>
             </ion-col>
             <ion-col>
               <ion-label>Numero de muestras</ion-label>
-              <ion-input class="contenedor_input"></ion-input>
+              <ion-input class="contenedor_input" [disabled]="formularioBloqueado" type="number"
+                [(ngModel)]="etapa2.numeroMuestras"></ion-input>
             </ion-col>
             <ion-col>
               <ion-label>Equipo y/o Instrumento</ion-label>
-              <ion-select placeholder="Seleccione un Equipo y/o Instrumento" class="selecionador_opciones">
+              <ion-select placeholder="Seleccione un Equipo y/o Instrumento" class="selecionador_opciones"
+                [disabled]="formularioBloqueado" [(ngModel)]="etapa2.equipo">
                 <ion-select-option *ngFor="let equipo of listaEquipos" [value]="equipo.nombre">
                   {{ equipo.nombre }}
                 </ion-select-option>
@@ -92,7 +98,8 @@
             </ion-col>
             <ion-col>
               <ion-label>Lugar de Almacenamiento de la muestra</ion-label>
-              <ion-select placeholder="Seleccione un Equipo y/o Instrumento" class="selecionador_opciones">
+              <ion-select placeholder="Seleccione un Equipo y/o Instrumento" class="selecionador_opciones"
+                [disabled]="formularioBloqueado" [(ngModel)]="etapa2.lugarAlmacenamiento">
                 <ion-select-option *ngFor="let lugar of listaLugares" [value]="lugar.nombre"
                   [disabled]="lugar.nombre === 'Mesón Siembra'">
                   {{ lugar.nombre }}
@@ -104,10 +111,10 @@
           <ion-row>
             <ion-col>
               <ion-label>Retiro o Pesado</ion-label>
-              <ion-radio-group [value]="estadoSeleccionado" (ionChange)="cambiarEstado($event)">
+              <ion-radio-group [value]="etapa2.tipoAccion" (ionChange)="etapa2.tipoAccion = $event.detail.value">
                 <div class="contenedor-radios">
-                  <ion-radio value="Retiro" labelPlacement="end">Retiro</ion-radio>
-                  <ion-radio value="Pesado" labelPlacement="end">Pesado</ion-radio>
+                  <ion-radio value="Retiro" labelPlacement="end" [disabled]="formularioBloqueado">Retiro</ion-radio>
+                  <ion-radio value="Pesado" labelPlacement="end" [disabled]="formularioBloqueado">Pesado</ion-radio>
                 </div>
               </ion-radio-group>
             </ion-col>
@@ -117,17 +124,18 @@
                 class="fila_dinamica">
                 <div class="contendor_doble">
                   <ion-select [(ngModel)]="material.tipoMaterial" placeholder="Seleccione la clave del material pesado"
-                    class="selecionador_opciones" interface="alert">
+                    class="selecionador_opciones" interface="alert" [disabled]="formularioBloqueado">
                     <ion-select-option *ngFor="let opcion of opcionesMateriales" [value]="opcion.valor"
                       [disabled]="opcion.esTitulo">
                       {{ opcion.nombre }}
                     </ion-select-option>
                   </ion-select>
-                  <ion-input [(ngModel)]="material.codigoMaterial" class="contendor_input"></ion-input>
+                  <ion-input [(ngModel)]="material.codigoMaterial" class="contendor_input"
+                    [disabled]="formularioBloqueado"></ion-input>
                 </div>
               </div>
               <div class="ion-text-right ion-padding-top">
-                <ion-button fill="clear" size="small" (click)="agregarMaterial(i)">
+                <ion-button fill="clear" size="small" (click)="agregarMaterial(i)" *ngIf="!formularioBloqueado">
                   <ion-icon name="add-circle" slot="start"></ion-icon>
                   Agregar otro material
                 </ion-button>
@@ -137,7 +145,7 @@
           <ion-row *ngIf="isLast">
             <ion-col size="12">
               <div class="ion-padding-top">
-                <ion-button expand="block" fill="outline" (click)="agregarRepeticion()">
+                <ion-button expand="block" fill="outline" (click)="agregarRepeticion()" *ngIf="!formularioBloqueado">
                   <ion-icon name="add-circle-outline" slot="start"></ion-icon>
                   Agregar Otro Analista
                 </ion-button>
@@ -155,7 +163,7 @@
         <ion-label>Items de Limpieza</ion-label>
         <ion-list>
           <ion-item *ngFor="let item of listaLimpieza">
-            <ion-checkbox slot="start" label-placement="end" [disabled]="item.bloqueado"
+            <ion-checkbox slot="start" label-placement="end" [disabled]="item.bloqueado || formularioBloqueado"
               [(ngModel)]="item.seleccionado">
               {{item.nombre}}
             </ion-checkbox>
@@ -164,7 +172,7 @@
         <ion-row>
           <ion-col>
             <ion-label>Observaciones</ion-label>
-            <ion-textarea></ion-textarea>
+            <ion-textarea [disabled]="formularioBloqueado" [(ngModel)]="observacionesLimpieza"></ion-textarea>
           </ion-col>
         </ion-row>
       </div>
@@ -180,7 +188,7 @@
             <ion-col>
               <ion-label>Responsable</ion-label>
               <ion-select placeholder="Seleccione un responsable" class="selecionador_opciones"
-                [(ngModel)]="etapa4.responsable">
+                [(ngModel)]="etapa4.responsable" [disabled]="formularioBloqueado">
                 <ion-select-option *ngFor="let responsable of listaResponsables" [value]="responsable.nombre">
                   {{responsable.nombre}}
                 </ion-select-option>
@@ -188,7 +196,8 @@
             </ion-col>
             <ion-col>
               <ion-label>Fecha</ion-label>
-              <ion-datetime-button [datetime]="'fechaRetiroMuestra' + i"></ion-datetime-button>
+              <ion-datetime-button [datetime]="'fechaRetiroMuestra' + i"
+                [disabled]="formularioBloqueado"></ion-datetime-button>
               <ion-modal [keepContentsMounted]="true">
                 <ng-template>
                   <ion-datetime [id]="'fechaRetiroMuestra' + i" presentation="date" [showDefaultButtons]="true"
@@ -199,7 +208,8 @@
             </ion-col>
             <ion-col>
               <ion-label>Hora de Inicio</ion-label>
-              <ion-datetime-button [datetime]="'horaInicioEtapa4' + i"></ion-datetime-button>
+              <ion-datetime-button [datetime]="'horaInicioEtapa4' + i"
+                [disabled]="formularioBloqueado"></ion-datetime-button>
               <ion-modal [keepContentsMounted]="true">
                 <ng-template>
                   <ion-datetime [id]="'horaInicioEtapa4' + i" presentation="time" [showDefaultButtons]="true"
@@ -210,11 +220,12 @@
             </ion-col>
             <ion-col>
               <ion-label>Observaciones</ion-label>
-              <ion-textarea [(ngModel)]="etapa4.analisisARealizar"></ion-textarea>
+              <ion-textarea [(ngModel)]="etapa4.analisisARealizar" [disabled]="formularioBloqueado"></ion-textarea>
             </ion-col>
             <ion-col size="12" *ngIf="isLast">
               <div class="ion-padding-top">
-                <ion-button expand="block" fill="outline" (click)="agregarRepeticionEtapa4()">
+                <ion-button expand="block" fill="outline" (click)="agregarRepeticionEtapa4()"
+                  *ngIf="!formularioBloqueado">
                   <ion-icon name="add-circle-outline" slot="start"></ion-icon>
                   Agregar Otro Analista
                 </ion-button>
@@ -246,7 +257,7 @@
                   <ion-row>
                     <ion-col size="6">
                       <ion-select placeholder="Seleccione" class="selecionador_opciones_small"
-                        [(ngModel)]="material.nombre">
+                        [(ngModel)]="material.nombre" [disabled]="formularioBloqueado">
                         <ion-select-option *ngFor="let opcion of opcionesMaterialSiembra" [value]="opcion.nombre">
                           {{opcion.nombre}}
                         </ion-select-option>
@@ -254,7 +265,7 @@
                     </ion-col>
                     <ion-col size="6">
                       <ion-input placeholder="Código" class="contendor_input_small"
-                        [(ngModel)]="material.codigoMaterialSiembra">
+                        [(ngModel)]="material.codigoMaterialSiembra" [disabled]="formularioBloqueado">
                       </ion-input>
                     </ion-col>
                   </ion-row>
@@ -262,7 +273,8 @@
 
                 <ion-row>
                   <ion-col size="12">
-                    <ion-button fill="clear" size="small" (click)="agregarMaterialSiembra()">
+                    <ion-button fill="clear" size="small" (click)="agregarMaterialSiembra()"
+                      *ngIf="!formularioBloqueado">
                       <ion-icon name="add-circle" slot="start"></ion-icon>
                       Agregar Material
                     </ion-button>
@@ -274,7 +286,8 @@
               <ion-label class="subtitulo">Equipo e Instrumento</ion-label>
               <ion-list class="lista_equipos">
                 <ion-item *ngFor="let equipo of listaEquiposSiembra">
-                  <ion-checkbox slot="start" label-placement="end" [(ngModel)]="equipo.seleccionado">
+                  <ion-checkbox slot="start" label-placement="end" [(ngModel)]="equipo.seleccionado"
+                    [disabled]="formularioBloqueado">
                     {{equipo.nombre}}
                   </ion-checkbox>
                 </ion-item>
@@ -282,7 +295,7 @@
             </ion-col>
             <ion-col size="3">
               <ion-label class="subtitulo">Otros Equipos e Instrumentos</ion-label>
-              <ion-textarea></ion-textarea>
+              <ion-textarea [disabled]="formularioBloqueado" [(ngModel)]="observacionesLimpieza"></ion-textarea>
             </ion-col>
           </ion-row>
           <hr class="linea_divisoria">
@@ -295,7 +308,7 @@
                     <ion-col size="5">
                       <ion-label>Diluyente</ion-label>
                       <ion-select placeholder="Seleccione" class="selecionador_opciones_small"
-                        [(ngModel)]="diluyente.nombre">
+                        [(ngModel)]="diluyente.nombre" [disabled]="formularioBloqueado">
                         <ion-select-option *ngFor="let opcion of opcionesDiluyentes" [value]="opcion.nombre">
                           {{opcion.nombre}}
                         </ion-select-option>
@@ -304,14 +317,14 @@
                     <ion-col size="5">
                       <ion-label>Código Diluyente</ion-label>
                       <ion-input placeholder="Código" class="contendor_input_small"
-                        [(ngModel)]="diluyente.codigoDiluyente">
+                        [(ngModel)]="diluyente.codigoDiluyente" [disabled]="formularioBloqueado">
                       </ion-input>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
               </div>
               <div class="ion-text-center ion-padding-top">
-                <ion-button fill="clear" size="small" (click)="agregarDiluyente()">
+                <ion-button fill="clear" size="small" (click)="agregarDiluyente()" *ngIf="!formularioBloqueado">
                   <ion-icon name="add-circle" slot="start"></ion-icon>
                   Agregar Diluyente
                 </ion-button>
@@ -333,7 +346,8 @@
               <div class="zona-firma-final">
                 <ion-label class="titulo-firma">Firma de la Coordinadora de Área</ion-label>
 
-                <div class="caja-upload" (click)="inputFirma.click()" [class.tiene-imagen]="firmaCoordinador">
+                <div class="caja-upload" (click)="!formularioBloqueado && inputFirma.click()"
+                  [class.tiene-imagen]="firmaCoordinador" [class.bloqueado]="formularioBloqueado">
 
                   <div *ngIf="!firmaCoordinador" class="contenido-vacio">
                     <ion-icon name="cloud-upload-outline" class="icono-upload"></ion-icon>
@@ -357,11 +371,46 @@
             <ion-col size="6">
               <ion-label class="subtitulo">Observaciones</ion-label>
               <ion-textarea class="textarea_observaciones_final" placeholder="Ingrese observaciones aquí..."
-                [(ngModel)]="observaciones"></ion-textarea>
+                [(ngModel)]="observacionesFinales" [disabled]="formularioBloqueado"></ion-textarea>
             </ion-col>
           </ion-row>
         </ion-grid>
       </div>
     </ion-accordion>
   </ion-accordion-group>
+
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <!-- Estado Editable: 3 Botones -->
+      <ion-row *ngIf="!formularioBloqueado">
+        <ion-col size="4">
+          <ion-button expand="block" color="danger" fill="outline" (click)="confirmarCancelar()">
+            Cancelar
+          </ion-button>
+        </ion-col>
+        <ion-col size="4">
+          <ion-button expand="block" color="medium" (click)="confirmarGuardarBorrador()">
+            Guardar Borrador
+          </ion-button>
+        </ion-col>
+        <ion-col size="4">
+          <ion-button expand="block" color="success" (click)="confirmarFormulario()">
+            Confirmar Formulario
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <!-- Estado Bloqueado: 1 Botón de Salir -->
+      <ion-row *ngIf="formularioBloqueado">
+        <ion-col size="12">
+          <ion-button expand="block" color="primary" (click)="salirVerificado()">
+            Volver / Salir
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

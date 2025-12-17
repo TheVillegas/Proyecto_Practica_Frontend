@@ -32,6 +32,13 @@ export class AliService {
     return this.muestraALI.find(m => m.ALIMuestra == id)?.estadoRAM!;
   }
 
+  updateEstadoTPA(id: number, nuevoEstado: 'Verificado' | 'Borrador' | 'No realizado') {
+    const muestra = this.muestraALI.find(m => m.ALIMuestra == id);
+    if (muestra) {
+      muestra.estadoTPA = nuevoEstado;
+    }
+  }
+
 
   getMaterialesPesados(): any[] {
     return [
