@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ALI } from 'src/app/interfaces/ali';
+import { AliService } from 'src/app/services/ali-service';
 import { AlertController } from '@ionic/angular';
 
 @Component({
@@ -16,7 +16,8 @@ export class GenerarALiBasicoPage implements OnInit {
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private aliService: AliService,
   ) {
     this.formularioIngresoALI = this.formBuilder.group({
       aliMuestra: ["", Validators.required],
@@ -67,6 +68,20 @@ export class GenerarALiBasicoPage implements OnInit {
     if (this.formularioIngresoALI.invalid) {
       console.log('El formulario es inválido. Faltan datos o están mal.');
       this.formularioIngresoALI.markAllAsTouched();
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'Por favor, complete todos los campos correctamente.',
+        buttons: [
+          {
+            text: 'Entendido',
+            role: 'cancel',
+            handler: () => {
+              console.log('Entendido');
+            }
+          }
+        ]
+      });
+      await alert.present();
       return;
     }
 
@@ -88,12 +103,13 @@ export class GenerarALiBasicoPage implements OnInit {
           role: 'confirm',
           handler: () => {
             console.log(this.formularioIngresoALI.value);
+            const { aliMuestra, codigoSerna } = this.formularioIngresoALI.value;
+            this.aliService.agregarMuestraALI(aliMuestra, codigoSerna);
             this.router.navigate(["/home"])
             //Faltaria la logica con el backend; 
           }
         }
       ]
-
     });
     await alert.present();
   }

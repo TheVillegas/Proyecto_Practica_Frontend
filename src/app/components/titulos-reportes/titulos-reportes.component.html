@@ -17,5 +17,30 @@
         </ion-card-header>
       </ion-card>
     </ion-col>
+    <ion-col size="2">
+      <ion-card class="estiloTitulo primary">
+        <ion-card-header>
+          <ion-card-subtitle>Norma ISO</ion-card-subtitle>
+          <ion-card-title>R-INS-MM-M-1-15/23-08-23</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ion-col>
+    <ion-col size="1.5">
+      <ion-card class="estiloTitulo primary">
+        <ion-card-header>
+          <ion-card-subtitle>Última Actualización</ion-card-subtitle>
+          <ion-card-title>{{ ultimaActualizacion ? (ultimaActualizacion | date:'dd/MM/yyyy HH:mm') : 'Nunca'
+            }}</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ion-col>
+    <ion-col size="1.5  " *ngIf="responsable">
+      <ion-card class="estiloTitulo primary">
+        <ion-card-header>
+          <ion-card-subtitle>Responsable</ion-card-subtitle>
+          <ion-card-title>{{ responsable }}</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ion-col>
   </ion-row>
 </ion-grid>
