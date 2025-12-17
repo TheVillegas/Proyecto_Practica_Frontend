@@ -308,6 +308,7 @@ export class ReporteTPAPage implements OnInit {
             if (this.codigoALI && !this.formularioBloqueado) {
               this.aliService.updateEstadoTPA(parseInt(this.codigoALI), 'No realizado');
             }
+            this.router.navigate(['/home']);
           }
         }
       ]
@@ -378,6 +379,7 @@ export class ReporteTPAPage implements OnInit {
               this.aliService.updateInfoTPA(id, this.ultimaActualizacion, this.responsableModificacion);
               this.aliService.updateDatosReporteTPA(id, datosParaGuardar);
             }
+            this.router.navigate(['/home']);
             // No bloqueamos el formulario
           }
         }
@@ -433,7 +435,7 @@ export class ReporteTPAPage implements OnInit {
 
             // Objeto con firma real para persistencia interna
             const datosPersistentes = { ...reporteCompleto };
-            //datosPersistentes.etapa6_cierre.firma = this.firmaCoordinador;
+            //datosPersistentes.etapa6_cierre.firma = this.firmaCoordinador; Error por tipo de dato del campo firma
             datosPersistentes.etapa5_siembra.materiales = this.listaMaterialSiembra; // Guardar completos por si se desbloquea
             datosPersistentes.etapa5_siembra.diluyentes = this.listaDiluyentes;
             console.log('DATOS PARA BACKEND (FILTRADOS):', reporteCompleto);
@@ -449,7 +451,7 @@ export class ReporteTPAPage implements OnInit {
               this.aliService.updateInfoTPA(id, this.ultimaActualizacion, this.responsableModificacion);
               this.aliService.updateDatosReporteTPA(id, datosPersistentes);
             }
-            // this.router.navigate(['/home']); // REMOVIDO por solicitud: "No llames a servicios ni lógica compleja"
+            this.router.navigate(['/home']);
           }
         }
       ]

@@ -44,4 +44,11 @@ export class ALIItemAccordeonComponent implements OnInit {
     this.router.navigate(["/reporte-tpa", this.muestra.ALIMuestra], { queryParams: { estadoTPA: this.muestra.estadoTPA } });
   }
 
+  goToReporteRAM() {
+    console.log("Redirigiendo a Reporte RAM");
+    console.log(this.muestra.ALIMuestra);
+    //cambiar el query params una vez implementado el backend
+    this.router.navigate(["/reporte-ram", this.muestra.ALIMuestra], { queryParams: { estadoRAM: this.muestra.estadoRAM } });
+  }
+
 }

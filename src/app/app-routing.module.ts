@@ -23,6 +23,10 @@ const routes: Routes = [
     path: 'reporte-tpa/:codigoALI',
     loadChildren: () => import('./pages/reporte-tpa/reporte-tpa.module').then(m => m.ReporteTPAPageModule)
   },
+  {
+    path: 'reporte-ram/:codigoALI',
+    loadChildren: () => import('./pages/reporte-ram/reporte-ram.module').then(m => m.ReporteRamPageModule)
+  },
 ];
 
 @NgModule({

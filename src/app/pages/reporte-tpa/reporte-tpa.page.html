@@ -1,7 +1,7 @@
 <app-header></app-header>
 <ion-content [fullscreen]="true" [scrollY]="true">
-  <app-titulos-reportes [codigoALI]="codigoALI" [estadoTPA]="estadoTPA" [ultimaActualizacion]="ultimaActualizacion"
-    [responsable]="responsableModificacion"></app-titulos-reportes>
+  <app-titulos-reportes [codigoALI]="codigoALI" [estadoTPA]="estadoTPA" tipoReporte="TPA"
+    [ultimaActualizacion]="ultimaActualizacion" [responsable]="responsableModificacion"></app-titulos-reportes>
   <ion-accordion-group [value]="seccionActual">
     <ion-accordion value="etapa1" class="contenedor_label">
       <ion-item slot="header" color="light">
