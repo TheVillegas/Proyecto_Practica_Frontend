@@ -3,5 +3,251 @@
 <ion-content [fullscreen]="true">
   <app-titulos-reportes [codigoALI]="codigoALI" [estadoRAM]="estadoRAM" tipoReporte="RAM"
     [ultimaActualizacion]="ultimaActtualizacionRam" [responsable]="responsableModificacionRam"></app-titulos-reportes>
-  <h3>Hola este es el reporte ram de la muestra {{codigoALI}} y su estado es {{estadoRAM}}</h3>
+
+  <ion-accordion-group [value]="seccionActual">
+    <ion-accordion value="first">
+      <ion-item slot="header">
+        <ion-label>ETAPA 1 : Trazabilidad de la Muestra</ion-label>
+      </ion-item>
+      <div slot="content">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="2">
+              <ion-label>Hora de inicio de Homogenizado</ion-label>
+              <ion-input type="time" [disabled]="formularioBloqueado"
+                [(ngModel)]="etapa1.horaInicioHomogenizado"></ion-input>
+            </ion-col>
+            <ion-col size="2">
+              <ion-label>Agar Plate Count</ion-label>
+              <ion-input type="number" [disabled]="formularioBloqueado" [(ngModel)]="etapa1.agarPlateCount"></ion-input>
+            </ion-col>
+            <ion-col size="2">
+              <ion-label>Equipo de Incubacion</ion-label>
+              <ion-select [disabled]="formularioBloqueado" [(ngModel)]="etapa1.equipoIncubacion">
+                <ion-select-option *ngFor="let equipo of listaEquiposIncubacion" [value]="equipo.id">
+                  {{ equipo.nombre }}
+                </ion-select-option>
+              </ion-select>
+            </ion-col>
+            <ion-col size="2">
+              <ion-label>N de Muestra 10gr/90ml</ion-label>
+              <ion-input type="number" [disabled]="formularioBloqueado" [(ngModel)]="etapa1.nMuestra10gr"></ion-input>
+            </ion-col>
+            <ion-col size="2">
+              <ion-label>N de Muestra 50gr/450ml</ion-label>
+              <ion-input type="number" [disabled]="formularioBloqueado" [(ngModel)]="etapa1.nMuestra50gr"></ion-input>
+            </ion-col>
+            <ion-col size="2">
+              <ion-label>Hora de termino de Siembra</ion-label>
+              <ion-input type="time" [disabled]="formularioBloqueado"
+                [(ngModel)]="etapa1.horaTerminoSiembraRam"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-label>Seleccione la Micropipeta Utilizada</ion-label>
+              <ion-select [disabled]="formularioBloqueado" [(ngModel)]="etapa2.micropipetaUtilizada">
+                <ion-select-option *ngFor="let pipeta of listaPipetas" [value]="pipeta.id" [disabled]="pipeta.esTitulo">
+                  {{ pipeta.nombre }}
+                </ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-accordion>
+    <ion-accordion value="second">
+      <ion-item slot="header">
+        <ion-label>ETAPA 2 : Incubacion de la muestra</ion-label>
+      </ion-item>
+      <div slot="content">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-label>Fecha Inicio de Incubacion</ion-label>
+              <ion-input type="date" [disabled]="formularioBloqueado" [(ngModel)]="etapa2.fechaInicioIncubacion"
+                (click)="openDatePicker($event)">
+              </ion-input>
+            </ion-col>
+            <ion-col>
+              <ion-col size="2">
+                <ion-label>Hora de Inicio de Incubacion</ion-label>
+                <ion-input type="time" [disabled]="formularioBloqueado"
+                  [(ngModel)]="etapa2.horaInicioIncubacion"></ion-input>
+              </ion-col>
+            </ion-col>
+            <ion-col size="2">
+              <ion-label>Responsable de la Incubacion</ion-label>
+              <ion-select [disabled]="formularioBloqueado" [(ngModel)]="etapa2.responsableIncubacion">
+                <ion-select-option *ngFor="let responsable of listaResponsables" [value]="etapa2.responsableIncubacion">
+                  {{ responsable.nombre }}
+                </ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-label>Fecha Fin de Incubacion</ion-label>
+              <ion-input type="date" [disabled]="formularioBloqueado" [(ngModel)]="etapa2.fechaFinIncubacion"
+                (click)="openDatePicker($event)">
+              </ion-input>
+            </ion-col>
+            <ion-col>
+              <ion-col size="2">
+                <ion-label>Hora de Fin de Incubacion</ion-label>
+                <ion-input type="time" [disabled]="formularioBloqueado"
+                  [(ngModel)]="etapa2.horaFinIncubacion"></ion-input>
+              </ion-col>
+            </ion-col>
+            <hr class="linea_divisoria">
+            <ion-col size="2">
+              <ion-label>Responsable de la Incubacion</ion-label>
+              <ion-select [disabled]="formularioBloqueado" [(ngModel)]="etapa2.responsableAnalisis">
+                <ion-select-option *ngFor="let responsable of listaResponsables" [value]="responsable.id">
+                  {{ responsable.nombre }}
+                </ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ion-accordion>
+    <ion-accordion *ngFor="let etapa3 of listaRepeticionesEtapa3; let i = index; let isLast = last"
+      [value]="'etapa3'+i">
+      <ion-item slot="header">
+        <ion-label>Etapa 3 : Calculo de Muestras {{i+1}}</ion-label>
+      </ion-item>
+      <div slot="content">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12">
+              <!-- Double Input Structure -->
+              <div class="contendor_doble">
+                <div style="flex: 1;">
+                  <ion-label>Codigo ALI</ion-label>
+                  <ion-input type="number" [disabled]="formularioBloqueado" [(ngModel)]="etapa3.codigoALI"
+                    placeholder="ALI"></ion-input>
+                </div>
+                <div style="flex: 1;">
+                  <ion-label>N° Muestra</ion-label>
+                  <ion-input type="number" [disabled]="true" [value]="etapa3.numeroMuestra" readonly="true"></ion-input>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="2" class="inputs_almedio">
+              <ion-label>Dil</ion-label>
+              <ion-input type="number" [disabled]="formularioBloqueado" [(ngModel)]="etapa3.dil"></ion-input>
+              <ion-input type="number" [disabled]="formularioBloqueado" [(ngModel)]="etapa3.dil2"></ion-input>
+            </ion-col>
+            <ion-col size="2" class="inputs_almedio">
+              <ion-label>N Colonias</ion-label>
+              <ion-input type="number" [disabled]="formularioBloqueado"
+                [(ngModel)]="etapa3.numeroColonias01"></ion-input>
+              <ion-input type="number" [disabled]="formularioBloqueado"
+                [(ngModel)]="etapa3.numeroColonias02"></ion-input>
+            </ion-col>
+            <ion-col size="2" class="inputs_almedio">
+              <ion-label>N Colonias</ion-label>
+              <ion-input type="number" [disabled]="formularioBloqueado"
+                [(ngModel)]="etapa3.numeroColonias03"></ion-input>
+              <ion-input type="number" [disabled]="formularioBloqueado"
+                [(ngModel)]="etapa3.numeroColonias04"></ion-input>
+            </ion-col>
+            <ion-col size="2" class="inputs_almedio">
+              <ion-label>Disolución</ion-label>
+              <ion-input type="number" [disabled]="formularioBloqueado" [(ngModel)]="etapa3.disolucion"
+                placeholder="Exponente"></ion-input>
+              <ion-input type="number" [disabled]="formularioBloqueado" [(ngModel)]="etapa3.disolucion2"
+                placeholder="Exponente"></ion-input>
+            </ion-col>
+            <ion-col size="2" class="inputs_resultados">
+              <ion-label class="titulo_resultado">Resultado RAM</ion-label>
+              <ion-input type="number" [disabled]="true" [(ngModel)]="etapa3.resultadoRAM01"></ion-input>
+            </ion-col>
+            <ion-col size="2" class="inputs_resultados">
+              <ion-label>Resultado RPES</ion-label>
+              <ion-input type="number" [disabled]="true" [(ngModel)]="etapa3.resultadoRPES01"></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <hr class="linea_divisoria" *ngIf="i === 0">
+
+          <ion-row *ngIf="i === 0">
+            <ion-col size="12">
+              <ion-label>Duplicado :</ion-label>
+              <div class="contendor_doble">
+                <div style="flex: 1;">
+                  <ion-label>Codigo ALI del Duplicado</ion-label>
+                  <ion-input type="number" [disabled]="formularioBloqueado" [(ngModel)]="etapa3.codigoALIDuplicado"
+                    placeholder="ALI"></ion-input>
+                </div>
+                <div style="flex: 1;">
+                  <ion-label>N° Muestra duplicado</ion-label>
+                  <ion-input type="number" [disabled]="true" [value]="etapa3.numeroMuestraDuplicado"></ion-input>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="i === 0">
+            <ion-col size="2" class="inputs_almedio">
+              <ion-label>Dil</ion-label>
+              <ion-input type="number" [disabled]="formularioBloqueado" [(ngModel)]="etapa3.dilDuplicado01"></ion-input>
+              <ion-input type="number" [disabled]="formularioBloqueado" [(ngModel)]="etapa3.dilDuplicado02"></ion-input>
+            </ion-col>
+            <ion-col size="2" class="inputs_almedio">
+              <ion-label>N Colonias</ion-label>
+              <ion-input type="number" [disabled]="formularioBloqueado"
+                [(ngModel)]="etapa3.numeroColoniasDuplicado01"></ion-input>
+              <ion-input type="number" [disabled]="formularioBloqueado"
+                [(ngModel)]="etapa3.numeroColoniasDuplicado02"></ion-input>
+            </ion-col>
+            <ion-col size="2" class="inputs_almedio">
+              <ion-label>N Colonias</ion-label>
+              <ion-input type="number" [disabled]="formularioBloqueado"
+                [(ngModel)]="etapa3.numeroColoniasDuplicado03"></ion-input>
+              <ion-input type="number" [disabled]="formularioBloqueado"
+                [(ngModel)]="etapa3.numeroColoniasDuplicado04"></ion-input>
+            </ion-col>
+            <ion-col size="2" class="inputs_almedio">
+              <ion-label>Disolución</ion-label>
+              <ion-input type="number" [disabled]="formularioBloqueado"
+                [(ngModel)]="etapa3.disolucionDuplicado01"></ion-input>
+              <ion-input type="number" [disabled]="formularioBloqueado"
+                [(ngModel)]="etapa3.disolucionDuplicado02"></ion-input>
+            </ion-col>
+            <ion-col size="2" class="inputs_resultados">
+              <ion-label>Resultado RAM</ion-label>
+              <ion-input type="number" [disabled]="true" [(ngModel)]="etapa3.resultadoRAMDuplicado01"
+                color="lightgray"></ion-input>
+            </ion-col>
+            <ion-col size="2" class="inputs_resultados">
+              <ion-label>Resultado RPES</ion-label>
+              <ion-input type="number" [disabled]="true" [(ngModel)]="etapa3.resultadoRPESDuplicado01"></ion-input>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="isLast">
+            <ion-col size="12">
+              <div class="ion-padding-top">
+                <ion-button expand="block" fill="outline" (click)="agregarRepeticionEtapa3()"
+                  *ngIf="!formularioBloqueado">
+                  <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+                  Agregar Otro Calculo
+                </ion-button>
+              </div>
+            </ion-col>
+          </ion-row>
+
+        </ion-grid>
+      </div>
+    </ion-accordion>
+
+  </ion-accordion-group>
 </ion-content>
+
+<app-footer-acciones [formularioBloqueado]="formularioBloqueado" (cancelar)="confirmarCancelar()"
+  (guardarBorrador)="confirmarGuardarBorrador()" (confirmar)="confirmarFormulario()" (salir)="salirVerificado()">
+</app-footer-acciones>

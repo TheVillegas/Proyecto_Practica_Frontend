@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { ReporteRamPageRoutingModule } from './reporte-ram-routing.module';
 
 import { ReporteRamPage } from './reporte-ram.page';
-import { ComponentsModule } from 'src/app/components/components-module/components.module';
+import { ComponentsModule } from '../../components/components-module/components.module';
 
 @NgModule({
   imports: [

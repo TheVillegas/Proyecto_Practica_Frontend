@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AliService } from 'src/app/services/ali-service';
+import { CatalogosService } from 'src/app/services/catalogos.service';
 import { IonContent, NavController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
@@ -65,6 +66,7 @@ export class ReporteTPAPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private aliService: AliService,
+    private catalogosService: CatalogosService,
     private navCtrl: NavController,
     private alertController: AlertController,
     private router: Router
@@ -85,14 +87,14 @@ export class ReporteTPAPage implements OnInit {
       this.ultimaActualizacion = this.aliService.getUltimaActualizacionTPA(id) || '';
       this.responsableModificacion = this.aliService.getResponsableTPA(id) || 'Usuario Actual';
     }
-    this.opcionesMateriales = this.aliService.getMaterialesPesados();
-    this.listaLugares = this.aliService.getLugaresAlmacenamiento();
-    this.listaResponsables = this.aliService.getResponsables();
-    this.listaEquipos = this.aliService.getEquiposInstrumentos();
-    this.listaLimpieza = this.aliService.getChecklistLimpieza();
-    this.opcionesMaterialSiembra = this.aliService.getMaterialSiembra();
-    this.listaEquiposSiembra = this.aliService.getEquiposSiembra();
-    this.opcionesDiluyentes = this.aliService.getDiluyentes();
+    this.opcionesMateriales = this.catalogosService.getMaterialesPesados();
+    this.listaLugares = this.catalogosService.getLugaresAlmacenamiento();
+    this.listaResponsables = this.catalogosService.getResponsables();
+    this.listaEquipos = this.catalogosService.getEquiposInstrumentos();
+    this.listaLimpieza = this.catalogosService.getChecklistLimpieza();
+    this.opcionesMaterialSiembra = this.catalogosService.getMaterialSiembra();
+    this.listaEquiposSiembra = this.catalogosService.getEquiposSiembra();
+    this.opcionesDiluyentes = this.catalogosService.getDiluyentes();
 
     // Cargar datos guardados si existen
     if (this.codigoALI) {

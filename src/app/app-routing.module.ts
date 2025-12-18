@@ -27,6 +27,7 @@ const routes: Routes = [
     path: 'reporte-ram/:codigoALI',
     loadChildren: () => import('./pages/reporte-ram/reporte-ram.module').then(m => m.ReporteRamPageModule)
   },
+
 ];
 
 @NgModule({

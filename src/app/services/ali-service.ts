@@ -7,9 +7,21 @@ import { ALI } from '../interfaces/ali';
 export class AliService {
 
   muestraALI: ALI[] = [
-    { ALIMuestra: 1, CodigoSerna: 123456, estadoTPA: 'Verificado', estadoRAM: 'No realizado' },
-    { ALIMuestra: 2, CodigoSerna: 654321, estadoTPA: 'Borrador', estadoRAM: 'Borrador' },
-    { ALIMuestra: 3, CodigoSerna: 111111, estadoTPA: 'No realizado', estadoRAM: 'Borrador' },
+    {
+      ALIMuestra: 1, CodigoSerna: 123456,
+      reporteTPA: { estado: 'Verificado', datosReporte: undefined },
+      reporteRAM: { estado: 'No realizado', datosReporte: undefined }
+    },
+    {
+      ALIMuestra: 2, CodigoSerna: 654321,
+      reporteTPA: { estado: 'Borrador', datosReporte: undefined },
+      reporteRAM: { estado: 'Borrador', datosReporte: undefined }
+    },
+    {
+      ALIMuestra: 3, CodigoSerna: 111111,
+      reporteTPA: { estado: 'No realizado', datosReporte: undefined },
+      reporteRAM: { estado: 'Borrador', datosReporte: undefined }
+    },
   ];
 
   constructor() { }
@@ -18,159 +30,62 @@ export class AliService {
     return this.muestraALI;
   }
 
+
   getMuestraPorID(id: number): ALI {
     return this.muestraALI.find(muestraALI => muestraALI.ALIMuestra == id)!;
   }
 
   getEstadoTPA(id: number): string {
-    return this.muestraALI.find(m => m.ALIMuestra == id)?.estadoTPA!;
+    return this.muestraALI.find(m => m.ALIMuestra == id)?.reporteTPA.estado!;
   }
 
   getEstadoRAM(id: number): string {
-    return this.muestraALI.find(m => m.ALIMuestra == id)?.estadoRAM!;
+    return this.muestraALI.find(m => m.ALIMuestra == id)?.reporteRAM.estado!;
   }
 
   updateEstadoTPA(id: number, nuevoEstado: 'Verificado' | 'Borrador' | 'No realizado') {
     const muestra = this.muestraALI.find(m => m.ALIMuestra == id);
     if (muestra) {
-      muestra.estadoTPA = nuevoEstado;
+      muestra.reporteTPA.estado = nuevoEstado;
     }
   }
 
   getUltimaActualizacionTPA(id: number): string | undefined {
-    return this.muestraALI.find(m => m.ALIMuestra == id)?.ultimaActualizacionTPA;
+    return this.muestraALI.find(m => m.ALIMuestra == id)?.reporteTPA.ultimaActualizacion;
   }
 
   getResponsableTPA(id: number): string | undefined {
-    return this.muestraALI.find(m => m.ALIMuestra == id)?.responsableTPA;
+    return this.muestraALI.find(m => m.ALIMuestra == id)?.reporteTPA.responsable;
   }
 
   updateInfoTPA(id: number, fecha: string, responsable: string) {
     const muestra = this.muestraALI.find(m => m.ALIMuestra == id);
     if (muestra) {
-      muestra.ultimaActualizacionTPA = fecha;
-      muestra.responsableTPA = responsable;
+      muestra.reporteTPA.ultimaActualizacion = fecha;
+      muestra.reporteTPA.responsable = responsable;
     }
   }
 
   updateDatosReporteTPA(id: number, datos: any) {
     const muestra = this.muestraALI.find(m => m.ALIMuestra == id);
     if (muestra) {
-      muestra.datosReporteTPA = datos;
+      muestra.reporteTPA.datosReporte = datos;
     }
   }
 
   getDatosReporteTPA(id: number): any {
-    return this.muestraALI.find(m => m.ALIMuestra == id)?.datosReporteTPA;
+    return this.muestraALI.find(m => m.ALIMuestra == id)?.reporteTPA.datosReporte;
   }
 
   agregarMuestraALI(id: number, codigoSerna: number) {
 
-    const nuevaMuestra: ALI = { ALIMuestra: id, CodigoSerna: codigoSerna, estadoTPA: 'No realizado', estadoRAM: 'No realizado' }
+    const nuevaMuestra: ALI = {
+      ALIMuestra: id, CodigoSerna: codigoSerna,
+      reporteTPA: { estado: 'No realizado' },
+      reporteRAM: { estado: 'No realizado' }
+    }
     this.muestraALI.push(nuevaMuestra);
   }
 
 
-  getMaterialesPesados(): any[] {
-    return [
-      { nombre: '--- INSTRUMENTOS ---', valor: '', esTitulo: true },
-      { nombre: 'Cuchara', valor: 'cuchara', esTitulo: false },
-      { nombre: 'Bisturí', valor: 'bisturi', esTitulo: false },
-      { nombre: 'Pinzas', valor: 'pinzas', esTitulo: false },
-      { nombre: '--- PIPETAS 1 ML ---', valor: '', esTitulo: true },
-      { nombre: '\u00A0\u00A0 Pipeta 22-M', valor: '22-M', esTitulo: false },
-      { nombre: '\u00A0\u00A0 Pipeta 23-M', valor: '23-M', esTitulo: false },
-      { nombre: '\u00A0\u00A0 Pipeta 72-M', valor: '72-M', esTitulo: false },
-      { nombre: '\u00A0\u00A0 Pipeta 98-M', valor: '98-M', esTitulo: false },
-      { nombre: '\u00A0\u00A0 Pipeta 100-M', valor: '100-M', esTitulo: false },
-      { nombre: '\u00A0\u00A0 Pipeta 102-M', valor: '102-M', esTitulo: false },
-      { nombre: '--- PIPETAS 10 ML ---', valor: '', esTitulo: true },
-      { nombre: '\u00A0\u00A0 Pipeta 32-M', valor: '32-M', esTitulo: false },
-      { nombre: '\u00A0\u00A0 Pipeta 75-M', valor: '75-M', esTitulo: false },
-      { nombre: '\u00A0\u00A0 Pipeta 94-M', valor: '94-M', esTitulo: false },
-      { nombre: '\u00A0\u00A0 Pipeta 103-M', valor: '103-M', esTitulo: false },
-      { nombre: '\u00A0\u00A0 Pipeta 106-M', valor: '106-M', esTitulo: false },
-    ];
-  }
-  getLugaresAlmacenamiento() {
-    return [
-      { id: 1, nombre: 'Freezer 33-M' },
-      { id: 2, nombre: 'Refrigerador 33-M' },
-      { id: 3, nombre: 'Mesón Siembra' },
-      { id: 4, nombre: 'Gabinete sala Transpaso' }
-    ];
-  }
-
-  getResponsables() {
-    return [
-      { id: 1, nombre: 'Olaya' },
-      { id: 2, nombre: 'Jorge' },
-      { id: 3, nombre: 'Sandy' },
-      { id: 4, nombre: 'Priscila' },
-      { id: 5, nombre: 'Matias' }
-    ];
-  }
-
-  getEquiposInstrumentos() {
-    return [
-      { id: 1, nombre: 'Balanza 74-M' },
-      { id: 2, nombre: 'Camara Flujo laminar 8-M' },
-      { id: 3, nombre: 'Balanza 6-M' },
-      { id: 4, nombre: 'Meson de Transpaso' },
-      { id: 5, nombre: 'Balanza 99-M' },
-      { id: 6, nombre: 'Balanza 108-M' }
-    ];
-  }
-
-  getChecklistLimpieza() {
-    return [
-      { id: 1, nombre: 'Mesón', seleccionado: true, bloqueado: true },
-      { id: 2, nombre: 'Stomacher 12-M', seleccionado: false, bloqueado: false },
-      { id: 3, nombre: 'Cámara Flujo laminar 8-M', seleccionado: false, bloqueado: false },
-      { id: 4, nombre: 'Balanza 74-M/108-M', seleccionado: false, bloqueado: false },
-      { id: 5, nombre: 'Balanza 6-M/99-M', seleccionado: false, bloqueado: false },
-      { id: 6, nombre: 'Gabinete', seleccionado: false, bloqueado: false },
-      { id: 7, nombre: 'Desinfectante en aerosol', seleccionado: true, bloqueado: true }
-    ];
-  }
-
-  getMaterialSiembra() {
-    return [
-      { id: 1, nombre: 'Puntas 1 ML' },
-      { id: 2, nombre: 'Puntas 10ML' },
-      { id: 3, nombre: 'Placas estériles 57cm2/150mm' },
-      { id: 4, nombre: 'Asas Drigalsky' },
-      { id: 5, nombre: 'Blender' },
-      { id: 6, nombre: 'Bolsas estériles' },
-      { id: 7, nombre: 'Probeta 250 ML' },
-      { id: 8, nombre: 'Probeta 100 ML' }
-    ];
-  }
-
-  getEquiposSiembra() {
-    return [
-      { id: 1, nombre: 'Baño-5m', seleccionado: false },
-      { id: 2, nombre: 'Homogenizador 12-m', seleccionado: false },
-      { id: 3, nombre: 'Cuenta colonias 9-M', seleccionado: false },
-      { id: 4, nombre: 'Cuenta Colonias 101-m', seleccionado: false },
-      { id: 5, nombre: 'pHmetro 93-m', seleccionado: false },
-      { id: 6, nombre: 'pipetas desechables', seleccionado: false },
-    ];
-  }
-
-  getDiluyentes() {
-    return [
-      { id: 1, nombre: 'AP 0,1 90ml' },
-      { id: 2, nombre: 'AP 0,1 99ml' },
-      { id: 3, nombre: 'AP 0,1 450ml' },
-      { id: 4, nombre: 'AP 0,1 225ml' },
-      { id: 5, nombre: 'AP 0,1 500ml' },
-      { id: 6, nombre: 'AP 0,1 tubosml' },
-      { id: 7, nombre: 'PBS 450 ml' },
-      { id: 8, nombre: 'SPS 225 ml' },
-      { id: 9, nombre: 'SPS Tubos' },
-      { id: 10, nombre: 'SPS sa 90ml' },
-      { id: 11, nombre: 'SPS sa tubos' }
-    ];
-  }
 }

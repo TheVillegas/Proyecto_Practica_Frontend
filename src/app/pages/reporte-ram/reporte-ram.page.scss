@@ -1,0 +1,113 @@
+ion-content {
+    --background: #f4f5f7;
+}
+
+ion-grid {
+    padding: 10px;
+}
+
+.contenedor_label {
+    background: white;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+}
+
+/* Cabecera del acordeón */
+ion-accordion ion-item[slot="header"] {
+    --background: #f9fafb;
+    --min-height: 55px;
+    --border-width: 0;
+}
+
+/* Título de la etapa */
+.titulo_contenedor {
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
+    letter-spacing: 0.5px;
+}
+
+.contenido_del_label {
+    background: white;
+    padding: 15px;
+}
+
+/* Estilos de Inputs para emular TPA */
+ion-input,
+ion-select,
+ion-textarea {
+    --padding-start: 12px;
+    --padding-end: 12px;
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    --padding-bottom: 10px;
+    --background: #ffffff;
+    border: 1px solid #555555;
+    /* Más oscuro para mayor contraste */
+    border-radius: 6px;
+    font-size: 14px;
+    color: #4b5563;
+    margin-top: 5px;
+    min-height: 45px;
+}
+
+ion-label {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    margin-bottom: 4px;
+    display: block;
+    /* Asegura que la etiqueta esté arriba */
+}
+
+.linea_divisoria {
+    border: 0;
+    border-top: 1px solid #e5e7eb;
+    margin: 20px 0;
+}
+
+/* Clases específicas para el layout de Stage 3 */
+.contendor_doble {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+    align-items: flex_end;
+}
+
+.item-input-custom {
+    --background: transparent;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+}
+
+/* Clase auxiliar para inputs agrupados si los hay */
+.inputs_almedio {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    /* Espacio entre inputs verticales */
+}
+
+/* Para los acordeones dentro del loop, quizás quieras margen */
+ion-accordion {
+    margin-bottom: 1px;
+}
+
+/* Estilo para los resultados que son más altos/grandes */
+.inputs_resultados {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 35px;
+}
+
+.titulo_resultado {
+    margin-bottom: 5px;
+}
+
+ion-row {
+    align-items: flex-start;
+}

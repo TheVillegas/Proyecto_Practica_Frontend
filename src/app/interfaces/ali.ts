@@ -1,14 +1,12 @@
+import { ReporteRAM } from './reporte-ram.interface';
+import { ReporteTPA } from './reporte-tpa.interface';
+
 export interface ALI {
     ALIMuestra: number;
     CodigoSerna: number;
 
-    estadoTPA: 'Verificado' | 'Borrador' | 'No realizado';
-    estadoRAM: 'Verificado' | 'Borrador' | 'No realizado';
+    reporteTPA: ReporteTPA;
+    reporteRAM: ReporteRAM;
 
-    ultimaActualizacionTPA?: string;
-    responsableTPA?: string;
-    ultimaActualizacionRAM?: string;
-    responsableRAM?: string;
-    datosReporteTPA?: any;
     //Aca irian los demas estados de los reportes proximamentes digitalizados
 }
