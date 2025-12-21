@@ -59,6 +59,16 @@ export class ReporteRamPage implements OnInit {
     }
   ];
 
+  etapa4: any = {
+    controlAmbientalPesado: null,
+    horaInicio: '',
+    horaFin: '',
+    temperatura: null,
+    ufc: null,
+    controlSiembraEcoli: null,
+    blancoUfc: null
+  };
+
   agregarRepeticionEtapa3() {
     const nuevoNumero = this.listaRepeticionesEtapa3.length + 1;
     this.listaRepeticionesEtapa3.push({
