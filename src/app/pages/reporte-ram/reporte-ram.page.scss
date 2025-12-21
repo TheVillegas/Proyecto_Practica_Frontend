@@ -13,6 +13,8 @@ ion-grid {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border: 1px solid #e0e0e0;
     overflow: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Cabecera del acordeón */
@@ -110,4 +112,94 @@ ion-accordion {
 
 ion-row {
     align-items: flex-start;
+}
+
+.fila_centrada {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.columna-con-borde {
+    border-right: 1px solid #e0e0e0;
+}
+
+@media (max-width: 768px) {
+    .columna-con-borde {
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+}
+
+.zona-firma-final {
+    padding: 0 10px;
+    background-color: white;
+    margin-top: 0;
+}
+
+.titulo-firma {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.caja-upload {
+    width: 100%;
+    height: 120px;
+    background-color: #f3f4f6;
+    border: 2px solid #8b5cf6;
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+
+    &:active {
+        opacity: 0.8;
+        background-color: #e5e7eb;
+    }
+}
+
+.contenido-vacio {
+    text-align: center;
+    color: #4b5563;
+
+    .icono-upload {
+        font-size: 40px;
+        color: #8b5cf6;
+        margin-bottom: 5px;
+    }
+
+    p {
+        margin: 0;
+        font-size: 12px;
+        font-weight: 500;
+    }
+}
+
+.vista-previa {
+    width: 100%;
+    height: 100%;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+.textarea_observaciones_final {
+    height: 120px !important;
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    border-radius: 8px;
+    margin-top: 0;
 }

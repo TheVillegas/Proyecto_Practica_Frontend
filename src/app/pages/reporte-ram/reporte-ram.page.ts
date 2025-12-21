@@ -17,7 +17,9 @@ export class ReporteRamPage implements OnInit {
     private aliService: AliService,
     private route: ActivatedRoute,
     private ramService: RamService,
+    private router: Router,
     private catalogosService: CatalogosService,
+    private alertController: AlertController,
     private navCtrl: NavController
   ) { }
   seccionActual: String = '';
@@ -69,6 +71,50 @@ export class ReporteRamPage implements OnInit {
     blancoUfc: null
   };
 
+
+  etapa5: any = {
+    desfavorable: null,
+    tablaPagina: null,
+    limite: null,
+    fechaEntrega: '',
+    horaEntrega: ''
+  };
+
+  etapa6: any = {
+    duplicadoAli: '',
+    analisis: 'RAM',
+    duplicadoEstado: null,
+
+    controlBlanco: '',
+    controlBlancoEstado: null,
+
+    controlSiembra: '',
+    controlSiembraEstado: null
+  };
+
+  etapa7: any = {
+    firmaCoordinador: null,
+    observacionesFinales: ''
+  };
+
+  cargarFirmaCoordinador(event: any) {
+    const archivo = event.target.files[0];
+
+    if (archivo) {
+      if (!archivo.type.startsWith('image/')) {
+        console.error('Por favor suba una imagen');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        // Guardamos el string Base64 en la variable
+        this.etapa7.firmaCoordinador = reader.result as string;
+      };
+      reader.readAsDataURL(archivo);
+    }
+  }
+
   agregarRepeticionEtapa3() {
     const nuevoNumero = this.listaRepeticionesEtapa3.length + 1;
     this.listaRepeticionesEtapa3.push({
@@ -91,6 +137,19 @@ export class ReporteRamPage implements OnInit {
       this.listaEquiposIncubacion = this.catalogosService.getEquiposIncubacion();
       this.listaPipetas = this.catalogosService.getMicroPipetas();
       this.listaResponsables = this.catalogosService.getResponsables();
+
+      const datosGuardados = this.ramService.getDatosReporteRAM(id);
+      if (datosGuardados) {
+        this.etapa1 = datosGuardados.etapa1 || this.etapa1;
+        this.etapa2 = datosGuardados.etapa2 || this.etapa2;
+        if (datosGuardados.listaRepeticionesEtapa3) {
+          this.listaRepeticionesEtapa3 = datosGuardados.listaRepeticionesEtapa3;
+        }
+        this.etapa4 = datosGuardados.etapa4 || this.etapa4;
+        this.etapa5 = datosGuardados.etapa5 || this.etapa5;
+        this.etapa6 = datosGuardados.etapa6 || this.etapa6;
+        this.etapa7 = datosGuardados.etapa7 || this.etapa7;
+      }
     }
   }
 
@@ -112,19 +171,116 @@ export class ReporteRamPage implements OnInit {
   }
 
   async confirmarCancelar() {
-    console.log('Cancelar clicked');
-    // Implementar lógica de cancelar (ej. navegar atrás)
-    this.navCtrl.back();
+    const alert = await this.alertController.create({
+      header: 'Cancelar',
+      message: '¿Estás seguro de que deseas salir? Los cambios no guardados se perderán.',
+      buttons: [
+        {
+          text: 'Continuar editando',
+          role: 'cancel',
+          cssClass: 'secondary'
+        }, {
+          text: 'Salir',
+          handler: () => {
+            // Solo si estamos editando y cancelamos, volvemos a 'No realizado' o el estado previo lógico
+            if (this.codigoALI && !this.formularioBloqueado) {
+              this.ramService.updateEstadoRAM(parseInt(this.codigoALI), 'No realizado');
+            }
+            this.router.navigate(['/home']);
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   async confirmarGuardarBorrador() {
     console.log('Guardar Borrador clicked');
-    // Implementar lógica de guardar borrador
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: '¿Estás seguro de guardar el borrador?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancelar clicked');
+          }
+        },
+        {
+          text: 'Guardar',
+          handler: () => {
+            console.log('--- GUARDANDO BORRADOR (Simulación) ---');
+
+            const datosReporteRAM = {
+              codigoALI: this.codigoALI,
+              etapa1: this.etapa1,
+              etapa2: this.etapa2,
+              listaRepeticionesEtapa3: this.listaRepeticionesEtapa3,
+              etapa4: this.etapa4,
+              etapa5: this.etapa5,
+              etapa6: this.etapa6,
+              etapa7: this.etapa7
+            };
+
+            this.ultimaActtualizacionRam = new Date().toISOString();
+            this.responsableModificacionRam = 'Usuario Actual'; // Esto debería venir de un servicio de auth
+
+            if (this.codigoALI) {
+              const id = parseInt(this.codigoALI);
+              this.ramService.updateEstadoRAM(id, 'Borrador');
+              this.ramService.updateInfoRAM(id, this.ultimaActtualizacionRam, this.responsableModificacionRam);
+              this.ramService.updateDatosReporteRAM(id, datosReporteRAM);
+            }
+            this.router.navigate(['/home']);
+          }
+        }
+      ]
+    })
   }
 
   async confirmarFormulario() {
     console.log('Confirmar Formulario clicked');
-    // Implementar lógica de confirmar formulario
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: '¿Estás seguro de confirmar el formulario?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancelar clicked');
+          }
+        },
+        {
+          text: 'Confirmar',
+          handler: () => {
+            console.log('--- CONFIRMANDO FORMULARIO (Simulación) ---');
+            const datosReporteRAM = {
+              codigoALI: this.codigoALI,
+              etapa1: this.etapa1,
+              etapa2: this.etapa2,
+              listaRepeticionesEtapa3: this.listaRepeticionesEtapa3,
+              etapa4: this.etapa4,
+              etapa5: this.etapa5,
+              etapa6: this.etapa6,
+              etapa7: this.etapa7
+            };
+
+            this.ultimaActtualizacionRam = new Date().toISOString();
+            this.responsableModificacionRam = 'Usuario Actual'; // Esto debería venir de un servicio de auth
+
+            if (this.codigoALI) {
+              const id = parseInt(this.codigoALI);
+              this.ramService.updateEstadoRAM(id, 'Verificado');
+              this.ramService.updateInfoRAM(id, this.ultimaActtualizacionRam, this.responsableModificacionRam);
+              this.ramService.updateDatosReporteRAM(id, datosReporteRAM);
+            }
+            this.router.navigate(['/home']);
+          }
+        }
+      ]
+    })
   }
 
   salirVerificado() {

@@ -43,3 +43,14 @@
 :root {
     --ion-font-family: 'Inclusive Sans', sans-serif;
 }
+
+/* Ocultar flechas en Chrome, Safari, Edge, Opera */
+ion-input input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Ocultar flechas en Firefox */
+ion-input input[type=number] {
+    -moz-appearance: textfield;
+}
