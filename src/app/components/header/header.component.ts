@@ -25,16 +25,12 @@ export class HeaderComponent implements OnInit {
 
   goToHome() {
     console.log("Redirigiendo a Home");
-    //Faltaria agregar la dirreccion a la pagina
     this.router.navigate(["/home"]);
   }
 
   goToLogin() {
     console.log("Redirigiendo a Login");
-    //Faltaria agregar la dirreccion a la pagina
-    //this.router.navigate(["//(Nombre de la pagina)"]);
+    this.router.navigate(["/login"]);
   }
-
-  //Aca podemos agregar mas funciones Para el Header cuando se amplie el proyecto.
 
 }
