@@ -136,4 +136,19 @@ export class CatalogosService {
             { nombre: '\u00A0\u00A0 Pipeta 106-M', valor: '106-M', esTitulo: false },
         ]
     }
+
+    getControlAnalisis() {
+        return [
+            { nombre: "Ram" },
+            { nombre: "Hongos" },
+            { nombre: "Ram Ruso" }
+        ]
+    }
+    getFormasCalculo() {
+        return [
+            { id: 1, nombre: "Calculadora", seleccionado: false },
+            { id: 2, nombre: "Plantillas Excel (Almacenar)", seleccionado: false },
+            { id: 3, nombre: "Software", seleccionado: true }
+        ]
+    }
 }

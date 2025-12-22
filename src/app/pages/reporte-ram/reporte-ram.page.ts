@@ -27,10 +27,11 @@ export class ReporteRamPage implements OnInit {
   estadoRAM: string = '';
   listaEquiposIncubacion: any[] = [];
   listaPipetas: any[] = [];
+  listaControlAnalisis: any[] = [];
   listaResponsables: any[] = [];
   ultimaActtualizacionRam: string = '';
   responsableModificacionRam: string = '';
-
+  listaFormasCalculo: any[] = [];
   formularioBloqueado: boolean = false;
   etapa1: any = {
     horaInicioHomogenizado: '',
@@ -63,6 +64,7 @@ export class ReporteRamPage implements OnInit {
 
   etapa4: any = {
     controlAmbientalPesado: null,
+    controlUFC: null,
     horaInicio: '',
     horaFin: '',
     temperatura: null,
@@ -77,7 +79,8 @@ export class ReporteRamPage implements OnInit {
     tablaPagina: null,
     limite: null,
     fechaEntrega: '',
-    horaEntrega: ''
+    horaEntrega: '',
+    mercado: null
   };
 
   etapa6: any = {
@@ -94,8 +97,70 @@ export class ReporteRamPage implements OnInit {
 
   etapa7: any = {
     firmaCoordinador: null,
-    observacionesFinales: ''
+    observacionesFinales: '',
+    formaCalculoAnalista: [],
+    formaCalculoCoordinador: null
   };
+  ngOnInit() {
+    this.codigoALI = this.route.snapshot.paramMap.get('codigoALI')!;
+    if (this.codigoALI) {
+      const id = parseInt(this.codigoALI);
+      this.estadoRAM = this.aliService.getEstadoRAM(id);
+      this.ultimaActtualizacionRam = this.ramService.getUltimaActualizacionRAM(id) || '';
+      this.responsableModificacionRam = this.ramService.getResponsableRAM(id) || '';
+      this.listaEquiposIncubacion = this.catalogosService.getEquiposIncubacion();
+      this.listaPipetas = this.catalogosService.getMicroPipetas();
+      this.listaResponsables = this.catalogosService.getResponsables();
+      this.listaControlAnalisis = this.catalogosService.getControlAnalisis();
+      this.listaFormasCalculo = this.catalogosService.getFormasCalculo();
+
+      if (this.estadoRAM === 'Verificado') {
+        this.formularioBloqueado = true;
+      }
+
+      const datosGuardados = this.ramService.getDatosReporteRAM(id);
+      if (datosGuardados) {
+        this.etapa1 = datosGuardados.etapa1 || this.etapa1;
+        this.etapa2 = datosGuardados.etapa2 || this.etapa2;
+        if (datosGuardados.listaRepeticionesEtapa3) {
+          this.listaRepeticionesEtapa3 = datosGuardados.listaRepeticionesEtapa3;
+        }
+        this.etapa4 = datosGuardados.etapa4 || this.etapa4;
+        this.etapa5 = datosGuardados.etapa5 || this.etapa5;
+        this.etapa6 = datosGuardados.etapa6 || this.etapa6;
+        this.etapa6 = datosGuardados.etapa6 || this.etapa6;
+        this.etapa7 = datosGuardados.etapa7 || this.etapa7;
+      } else {
+        // Initialize default selection if no data loaded
+        this.etapa7.formaCalculoAnalista = this.listaFormasCalculo.filter(f => f.seleccionado);
+      }
+    }
+  }
+
+  isFormaCalculoSelected(formaCalculo: any): boolean {
+    if (!this.etapa7.formaCalculoAnalista) return false;
+    return this.etapa7.formaCalculoAnalista.some((f: any) => f.id === formaCalculo.id);
+  }
+
+  toggleFormaCalculo(formaCalculo: any, event: any) {
+    if (!this.etapa7.formaCalculoAnalista) {
+      this.etapa7.formaCalculoAnalista = [];
+    }
+
+    const isChecked = event.detail.checked;
+
+    if (isChecked) {
+      // Add if not already present
+      if (!this.isFormaCalculoSelected(formaCalculo)) {
+        this.etapa7.formaCalculoAnalista.push(formaCalculo);
+      }
+    } else {
+      // Remove if present
+      this.etapa7.formaCalculoAnalista = this.etapa7.formaCalculoAnalista.filter(
+        (f: any) => f.id !== formaCalculo.id
+      );
+    }
+  }
 
   cargarFirmaCoordinador(event: any) {
     const archivo = event.target.files[0];
@@ -127,31 +192,7 @@ export class ReporteRamPage implements OnInit {
     this.seccionActual = id;
   }
 
-  ngOnInit() {
-    this.codigoALI = this.route.snapshot.paramMap.get('codigoALI')!;
-    if (this.codigoALI) {
-      const id = parseInt(this.codigoALI);
-      this.estadoRAM = this.aliService.getEstadoRAM(id);
-      this.ultimaActtualizacionRam = this.ramService.getUltimaActualizacionRAM(id) || '';
-      this.responsableModificacionRam = this.ramService.getResponsableRAM(id) || '';
-      this.listaEquiposIncubacion = this.catalogosService.getEquiposIncubacion();
-      this.listaPipetas = this.catalogosService.getMicroPipetas();
-      this.listaResponsables = this.catalogosService.getResponsables();
 
-      const datosGuardados = this.ramService.getDatosReporteRAM(id);
-      if (datosGuardados) {
-        this.etapa1 = datosGuardados.etapa1 || this.etapa1;
-        this.etapa2 = datosGuardados.etapa2 || this.etapa2;
-        if (datosGuardados.listaRepeticionesEtapa3) {
-          this.listaRepeticionesEtapa3 = datosGuardados.listaRepeticionesEtapa3;
-        }
-        this.etapa4 = datosGuardados.etapa4 || this.etapa4;
-        this.etapa5 = datosGuardados.etapa5 || this.etapa5;
-        this.etapa6 = datosGuardados.etapa6 || this.etapa6;
-        this.etapa7 = datosGuardados.etapa7 || this.etapa7;
-      }
-    }
-  }
 
 
   openDatePicker(event: any) {
@@ -195,7 +236,6 @@ export class ReporteRamPage implements OnInit {
   }
 
   async confirmarGuardarBorrador() {
-    console.log('Guardar Borrador clicked');
     const alert = await this.alertController.create({
       header: 'Confirmar',
       message: '¿Estás seguro de guardar el borrador?',
@@ -236,7 +276,8 @@ export class ReporteRamPage implements OnInit {
           }
         }
       ]
-    })
+    });
+    await alert.present();
   }
 
   async confirmarFormulario() {
@@ -280,7 +321,8 @@ export class ReporteRamPage implements OnInit {
           }
         }
       ]
-    })
+    });
+    await alert.present();
   }
 
   salirVerificado() {
