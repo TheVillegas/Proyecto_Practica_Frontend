@@ -1,14 +1,58 @@
-<ion-header>
-  <ion-toolbar color="azul-oscuro">
-    <ion-buttons slot="end">
+<nav class="header-container">
 
-      <ion-button fill="clear" (click)="busquedaALI()">Busqueda ALI </ion-button>
+  <!-- Izquierda: Branding -->
+  <div class="logo-section" (click)="goToHome()">
+    <div class="icon-box">
+      <ion-icon name="flask-outline"></ion-icon>
+    </div>
+    <div class="brand-group">
+      <span class="brand-name">AsisTec</span>
+      <span class="brand-subtitle">Lab Management</span>
+    </div>
+  </div>
 
-      <ion-button fill="clear" (click)="generarALI()">Generar ALI Basico</ion-button>
+  <!-- Centro: Navegación (Píldora) -->
+  <div class="nav-pill-container">
 
-      <ion-button fill="clear" (click)="goToHome()">Home</ion-button>
+    <!-- Home -->
+    <button (click)="goToHome()" [ngClass]="{'active': activeSegment === 'home', 'inactive': activeSegment !== 'home'}"
+      class="nav-btn">
+      Home
+    </button>
 
-      <ion-button fill="clear" (click)="goToLogin()">Cerrar Sesion</ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+    <!-- Búsqueda ALI -->
+    <button (click)="busquedaALI()"
+      [ngClass]="{'active': activeSegment === 'busqueda', 'inactive': activeSegment !== 'busqueda'}" class="nav-btn">
+      Búsqueda ALI
+    </button>
+
+    <!-- Generar ALI -->
+    <button (click)="generarALI()"
+      [ngClass]="{'active': activeSegment === 'generar', 'inactive': activeSegment !== 'generar'}" class="nav-btn">
+      Generar ALI
+    </button>
+  </div>
+
+  <!-- Derecha: Perfil -->
+  <div class="user-section">
+    <!-- Info Usuario -->
+    <div class="user-info">
+      <div class="user-name">Matías Villegas</div>
+      <div class="user-role">Analista</div>
+    </div>
+
+    <!-- Avatar -->
+    <div class="avatar-box group">
+      <img src="https://avatars.githubusercontent.com/u/127423201?v=4&size=64" alt="Avatar">
+    </div>
+
+    <!-- Separador -->
+    <div class="separator"></div>
+
+    <!-- Botón Salir -->
+    <button (click)="goToLogin()" class="logout-btn" title="Cerrar Sesión">
+      <ion-icon name="log-out-outline"></ion-icon>
+    </button>
+  </div>
+
+</nav>
