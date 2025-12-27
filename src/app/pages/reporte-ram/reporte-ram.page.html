@@ -337,6 +337,30 @@
               <ion-input [disabled]="formularioBloqueado" [(ngModel)]="etapa5.mercado"></ion-input>
             </ion-col>
           </ion-row>
+          <ion-row class="ion-justify-content-center ion-padding-top">
+            <ion-col size="2">
+              <!--Label para adjuntar imagenes-->
+              <ion-label>Agregar Imagen del Manual de Inocuidad :</ion-label>
+              <div class="caja-upload" (click)="!formularioBloqueado && inputManual.click()"
+                [class.tiene-imagen]="etapa5.imagenManual" [class.bloqueado]="formularioBloqueado">
+
+                <div *ngIf="!etapa5.imagenManual" class="contenido-vacio">
+                  <ion-icon name="cloud-upload-outline" class="icono-upload"></ion-icon>
+                  <p>Adjuntar Imagen</p>
+                </div>
+
+                <div *ngIf="etapa5.imagenManual" class="vista-previa">
+                  <img [src]="etapa5.imagenManual" alt="Imagen Manual" />
+                  <div class="capa-eliminar">
+                    <span>Cambiar Imagen</span>
+                  </div>
+                </div>
+
+              </div>
+              <input #inputManual type="file" accept="image/*" (change)="cargarImagenManual($event)"
+                style="display: none;" />
+            </ion-col>
+          </ion-row>
         </ion-grid>
       </div>
     </ion-accordion>

@@ -11,10 +11,15 @@ import { query } from '@angular/animations';
 export class ALIItemAccordeonComponent implements OnInit {
 
   @Input() muestra!: ALI;
+  isExpanded: boolean = false;
 
   constructor(private router: Router) { }
 
   ngOnInit() { }
+
+  toggleExpand() {
+    this.isExpanded = !this.isExpanded;
+  }
 
   getColorEstado(estado: string | undefined): string {
     if (!estado) {
@@ -37,14 +42,16 @@ export class ALIItemAccordeonComponent implements OnInit {
         return 'badge-rojo';
     }
   }
-  goToReporteTPA() {
+  goToReporteTPA(event?: Event) {
+    if (event) event.stopPropagation();
     console.log("Redirigiendo a Reporte TPA");
     console.log(this.muestra.ALIMuestra);
     //cambiar el query params una vez implementado el backend
     this.router.navigate(["/reporte-tpa", this.muestra.ALIMuestra], { queryParams: { estadoTPA: this.muestra.reporteTPA.estado } });
   }
 
-  goToReporteRAM() {
+  goToReporteRAM(event?: Event) {
+    if (event) event.stopPropagation();
     console.log("Redirigiendo a Reporte RAM");
     console.log(this.muestra.ALIMuestra);
     //cambiar el query params una vez implementado el backend

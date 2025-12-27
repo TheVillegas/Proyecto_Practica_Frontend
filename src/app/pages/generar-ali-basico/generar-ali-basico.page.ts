@@ -21,7 +21,8 @@ export class GenerarALiBasicoPage implements OnInit {
   ) {
     this.formularioIngresoALI = this.formBuilder.group({
       aliMuestra: ["", Validators.required],
-      codigoSerna: ['']
+      codigoSerna: [''],
+      observacionesCliente: ['']
     })
   }
   ngOnInit() {

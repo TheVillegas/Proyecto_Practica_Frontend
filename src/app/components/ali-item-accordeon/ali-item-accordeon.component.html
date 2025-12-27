@@ -1,50 +1,122 @@
-<ion-accordion value="item-{{muestra.ALIMuestra}}">
-  <ion-item slot="header" color="light" lines="none">
-    <ion-label class="titulo-ALI">
-      Muestra ALI : <strong>{{muestra.ALIMuestra}}</strong>
-    </ion-label>
-  </ion-item>
+<!-- Card Container matches HTML prototype structure -->
+<div
+  class="card-hover rounded-xl overflow-hidden group mb-4 bg-white border border-gray-300 shadow-sm hover:shadow-md hover:border-brand-primary/50 transition-all">
 
-  <div class="caja-contenedora" slot="content">
-    <ion-grid>
-      <ion-row class="header-row">
-        <ion-col size="12" size-md="7">
-          <h3 class="seccion-titulo">Link a Reportes : </h3>
-        </ion-col>
-        <ion-col size="12" size-md="5" class="columna-estados-header">
-          <h3 class="seccion-titulo text-center">Estado de los Reportes : </h3>
-        </ion-col>
-      </ion-row>
+  <!-- Header / Summary Section -->
+  <div class="p-5 flex items-center justify-between cursor-pointer" (click)="toggleExpand()">
+    <div class="flex items-center gap-5">
+      <!-- Icon Container -->
+      <div class="h-12 w-12 rounded-full flex items-center justify-center shrink-0 transition-colors"
+        [ngClass]="isExpanded ? 'bg-brand-primary text-white shadow-md' : 'bg-blue-50 text-brand-primary group-hover:bg-brand-primary group-hover:text-white'">
+        <ion-icon name="flask-outline" class="text-2xl"></ion-icon>
+      </div>
 
-      <ion-row class="fila-reporte">
-        <ion-col size="12" size-md="7" class="columna-link">
-          <div class="contenedor-links">
-            <ion-icon name="radio-button-off"></ion-icon>
-            <a (click)="goToReporteTPA()">LINK A REPORTE TPA</a>
-          </div>
-        </ion-col>
-        <ion-col size="12" size-md="5" class="columna-estado">
-          <div [class]="'estado-reporte ' + getColorEstado(muestra.reporteTPA.estado)">
-            {{muestra.reporteTPA.estado}}
-          </div>
-        </ion-col>
-      </ion-row>
+      <!-- Title Section -->
+      <div>
+        <span class="text-xs font-semibold uppercase tracking-wider block mb-0.5"
+          [ngClass]="isExpanded ? 'text-brand-primary/70' : 'text-gray-400'">
+          ID de Muestra
+        </span>
+        <h3 class="text-xl font-bold font-mono tracking-tight"
+          [ngClass]="isExpanded ? 'text-brand-primary' : 'text-gray-900'">
+          {{muestra.CodigoSerna || muestra.ALIMuestra}}
+        </h3>
+      </div>
+    </div>
 
-      <ion-row class="fila-reporte">
-        <ion-col size="12" size-md="7" class="columna-link">
-          <div class="contenedor-links">
-            <ion-icon name="radio-button-off"></ion-icon>
-            <a (click)="goToReporteRAM()">LINK A REPORTE RAM</a>
-          </div>
-        </ion-col>
-        <ion-col size="12" size-md="5" class="columna-estado">
-          <div [class]="'estado-reporte ' + getColorEstado(muestra.reporteRAM.estado)">
-            {{muestra.reporteRAM.estado}}
-          </div>
-        </ion-col>
-      </ion-row>
-      <!--Agregar mas Estados de los proximos reportes-->
-    </ion-grid>
+    <!-- Actions (Right Side) -->
+    <div class="flex items-center gap-2 sm:gap-4">
+      <!-- Excel Button -->
+      <!-- Note: Using click stopPropagation to prevent toggling expansion when clicking button -->
+      <button class="btn-primary text-xs sm:text-sm py-1.5 sm:py-2" title="Generar reporte Excel"
+        (click)="$event.stopPropagation()">
+        <ion-icon name="document-text-outline" class="text-[18px] sm:text-[20px]"></ion-icon>
+        <span class="hidden sm:inline">Generar Excel</span>
+      </button>
 
+      <div class="h-6 w-px bg-gray-200 mx-1"></div>
+
+      <!-- Delete Button -->
+      <button class="btn-icon-danger flex items-center justify-center" title="Eliminar ALI"
+        (click)="$event.stopPropagation()">
+        <ion-icon name="trash-outline" class="text-xl"></ion-icon>
+      </button>
+
+      <!-- Expand/Collapse Button -->
+      <button class="transition-colors p-1 rounded-full flex items-center justify-center"
+        [ngClass]="isExpanded ? 'text-brand-primary bg-brand-primary/10' : 'text-gray-400 hover:text-brand-primary'"
+        title="Ver detalles">
+        <ion-icon [name]="isExpanded ? 'chevron-up-outline' : 'chevron-down-outline'" class="text-xl"></ion-icon>
+      </button>
+    </div>
   </div>
-</ion-accordion>
+
+  <!-- Expanded Details Section -->
+  <div *ngIf="isExpanded" class="p-6 bg-white border-t border-gray-100 animate-fade-in">
+    <div class="grid grid-cols-1 gap-6 text-sm">
+      <div class="col-span-1">
+        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Documentación Asociada</h4>
+        <div class="space-y-3">
+
+          <!-- Reporte TPA -->
+          <div class="flex items-center justify-between p-3 rounded-lg border transition-colors"
+            [ngClass]="muestra.reporteTPA.estado === 'Verificado' ? 'bg-blue-50/50 border-blue-100/50' : 'hover:bg-gray-50 border-transparent hover:border-gray-100'">
+            <div class="flex items-center gap-3">
+              <ion-icon
+                [name]="muestra.reporteTPA.estado === 'Verificado' ? 'checkmark-circle-outline' : 'document-outline'"
+                class="text-[20px]"
+                [ngClass]="muestra.reporteTPA.estado === 'Verificado' ? 'text-brand-primary' : 'text-gray-400'">
+              </ion-icon>
+              <div class="flex flex-col">
+                <span class="font-medium"
+                  [ngClass]="muestra.reporteTPA.estado === 'Verificado' ? 'text-gray-900' : 'text-gray-700'">
+                  Reporte TPA
+                </span>
+                <a class="text-xs text-brand-primary hover:underline mt-0.5 cursor-pointer"
+                  (click)="goToReporteTPA($event)">
+                  Ver documento
+                </a>
+              </div>
+            </div>
+            <span class="status-badge border" [ngClass]="{
+                    'bg-green-100 text-green-700 border-green-200': muestra.reporteTPA.estado === 'Verificado',
+                    'bg-gray-100 text-gray-600 border-gray-200': muestra.reporteTPA.estado !== 'Verificado'
+                  }">
+              {{ muestra.reporteTPA.estado || 'PENDIENTE' }}
+            </span>
+          </div>
+
+          <!-- Reporte RAM -->
+          <div class="flex items-center justify-between p-3 rounded-lg border transition-colors"
+            [ngClass]="muestra.reporteRAM.estado === 'Verificado' ? 'bg-blue-50/50 border-blue-100/50' : 'hover:bg-gray-50 border-transparent hover:border-gray-100'">
+            <div class="flex items-center gap-3">
+              <ion-icon
+                [name]="muestra.reporteRAM.estado === 'Verificado' ? 'checkmark-circle-outline' : 'document-outline'"
+                class="text-[20px]"
+                [ngClass]="muestra.reporteRAM.estado === 'Verificado' ? 'text-brand-primary' : 'text-gray-400'">
+              </ion-icon>
+              <div class="flex flex-col">
+                <span class="font-medium"
+                  [ngClass]="muestra.reporteRAM.estado === 'Verificado' ? 'text-gray-900' : 'text-gray-700'">
+                  Reporte RAM
+                </span>
+                <a class="text-xs text-brand-primary hover:underline mt-0.5 cursor-pointer"
+                  (click)="goToReporteRAM($event)">
+                  Ver documento
+                </a>
+              </div>
+            </div>
+            <span class="status-badge border" [ngClass]="{
+                    'bg-green-100 text-green-700 border-green-200': muestra.reporteRAM.estado === 'Verificado',
+                    'bg-gray-100 text-gray-600 border-gray-200': muestra.reporteRAM.estado !== 'Verificado'
+                  }">
+              {{ muestra.reporteRAM.estado || 'PENDIENTE' }}
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

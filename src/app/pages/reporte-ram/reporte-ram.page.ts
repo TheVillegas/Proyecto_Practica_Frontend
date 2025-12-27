@@ -80,7 +80,8 @@ export class ReporteRamPage implements OnInit {
     limite: null,
     fechaEntrega: '',
     horaEntrega: '',
-    mercado: null
+    mercado: null,
+    imagenManual: null
   };
 
   etapa6: any = {
@@ -180,6 +181,24 @@ export class ReporteRamPage implements OnInit {
     }
   }
 
+  cargarImagenManual(event: any) {
+    const archivo = event.target.files[0];
+
+    if (archivo) {
+      if (!archivo.type.startsWith('image/')) {
+        console.error('Por favor suba una imagen');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        // Guardamos el string Base64 en la variable
+        this.etapa5.imagenManual = reader.result as string;
+      };
+      reader.readAsDataURL(archivo);
+    }
+  }
+
   agregarRepeticionEtapa3() {
     const nuevoNumero = this.listaRepeticionesEtapa3.length + 1;
     this.listaRepeticionesEtapa3.push({
@@ -192,7 +211,20 @@ export class ReporteRamPage implements OnInit {
     this.seccionActual = id;
   }
 
-
+  openImagenPicker(event: any) {
+    const element = event.target;
+    if (element && typeof element.showPicker === 'function') {
+      element.showPicker();
+    }
+    // Si es un componente Ionic (ion-input)
+    else if (element && element.getInputElement) {
+      element.getInputElement().then((input: HTMLInputElement) => {
+        if (input && typeof input.showPicker === 'function') {
+          input.showPicker();
+        }
+      });
+    }
+  }
 
 
   openDatePicker(event: any) {
