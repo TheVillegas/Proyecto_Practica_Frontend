@@ -4,7 +4,7 @@
   <div class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
     <!-- Search Section -->
     <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
-      <div class="relative w-full md:w-3/4 group">
+      <div class="relative w-full group">
         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
           <ion-icon name="search-outline"
             class="text-xl text-brand-primary group-focus-within:text-brand-primary transition-colors"></ion-icon>
@@ -13,13 +13,7 @@
           class="block w-full pl-12 pr-4 py-3.5 border border-gray-300 rounded-xl leading-5 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 shadow-md transition-all"
           placeholder="Ingrese el código de la muestra ALI..." type="text" (input)="buscarALI($event)" />
       </div>
-      <button
-        class="w-full md:w-auto flex items-center justify-center px-5 py-3.5 border border-gray-300 bg-white text-sm font-medium rounded-xl text-gray-700 hover:bg-gray-50 hover:text-brand-primary hover:border-brand-primary/50 shadow-md transition-all">
-        <ion-icon name="options-outline" class="text-[20px] mr-2"></ion-icon>
-        Filtros Avanzados
-      </button>
     </div>
-
     <!-- Results Section -->
     <div class="space-y-6">
       <div class="flex items-end justify-between px-1">

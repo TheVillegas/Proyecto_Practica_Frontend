@@ -104,8 +104,8 @@ export class GenerarALiBasicoPage implements OnInit {
           role: 'confirm',
           handler: () => {
             console.log(this.formularioIngresoALI.value);
-            const { aliMuestra, codigoSerna } = this.formularioIngresoALI.value;
-            this.aliService.agregarMuestraALI(aliMuestra, codigoSerna);
+            const { aliMuestra, codigoSerna, observacionesCliente } = this.formularioIngresoALI.value;
+            this.aliService.agregarMuestraALI(aliMuestra, codigoSerna, observacionesCliente);
             this.router.navigate(["/home"])
             //Faltaria la logica con el backend; 
           }

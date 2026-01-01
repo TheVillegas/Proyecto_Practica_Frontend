@@ -4,6 +4,8 @@ import { ReporteTPA } from './reporte-tpa.interface';
 export interface ALI {
     ALIMuestra: number;
     CodigoSerna: number;
+    observacionesCliente: string;
+    observacionesGenerales: string;
 
     reporteTPA: ReporteTPA;
     reporteRAM: ReporteRAM;

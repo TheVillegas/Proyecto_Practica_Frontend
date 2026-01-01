@@ -1,95 +1,129 @@
-.titulo-ALI {
-    font-size: 20px;
-    color: black;
+.ali-card {
+    @apply rounded-xl overflow-hidden mb-4 bg-slate-100 border border-gray-300 shadow-sm hover:shadow-md hover:border-brand-primary/50 transition-all;
 }
 
-.caja-contenedora {
-    background-color: #f9f9f9;
+.card-header {
+    @apply p-5 flex items-center justify-between cursor-pointer;
 }
 
-.seccion-titulo {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #000;
+.header-left {
+    @apply flex items-center gap-5;
 }
 
-.header-row {
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 5px;
-    margin-bottom: 5px;
+.icon-container {
+    @apply h-12 w-12 rounded-full flex items-center justify-center shrink-0 transition-colors;
 }
 
-.fila-reporte {
-    border-bottom: 1px solid #e0e0e0;
-    padding: 12px 0;
-    align-items: center;
-    /* Vertically align link and badge */
+.title-section {}
 
-    &:last-child {
-        border-bottom: none;
-    }
+.label-id {
+    @apply text-xs font-semibold uppercase tracking-wider block mb-0.5;
 }
 
-.contenedor-links {
-    cursor: pointer;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    height: 26px;
-
-    ion-icon {
-        font-size: 12px;
-        color: black;
-    }
-
-    a {
-        color: #333;
-        text-decoration: underline;
-        font-size: 14px;
-        font-weight: 500;
-    }
+.value-id {
+    @apply text-xl font-bold font-mono tracking-tight;
 }
 
-.columna-estados-header {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding-right: 10px;
+.actions-right {
+    @apply flex items-center gap-2 sm:gap-4;
 }
 
-.columna-estado {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding-right: 30px;
+.btn-excel {
+    @apply bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-2 px-3 transition-colors text-xs sm:text-sm py-1.5 sm:py-2;
 }
 
-.estado-reporte {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    width: 150px;
-    height: 26px;
-    border-radius: 13px;
-
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    text-transform: uppercase;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+.excel-icon {
+    @apply text-[18px] sm:text-[20px];
 }
 
-.badge-azul {
-    background-color: #006EB6;
+.btn-separator {
+    @apply h-6 w-px bg-gray-200 mx-1;
 }
 
-.badge-gris {
-    background-color: #666666;
+.btn-delete {
+    @apply bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center justify-center h-[34px] w-[34px] transition-colors shadow-sm;
 }
 
-.badge-rojo {
-    background-color: #C41D1D;
+.delete-icon {
+    @apply text-lg;
+}
+
+.btn-expand {
+    @apply transition-colors p-1 rounded-full flex items-center justify-center;
+}
+
+.expand-icon {
+    @apply text-xl;
+}
+
+.expanded-section {
+    @apply p-6 bg-slate-50 border-t border-gray-100;
+}
+
+.details-grid {
+    @apply grid grid-cols-1 gap-6 text-sm;
+}
+
+.grid-col {
+    @apply col-span-1;
+}
+
+.details-wrapper {
+    @apply space-y-3;
+}
+
+.observations-wrapper {
+    @apply space-y-4;
+}
+
+.section-title {
+    @apply text-xs font-bold text-gray-400 uppercase tracking-wider mb-2;
+}
+
+.obs-readonly {
+    @apply p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 whitespace-pre-wrap;
+}
+
+.obs-textarea {
+    @apply w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none text-sm min-h-[80px] transition-all resize-y placeholder:text-gray-400 mb-2;
+}
+
+.btn-save-container {
+    @apply flex justify-end;
+}
+
+.btn-save {
+    @apply bg-brand-primary hover:bg-ion-primary-dark text-white font-medium rounded-lg shadow-sm transition-colors py-1.5 px-4 text-xs;
+}
+
+.doc-section-title {
+    @apply text-xs font-bold text-gray-400 uppercase tracking-wider mb-4;
+}
+
+.doc-card {
+    @apply flex items-center justify-between p-3 rounded-lg border transition-colors;
+}
+
+.doc-icon-wrapper {
+    @apply flex items-center gap-3;
+}
+
+.doc-icon {
+    @apply text-[20px];
+}
+
+.doc-info {
+    @apply flex flex-col;
+}
+
+.doc-label {
+    @apply font-medium;
+}
+
+.doc-link {
+    @apply text-xs text-brand-primary hover:underline mt-0.5 cursor-pointer;
+}
+
+.status-badge-custom {
+    @apply inline-flex items-center justify-center border px-2 py-0.5 rounded text-xs font-medium;
 }

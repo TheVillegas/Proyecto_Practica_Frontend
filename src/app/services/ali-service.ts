@@ -8,17 +8,17 @@ export class AliService {
 
   muestraALI: ALI[] = [
     {
-      ALIMuestra: 1, CodigoSerna: 123456,
+      ALIMuestra: 1, CodigoSerna: 123456, observacionesCliente: '', observacionesGenerales: '',
       reporteTPA: { estado: 'Verificado', datosReporte: undefined },
       reporteRAM: { estado: 'No realizado', datosReporte: undefined }
     },
     {
-      ALIMuestra: 2, CodigoSerna: 654321,
+      ALIMuestra: 2, CodigoSerna: 654321, observacionesCliente: '', observacionesGenerales: '',
       reporteTPA: { estado: 'Borrador', datosReporte: undefined },
       reporteRAM: { estado: 'Borrador', datosReporte: undefined }
     },
     {
-      ALIMuestra: 3, CodigoSerna: 111111,
+      ALIMuestra: 3, CodigoSerna: 111111, observacionesCliente: '', observacionesGenerales: '',
       reporteTPA: { estado: 'No realizado', datosReporte: undefined },
       reporteRAM: { estado: 'Borrador', datosReporte: undefined }
     },
@@ -43,10 +43,24 @@ export class AliService {
     return this.muestraALI.find(m => m.ALIMuestra == id)?.reporteRAM.estado!;
   }
 
+  getObservacionesCliente(id: number): string {
+    return this.muestraALI.find(m => m.ALIMuestra == id)?.observacionesCliente!;
+  }
+  getObservacionesGenerales(id: number): string {
+    return this.muestraALI.find(m => m.ALIMuestra == id)?.observacionesGenerales!;
+  }
+
   updateEstadoTPA(id: number, nuevoEstado: 'Verificado' | 'Borrador' | 'No realizado') {
     const muestra = this.muestraALI.find(m => m.ALIMuestra == id);
     if (muestra) {
       muestra.reporteTPA.estado = nuevoEstado;
+    }
+  }
+
+  updateObservacionesGenerales(id: number, observacionesGenerales: string) {
+    const muestra = this.muestraALI.find(m => m.ALIMuestra == id);
+    if (muestra) {
+      muestra.observacionesGenerales = observacionesGenerales;
     }
   }
 
@@ -77,15 +91,21 @@ export class AliService {
     return this.muestraALI.find(m => m.ALIMuestra == id)?.reporteTPA.datosReporte;
   }
 
-  agregarMuestraALI(id: number, codigoSerna: number) {
+  agregarMuestraALI(id: number, codigoSerna: number, observacionesCliente: string) {
 
     const nuevaMuestra: ALI = {
-      ALIMuestra: id, CodigoSerna: codigoSerna,
+      ALIMuestra: id, CodigoSerna: codigoSerna, observacionesCliente: observacionesCliente, observacionesGenerales: '',
       reporteTPA: { estado: 'No realizado' },
       reporteRAM: { estado: 'No realizado' }
     }
     this.muestraALI.push(nuevaMuestra);
   }
 
+  eliminarMuestra(id: number) {
+    const index = this.muestraALI.findIndex(m => m.ALIMuestra === id);
+    if (index > -1) {
+      this.muestraALI.splice(index, 1);
+    }
+  }
 
 }

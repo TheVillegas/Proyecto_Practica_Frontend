@@ -1,12 +1,12 @@
 /* register.page.scss */
 
 .register-page {
-    @apply bg-ion-light font-display antialiased min-h-screen flex flex-col;
+    @apply bg-[#F4F4F4] font-display antialiased min-h-screen flex flex-col;
 }
 
 // HEADER
 .register-header {
-    @apply bg-ion-azul-oscuro text-white py-4 px-4 md:px-6 shadow-md relative z-10;
+    @apply bg-[#29588C] text-white py-4 px-4 md:px-6 shadow-md relative z-10;
 
     .header-content {
         @apply flex items-center justify-between gap-3;
@@ -53,9 +53,7 @@
     .card-header {
         @apply px-8 pt-8 pb-6 text-center border-b border-gray-100 bg-gray-50/50;
 
-        h2 {
-            @apply text-2xl font-bold text-ion-azul-oscuro mb-2;
-        }
+        @apply text-2xl font-bold text-[#29588C] mb-2;
 
         p {
             @apply text-text-muted text-sm;
