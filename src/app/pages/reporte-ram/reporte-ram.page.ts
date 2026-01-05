@@ -349,6 +349,7 @@ export class ReporteRamPage implements OnInit {
               this.ramService.updateInfoRAM(id, this.ultimaActtualizacionRam, this.responsableModificacionRam);
               this.ramService.updateDatosReporteRAM(id, datosReporteRAM);
             }
+            console.log(datosReporteRAM)
             this.router.navigate(['/home']);
           }
         }
