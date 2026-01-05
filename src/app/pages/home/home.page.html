@@ -1,44 +1,61 @@
-<app-header></app-header>
+<app-header activePage="home"></app-header>
 
-<ion-content [fullscreen]="true">
-  <ion-card class="tarjeta_Personalizada" color="light">
-    <ion-card-header>
-      <ion-card-title> Bienvenido a la nueva interfaz digital de AsisTec </ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      La pagina web creada para Analistas del laboratorio AsisTec de la Pontificia Universidad Catolica de Valparaiso.
+<ion-content [fullscreen]="true" class="bg-slate-50">
+  <div class="home-container">
 
-    </ion-card-content>
-  </ion-card>
+    <!-- Sección de Bienvenida Compacta -->
+    <div class="welcome-card">
+      <div class="welcome-content">
+        <h1 class="welcome-title">Bienvenido a la nueva interfaz digital de AsisTec</h1>
+        <p class="welcome-subtitle">
+          La pagina web creada para analistas del laboratorio AsisTec de la Pontificia Universidad Catolica de
+          Valparaiso.
+        </p>
+      </div>
+    </div>
 
-  <div class="menu-grid">
+    <!-- Grid de Acciones (Diseño Rico) -->
+    <div class="action-grid">
 
-    <ion-button class="boton-panel" color="rojo-suave" expand="block" (click)="busquedaALI()">
-      Busqueda ALI
-    </ion-button>
+      <!-- Tarjeta: Búsqueda ALI -->
+      <div class="action-card" (click)="busquedaALI()">
+        <div class="card-main-content">
+          <div class="icon-badge">
+            <ion-icon name="search-outline"></ion-icon>
+          </div>
+          <div class="text-content">
+            <h3>Búsqueda ALI</h3>
+            <p>Consultar registros, historial y reportes.</p>
+          </div>
+          <div class="cta-link">
+            Consultar <span class="arrow">→</span>
+          </div>
+        </div>
 
-    <ion-button class="boton-panel" color="rojo-suave" expand="block">
-      LOREM IPSUM
-    </ion-button>
+        <!-- Watermark Decorativo -->
+        <ion-icon name="search-outline" class="watermark-icon"></ion-icon>
+      </div>
 
-    <ion-button class="boton-panel" color="rojo-suave" expand="block">
-      LOREM IPSUM
-    </ion-button>
+      <!-- Tarjeta: Generar ALI -->
+      <div class="action-card" (click)="generarALI()">
+        <div class="card-main-content">
+          <div class="icon-badge">
+            <ion-icon name="add-circle-outline"></ion-icon>
+          </div>
+          <div class="text-content">
+            <h3>Generar ALI Básico</h3>
+            <p>Crear nuevo registro de ingreso de muestras.</p>
+          </div>
+          <div class="cta-link">
+            Iniciar <span class="arrow">→</span>
+          </div>
+        </div>
 
-    <ion-button class="boton-panel" color="rojo-suave" expand="block" (click)="generarALI()">
-      Generar ALI Basico
-    </ion-button>
+        <!-- Watermark Decorativo -->
+        <ion-icon name="add-circle-outline" class="watermark-icon"></ion-icon>
+      </div>
 
-    <ion-button class="boton-panel" color="rojo-suave" expand="block">
-      LOREM IPSUM
-    </ion-button>
+    </div>
 
-    <ion-button class="boton-panel" color="rojo-suave" expand="block">
-      LOREM IPSUM
-    </ion-button>
   </div>
-
-
-
-
 </ion-content>

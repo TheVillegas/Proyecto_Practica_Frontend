@@ -1,32 +1,90 @@
-.tarjeta_Personalizada {
-
-    width: 90%;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 40px;
-
+ion-content {
+    --background: #f4f5f7;
 }
 
-.tarjeta_Personalizada ion-card-title {
-    font-size: 38px;
-    font-family: "Inclusive Sans", regular;
+.home-container {
+    @apply max-w-5xl mx-auto px-6 pt-8 pb-20;
 }
 
-.menu-grid {
-    display: grid;
+// === Welcome Section (Compact & Branded) ===
+.welcome-card {
+    @apply bg-white rounded-lg shadow-sm p-6 mb-8 border border-slate-200 border-l-4 border-l-[#006EB6]; // Brand stripe on left
 
-    grid-template-columns: repeat(3, 1fr);
+    .welcome-title {
+        @apply text-2xl font-bold text-slate-800 mb-1 tracking-tight;
+        font-family: 'Inter', sans-serif;
+    }
 
-    gap: 20px;
+    .welcome-subtitle {
+        @apply text-slate-500 text-base;
+        font-family: 'Inter', sans-serif;
+    }
+}
 
-    margin-top: 30px;
-    padding-left: 5%;
-    padding-right: 5%;
+// === Action Cards Grid ===
+.action-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
 
-    max-width: 1400px;
-    margin-left: auto;
-    margin-right: auto;
+.action-card {
+    // Base Card Style
+    @apply bg-white rounded-xl relative overflow-hidden cursor-pointer border border-slate-200 shadow-sm transition-all duration-300 ease-out;
 
-    height: 200px;
+    // Hover Effects (Scale, Shadow, Border Blue)
+    &:hover {
+        @apply shadow-lg border-blue-400 -translate-y-1;
+
+        .watermark-icon {
+            @apply scale-110 opacity-10;
+        }
+
+        .cta-link {
+            @apply text-[#006EB6];
+
+            .arrow {
+                @apply translate-x-1;
+            }
+        }
+    }
+
+    // Inner Layout (z-index higher to stay above watermark)
+    .card-main-content {
+        @apply relative z-10 p-6 flex flex-col h-full items-start;
+    }
+
+    // Icon Badge (Top Left)
+    .icon-badge {
+        @apply w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center mb-4 text-[#006EB6];
+
+        ion-icon {
+            @apply text-2xl;
+        }
+    }
+
+    // Text Content
+    .text-content {
+        @apply mb-6;
+
+        h3 {
+            @apply text-xl font-bold text-slate-800 mb-2 leading-tight;
+        }
+
+        p {
+            @apply text-slate-500 text-sm leading-relaxed;
+        }
+    }
+
+    // Call To Action (Bottom Left)
+    .cta-link {
+        @apply mt-auto font-bold text-blue-600 text-sm flex items-center gap-1 transition-colors;
+
+        .arrow {
+            @apply transition-transform duration-300;
+        }
+    }
+
+    // Watermark Icon (Absolute Bottom Right)
+    .watermark-icon {
+        @apply absolute -bottom-6 -right-6 text-9xl text-slate-900 opacity-[0.03] transform -rotate-12 transition-all duration-500 pointer-events-none;
+    }
 }

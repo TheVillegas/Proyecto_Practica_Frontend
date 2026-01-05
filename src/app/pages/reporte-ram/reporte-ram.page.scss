@@ -1,0 +1,200 @@
+ion-content {
+    --background: #f4f5f7;
+}
+
+ion-grid {
+    padding: 10px;
+}
+
+.contenedor_label {
+    background: white;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+}
+
+/* Cabecera del acordeón */
+ion-accordion ion-item[slot="header"] {
+    --background: #f9fafb;
+    --min-height: 55px;
+    --border-width: 0;
+}
+
+/* Título de la etapa */
+.titulo_contenedor {
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
+    letter-spacing: 0.5px;
+}
+
+.contenido_del_label {
+    background: white;
+    padding: 15px;
+}
+
+/* Estilos de Inputs para emular TPA */
+ion-input,
+ion-select,
+ion-textarea {
+    --padding-start: 12px;
+    --padding-end: 12px;
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    --padding-bottom: 10px;
+    --background: #ffffff;
+    border: 1px solid #555555; //Ajusta 
+    /* Más oscuro para mayor contraste */
+    border-radius: 6px;
+    font-size: 14px;
+    color: #4b5563;
+    margin-top: 5px;
+    min-height: 45px;
+}
+
+ion-label {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    margin-bottom: 4px;
+    display: block;
+    /* Asegura que la etiqueta esté arriba */
+}
+
+.linea_divisoria {
+    border: 0;
+    border-top: 1px solid #e5e7eb;
+    margin: 20px 0;
+}
+
+.item-input-custom {
+    --background: transparent;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+}
+
+/* Clase auxiliar para inputs agrupados si los hay */
+.inputs_almedio {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    /* Espacio entre inputs verticales */
+}
+
+/* Para los acordeones dentro del loop, quizás quieras margen */
+ion-accordion {
+    margin-bottom: 1px;
+}
+
+/* Estilo para los resultados que son más altos/grandes */
+.inputs_resultados {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 35px;
+}
+
+.titulo_resultado {
+    margin-bottom: 5px;
+}
+
+ion-row {
+    align-items: flex-start;
+}
+
+/* Estilos para la zona de firma */
+.zona-firma-final {
+    display: flex;
+    flex-direction: column;
+}
+
+.titulo-firma,
+.subtitulo {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 16px !important;
+}
+
+.caja-upload {
+    border: 2px dashed #8b5cf6;
+    border-radius: 8px;
+    background-color: #f9fafb;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    overflow: hidden;
+    position: relative;
+
+    &:hover {
+        background-color: #f3f4f6;
+        border-color: #7c3aed;
+    }
+
+    &.tiene-imagen {
+        border-style: solid;
+        padding: 0;
+    }
+
+    &.bloqueado {
+        opacity: 0.7;
+        pointer-events: none;
+        border-color: #d1d5db;
+    }
+}
+
+.contenido-vacio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #6b7280;
+    text-align: center;
+
+    .icono-upload {
+        font-size: 32px;
+        margin-bottom: 8px;
+        color: #8b5cf6;
+    }
+
+    p {
+        margin: 0;
+        font-size: 13px;
+    }
+}
+
+.vista-previa {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .capa-eliminar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.2s;
+        color: white;
+        font-weight: 500;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}

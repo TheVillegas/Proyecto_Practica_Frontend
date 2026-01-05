@@ -1,0 +1,155 @@
+/* login.page.scss */
+
+.login-page {
+    @apply bg-ion-light font-display antialiased min-h-screen flex flex-col;
+}
+
+.login-header {
+    @apply bg-ion-azul-oscuro text-white py-4 px-4 md:px-6 shadow-md;
+
+    .header-content {
+        @apply flex items-center gap-3;
+    }
+
+    .logo-box {
+        @apply bg-white/10 p-2 rounded-lg backdrop-blur-sm flex items-center justify-center;
+
+        ion-icon {
+            font-size: 24px;
+        }
+    }
+
+    h1 {
+        @apply text-xl md:text-2xl font-bold tracking-tight;
+    }
+}
+
+.main-container {
+    @apply flex-1 flex flex-col items-center justify-center p-6;
+}
+
+.content-wrapper {
+    @apply w-full max-w-md;
+}
+
+.text-header {
+    @apply text-center mb-10;
+
+    h2 {
+        @apply text-3xl md:text-4xl font-bold text-text-main mb-2;
+    }
+
+    p {
+        @apply text-text-muted;
+    }
+}
+
+.login-card {
+    @apply bg-surface rounded-2xl shadow-card border border-slate-200 p-8 md:p-10;
+}
+
+.form-group {
+    @apply space-y-6;
+}
+
+.field-group {
+    @apply space-y-2;
+
+    label {
+        @apply block text-sm font-medium text-text-main;
+    }
+}
+
+.input-wrapper {
+    @apply relative;
+
+    .field-icon {
+        @apply absolute left-3 top-1/2 -translate-y-1/2 text-slate-400;
+        font-size: 20px;
+    }
+
+    .input-field {
+        @apply block w-full rounded-lg border-slate-300 pl-10 pr-4 py-2.5 text-text-main shadow-input transition-all sm:text-sm;
+
+        &:focus {
+            @apply border-ion-primary ring-ion-primary outline-none;
+        }
+    }
+}
+
+.btn-primary {
+    @apply w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-ion-primary transition-colors;
+
+    &:hover {
+        @apply bg-ion-primary-dark;
+    }
+
+    &:focus {
+        @apply outline-none ring-2 ring-offset-2 ring-ion-primary;
+    }
+
+    &:disabled {
+        @apply opacity-70 cursor-not-allowed;
+    }
+}
+
+.btn-outline {
+    @apply w-full flex justify-center py-3 px-4 border border-ion-primary rounded-lg text-sm font-semibold text-ion-primary bg-white transition-colors;
+
+    &:hover {
+        @apply bg-slate-50;
+    }
+
+    &:focus {
+        @apply outline-none ring-2 ring-offset-2 ring-ion-primary;
+    }
+}
+
+.forgot-pass {
+    @apply flex justify-center pt-2;
+
+    a {
+        @apply text-sm font-medium text-text-muted underline decoration-slate-300 underline-offset-4 transition-all;
+
+        &:hover {
+            @apply text-ion-primary decoration-ion-primary;
+        }
+    }
+}
+
+.divider {
+    @apply relative my-8;
+
+    .line {
+        @apply absolute inset-0 flex items-center;
+
+        &::before {
+            content: '';
+            @apply w-full border-t border-slate-200 block;
+        }
+    }
+
+    .or-text {
+        @apply relative flex justify-center;
+
+        span {
+            @apply px-2 bg-surface text-sm text-slate-500;
+        }
+    }
+}
+
+.register-section {
+    @apply text-center space-y-4;
+
+    p {
+        @apply text-sm text-text-main font-medium;
+
+        span {
+            @apply text-text-muted font-normal;
+        }
+    }
+}
+
+.copyright {
+    @apply text-center mt-8 text-xs text-slate-400;
+}

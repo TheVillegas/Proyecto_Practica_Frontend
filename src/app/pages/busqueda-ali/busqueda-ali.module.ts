@@ -15,7 +15,7 @@ import { ComponentsModule } from 'src/app/components/components-module/component
     FormsModule,
     IonicModule,
     BusquedaALIPageRoutingModule,
-    ComponentsModule
+    ComponentsModule // Modulo de componentes compartidos
   ],
   declarations: [BusquedaALIPage]
 })

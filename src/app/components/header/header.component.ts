@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';;
+import { Component, OnInit, Input } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -9,9 +10,33 @@ import { Router } from '@angular/router';;
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {
+    // Escuchar cambios de ruta para actualizar el segmento activo
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      this.updateActiveSegment(event.urlAfterRedirects);
+    });
+  }
 
-  ngOnInit() { }
+  // Variable para saber qué botón pintar como activo ('home', 'busqueda', 'generar')
+  @Input() activeSegment: string = 'home';
+
+  ngOnInit() {
+    this.updateActiveSegment(this.router.url);
+  }
+
+  private updateActiveSegment(url: string) {
+    if (url.includes('/home')) {
+      this.activeSegment = 'home';
+    } else if (url.includes('/busqueda-ali')) {
+      this.activeSegment = 'busqueda';
+    } else if (url.includes('/generar-ali-basico')) {
+      this.activeSegment = 'generar';
+    } else if (url === '/') {
+      this.activeSegment = 'home';
+    }
+  }
 
   busquedaALI() {
     console.log("Redirigiendo a Busqueda ALI");
@@ -25,16 +50,12 @@ export class HeaderComponent implements OnInit {
 
   goToHome() {
     console.log("Redirigiendo a Home");
-    //Faltaria agregar la dirreccion a la pagina
     this.router.navigate(["/home"]);
   }
 
   goToLogin() {
     console.log("Redirigiendo a Login");
-    //Faltaria agregar la dirreccion a la pagina
-    //this.router.navigate(["//(Nombre de la pagina)"]);
+    this.router.navigate(["/login"]);
   }
-
-  //Aca podemos agregar mas funciones Para el Header cuando se amplie el proyecto.
 
 }

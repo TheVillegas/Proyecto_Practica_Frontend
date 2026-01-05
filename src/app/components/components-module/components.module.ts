@@ -1,24 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
 import { ALIItemAccordeonComponent } from '../ali-item-accordeon/ali-item-accordeon.component';
 import { TitulosReportesComponent } from '../titulos-reportes/titulos-reportes.component';
+import { FooterAccionesComponent } from '../footer-acciones/footer-acciones.component';
 
 @NgModule({
     declarations: [
         HeaderComponent,
         ALIItemAccordeonComponent,
-        TitulosReportesComponent
+        TitulosReportesComponent,
+        FooterAccionesComponent
     ],
     imports: [
         CommonModule,
-        IonicModule
+        IonicModule,
+        FormsModule
     ],
     exports: [
         HeaderComponent,
         ALIItemAccordeonComponent,
-        TitulosReportesComponent
+        TitulosReportesComponent,
+        FooterAccionesComponent
     ]
 })
 export class ComponentsModule { }

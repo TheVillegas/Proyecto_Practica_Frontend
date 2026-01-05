@@ -1,0 +1,96 @@
+<ion-content [fullscreen]="true">
+  <div class="login-page">
+    <!-- Header -->
+    <header class="login-header">
+      <div class="header-content">
+        <div class="logo-box">
+          <ion-icon name="flask-outline"></ion-icon>
+        </div>
+        <h1>Inicio Sesión</h1>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+      <div class="content-wrapper">
+        <!-- Text Header -->
+        <div class="text-header">
+          <h2>Ingresa tus Credenciales</h2>
+          <p>Bienvenido de nuevo al portal de laboratorio AsisTec</p>
+        </div>
+
+        <!-- Login Card -->
+        <div class="login-card">
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="form-group">
+            <!-- Email Field -->
+            <div class="field-group">
+              <label for="email">Correo Electrónico</label>
+              <div class="input-wrapper">
+                <ion-icon name="mail-outline" class="field-icon"></ion-icon>
+                <input class="input-field" id="email" type="email" formControlName="email"
+                  placeholder="ejemplo@asistec.com" />
+              </div>
+              <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="error-msg">
+                <ion-icon name="alert-circle-outline"></ion-icon>
+                <span *ngIf="loginForm.get('email')?.errors?.['required']">El correo es obligatorio.</span>
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="field-group">
+              <label for="password">Contraseña</label>
+              <div class="input-wrapper">
+                <ion-icon name="lock-closed-outline" class="field-icon"></ion-icon>
+                <input class="input-field" id="password" type="password" formControlName="contraseña"
+                  placeholder="••••••••" />
+              </div>
+              <div *ngIf="loginForm.get('contraseña')?.touched && loginForm.get('contraseña')?.invalid"
+                class="error-msg">
+                <ion-icon name="alert-circle-outline"></ion-icon>
+                <span *ngIf="loginForm.get('contraseña')?.errors?.['required']">La contraseña es obligatoria.</span>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" [disabled]="isLoading" class="btn-primary">
+              <span *ngIf="!isLoading">Iniciar Sesión</span>
+              <span *ngIf="isLoading">Cargando...</span>
+            </button>
+
+            <!-- Forgot Password -->
+            <div class="forgot-pass">
+              <a href="#">¿Te olvidaste de tu contraseña?</a>
+            </div>
+          </form>
+
+          <!-- Divider -->
+          <div class="divider">
+            <div class="line"></div>
+            <div class="or-text"><span>O</span></div>
+          </div>
+
+          <!-- Register Section -->
+          <div class="register-section">
+            <p>
+              ¿No tienes una cuenta?<br />
+              <span>Crea una para acceder al sistema</span>
+            </p>
+            <button type="button" (click)="goToRegister()" class="btn-outline">
+              Crear una Cuenta
+            </button>
+          </div>
+        </div>
+
+        <!-- Copyright -->
+        <p class="copyright">
+          © 2024 Laboratorio AsisTec<br>
+          Hecho con <ion-icon name="heart" class="text-red-500 align-middle"></ion-icon> y código por
+          <a href="https://linkedin.com/in/tu-perfil" target="_blank"
+            class="hover:text-ion-primary transition-colors font-medium">
+            Matías Villegas
+          </a>
+        </p>
+      </div>
+    </main>
+  </div>
+</ion-content>

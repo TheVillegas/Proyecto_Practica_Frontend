@@ -10,6 +10,10 @@ export class TitulosReportesComponent implements OnInit {
 
   @Input() codigoALI: string = '';
   @Input() estadoTPA: string = '';
+  @Input() estadoRAM: string = '';
+  @Input() tipoReporte: 'TPA' | 'RAM' | '' = '';
+  @Input() ultimaActualizacion: string = '';
+  @Input() responsable: string = '';
   constructor() { }
 
 

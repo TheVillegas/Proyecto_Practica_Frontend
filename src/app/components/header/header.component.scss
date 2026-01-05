@@ -1,0 +1,79 @@
+.header-container {
+    @apply w-full h-20 bg-ion-azul-oscuro px-6 flex items-center justify-between shadow-lg relative z-50;
+}
+
+.logo-section {
+    @apply flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 select-none cursor-pointer;
+
+    .icon-box {
+        @apply text-white text-2xl flex items-center justify-center;
+    }
+
+    .brand-group {
+        @apply flex flex-col leading-none;
+
+        .brand-name {
+            @apply text-white font-bold text-lg tracking-wide;
+        }
+
+        .brand-subtitle {
+            @apply text-blue-200 text-xs font-light uppercase tracking-wider;
+        }
+    }
+}
+
+.nav-pill-container {
+    @apply absolute left-1/2 transform -translate-x-1/2 bg-transparent rounded-full border border-white/20 flex items-center p-1 gap-1;
+}
+
+.nav-btn {
+    @apply px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 focus:outline-none;
+
+    &.active {
+        @apply bg-white text-ion-azul-oscuro font-bold shadow-md;
+    }
+
+    &.inactive {
+        @apply text-white bg-transparent hover:bg-white/10;
+    }
+}
+
+.user-section {
+    @apply flex items-center gap-4;
+
+    .user-info {
+        @apply text-right hidden md:block leading-tight;
+
+        .user-name {
+            @apply text-white font-bold text-sm;
+        }
+
+        .user-role {
+            @apply text-blue-200 text-xs font-medium;
+        }
+    }
+
+    .avatar-box {
+        @apply h-10 w-10 rounded-full bg-slate-200 border-2 border-white/30 overflow-hidden flex items-center justify-center shadow-md relative;
+
+        img {
+            @apply h-full w-full object-cover;
+        }
+    }
+
+    .separator {
+        @apply h-6 w-px bg-white/20 mx-1;
+    }
+}
+
+.logout-btn {
+    @apply bg-white text-ion-azul-oscuro shadow-md transition-all p-2 rounded-full flex items-center justify-center;
+
+    ion-icon {
+        @apply text-2xl;
+    }
+
+    &:hover {
+        @apply scale-110 shadow-lg;
+    }
+}
