@@ -1,0 +1,7 @@
+# --- Dependencias (Lo más importante) ---
+node_modules/
+**/node_modules/
+
+# --- Seguridad (Claves y secretos) ---
+.env
+**/Backend/.env

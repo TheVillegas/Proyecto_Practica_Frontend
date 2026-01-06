@@ -1,0 +1,30 @@
+const express = require("express");
+const app = express();
+const port = 3000;
+
+app.use(express.json());
+
+app.get("/", (req, res) => {
+    res.send("Servidor corriendo ✅");
+});
+
+// 11. Conexión a la BD
+const db = require('./config/DB.js');
+
+// Esperar a que la BD esté lista antes de arrancar el servidor
+db.initialize().then(() => {
+    const analistasRoutes = require('./routes/analistasRoutes.js');
+    const catalogoRoutes = require('./routes/catalogoRoutes.js');
+    const muestraAliRoutes = require('./routes/muestraAliRoutes.js');
+
+    app.use('/AsisTec/Usuarios', analistasRoutes);
+    app.use('/AsisTec/Catalogos', catalogoRoutes);
+    app.use('/AsisTec/MuestraALI', muestraAliRoutes);
+
+    app.listen(port, () => {
+        console.log(`El servidor esta corriendo en el puerto ${port}`);
+    });
+}).catch(err => {
+    console.error("No se pudo iniciar la aplicación debido a un error en la base de datos");
+    process.exit(1);
+});
