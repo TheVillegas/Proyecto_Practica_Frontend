@@ -65,6 +65,29 @@
               <h4 class="section-title">Observaciones Generales</h4>
               <textarea [(ngModel)]="muestra.observacionesGenerales" class="obs-textarea"
                 placeholder="Escriba aquí las observaciones generales..."></textarea>
+              <div class="boton-añadir-imagen">
+                <button class="btn-add-imagen" (click)="adjuntarImagen()">Adjuntar Imagen</button>
+              </div>
+
+              <!-- Lista de imágenes adjuntadas -->
+              <div *ngIf="muestra.imagenesObservaciones && muestra.imagenesObservaciones.length > 0"
+                class="imagenes-adjuntadas">
+                <h5 class="imagenes-title">Imágenes Adjuntadas:</h5>
+                <div class="imagen-item" *ngFor="let imagen of muestra.imagenesObservaciones; let i = index">
+                  <div class="imagen-preview">
+                    <img [src]="imagen.data" [alt]="imagen.nombre" class="thumbnail">
+                  </div>
+                  <div class="imagen-info">
+                    <span class="imagen-nombre" [title]="imagen.nombre">{{ imagen.nombre }}</span>
+                    <span class="imagen-metadata">{{ formatearTamanio(imagen.tamanio) }} • {{
+                      formatearFecha(imagen.fechaAdjunto) }}</span>
+                  </div>
+                  <button class="btn-eliminar-imagen" (click)="eliminarImagen(i)" title="Eliminar imagen">
+                    <ion-icon name="trash-outline"></ion-icon>
+                  </button>
+                </div>
+              </div>
+
               <div class="btn-save-container">
                 <button (click)="guardarObservaciones()" class="btn-save">
                   Guardar

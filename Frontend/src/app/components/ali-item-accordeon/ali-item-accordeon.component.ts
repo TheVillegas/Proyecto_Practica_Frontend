@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ALI } from '../../interfaces/ali';
 import { AliService } from '../../services/ali-service';
+import { ImagenUploadService } from '../../services/imagen-upload';
 import { Router } from '@angular/router';
 import { query } from '@angular/animations';
 import { AlertController } from '@ionic/angular';
@@ -15,7 +16,12 @@ export class ALIItemAccordeonComponent implements OnInit {
   @Input() muestra!: ALI;
   isExpanded: boolean = false;
 
-  constructor(private router: Router, private aliService: AliService, private alertController: AlertController) { }
+  constructor(
+    private router: Router,
+    private aliService: AliService,
+    private alertController: AlertController,
+    private imagenUploadService: ImagenUploadService
+  ) { }
 
   ngOnInit() { }
 
@@ -106,6 +112,89 @@ export class ALIItemAccordeonComponent implements OnInit {
     console.log(this.muestra.ALIMuestra);
     //cambiar el query params una vez implementado el backend
     this.router.navigate(["/reporte-ram", this.muestra.ALIMuestra], { queryParams: { estadoRAM: this.muestra.reporteRAM.estado } });
+  }
+
+  /**
+   * Función para adjuntar una imagen adicional en las observaciones generales
+   * Usa el servicio ImagenUploadService para manejar la selección y validación
+   */
+  async adjuntarImagen() {
+    // Usar el servicio para seleccionar la imagen
+    const imagen = await this.imagenUploadService.seleccionarImagen({
+      maxSize: 5 * 1024 * 1024, // 5MB
+      accept: 'image/jpeg,image/jpg,image/png,image/gif',
+      mostrarAlertas: true
+    });
+
+    if (!imagen) {
+      // Usuario canceló o hubo un error (ya manejado por el servicio)
+      return;
+    }
+
+    // Inicializar el array de imágenes si no existe
+    if (!this.muestra.imagenesObservaciones) {
+      this.muestra.imagenesObservaciones = [];
+    }
+
+    // Agregar la imagen al array
+    this.muestra.imagenesObservaciones.push(imagen);
+
+    // Mostrar confirmación
+    const alert = await this.alertController.create({
+      header: 'Imagen adjuntada',
+      message: `La imagen "${imagen.nombre}" se ha adjuntado correctamente`,
+      buttons: ['OK']
+    });
+    await alert.present();
+
+    console.log('Imagen adjuntada exitosamente:', imagen.nombre);
+  }
+
+  /**
+   * Elimina una imagen del array de imágenes adjuntadas
+   * @param index - Índice de la imagen a eliminar
+   */
+  async eliminarImagen(index: number) {
+    const alert = await this.alertController.create({
+      header: 'Confirmar eliminación',
+      message: '¿Está seguro de que desea eliminar esta imagen?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          handler: () => {
+            if (this.muestra.imagenesObservaciones) {
+              this.muestra.imagenesObservaciones.splice(index, 1);
+              console.log('Imagen eliminada del índice:', index);
+            }
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  /**
+   * Formatea el tamaño del archivo usando el servicio
+   * @param bytes - Tamaño en bytes
+   * @returns String formateado (ej: "1.5 MB")
+   */
+  formatearTamanio(bytes: number): string {
+    return this.imagenUploadService.formatearTamanio(bytes);
+  }
+
+  /**
+   * Formatea la fecha usando el servicio
+   * @param fechaISO - Fecha en formato ISO string
+   * @returns String formateado (ej: "07/01/2026")
+   */
+  formatearFecha(fechaISO: string): string {
+    return this.imagenUploadService.formatearFecha(fechaISO);
   }
 
 }

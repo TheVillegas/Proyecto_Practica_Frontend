@@ -1,14 +1,32 @@
 const db = require('../config/DB.js');
+const ReporteTPA = require('./reporteTPAModel.js');
 
 const MuestraALI = {};
 
-MuestraALI.crearMuestraALI = (datos, callback) => {
+MuestraALI.crearMuestraALI = async (datos, callback) => {
     const { codigo_ali, codigo_otros, observaciones_cliente, observaciones_generales } = datos;
 
-    const sql = 'INSERT INTO MUESTRAS_ALI (codigo_ali, codigo_otros, observaciones_cliente, observaciones_generales) VALUES (:codigo_ali, :codigo_otros, :observaciones_cliente, :observaciones_generales)';
-    db.execute(sql, { codigo_ali, codigo_otros, observaciones_cliente, observaciones_generales }, { autoCommit: true })
-        .then(result => callback(null, result))
-        .catch(err => callback(err));
+    try {
+        // 1. Crear la muestra ALI
+        const sql = 'INSERT INTO MUESTRAS_ALI (codigo_ali, codigo_otros, observaciones_cliente, observaciones_generales) VALUES (:codigo_ali, :codigo_otros, :observaciones_cliente, :observaciones_generales)';
+        const result = await db.execute(sql, { codigo_ali, codigo_otros, observaciones_cliente, observaciones_generales }, { autoCommit: false });
+
+        // 2. Crear automáticamente el reporte TPA con estado NO_REALIZADO
+        await ReporteTPA.crearReporteTPAInicial(codigo_ali);
+
+        // 3. Commit de ambas operaciones
+        await db.execute('COMMIT');
+
+        callback(null, result);
+    } catch (err) {
+        // Rollback en caso de error
+        try {
+            await db.execute('ROLLBACK');
+        } catch (rollbackErr) {
+            console.error('Error en rollback:', rollbackErr);
+        }
+        callback(err);
+    }
 };
 
 MuestraALI.obtenerMuestraALI_porCodigoAli = (codigo_ali, callback) => {

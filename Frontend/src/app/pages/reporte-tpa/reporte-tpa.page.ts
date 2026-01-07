@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AliService } from 'src/app/services/ali-service';
 import { CatalogosService } from 'src/app/services/catalogos.service';
+import { ImagenUploadService } from 'src/app/services/imagen-upload';
 import { IonContent, NavController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
@@ -69,7 +70,8 @@ export class ReporteTPAPage implements OnInit {
     private catalogosService: CatalogosService,
     private navCtrl: NavController,
     private alertController: AlertController,
-    private router: Router
+    private router: Router,
+    private imagenUploadService: ImagenUploadService
   ) { }
 
   ngOnInit() {
@@ -273,21 +275,19 @@ export class ReporteTPAPage implements OnInit {
     });
   }
 
-  cargarFirmaCoordinador(event: any) {
-    const archivo = event.target.files[0];
+  /**
+   * Adjunta la firma de la coordinadora usando el servicio centralizado
+   */
+  async adjuntarFirma() {
+    const firma = await this.imagenUploadService.seleccionarImagenBase64({
+      maxSize: 2 * 1024 * 1024, // 2MB para firmas
+      accept: 'image/png,image/jpeg,image/jpg',
+      mostrarAlertas: true
+    });
 
-    if (archivo) {
-      if (!archivo.type.startsWith('image/')) {
-        console.error('Por favor suba una imagen');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        // Guardamos el string Base64 en la variable
-        this.firmaCoordinador = reader.result as string;
-      };
-      reader.readAsDataURL(archivo);
+    if (firma) {
+      this.firmaCoordinador = firma;
+      console.log('Firma adjuntada exitosamente');
     }
   }
 

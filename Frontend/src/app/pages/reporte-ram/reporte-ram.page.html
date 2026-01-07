@@ -341,7 +341,7 @@
             <ion-col size="2">
               <!--Label para adjuntar imagenes-->
               <ion-label>Agregar Imagen del Manual de Inocuidad :</ion-label>
-              <div class="caja-upload" (click)="!formularioBloqueado && inputManual.click()"
+              <div class="caja-upload" (click)="!formularioBloqueado && adjuntarImagenManual()"
                 [class.tiene-imagen]="etapa5.imagenManual" [class.bloqueado]="formularioBloqueado">
 
                 <div *ngIf="!etapa5.imagenManual" class="contenido-vacio">
@@ -357,8 +357,6 @@
                 </div>
 
               </div>
-              <input #inputManual type="file" accept="image/*" (change)="cargarImagenManual($event)"
-                style="display: none;" />
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -470,7 +468,7 @@
               <div class="zona-firma-final">
                 <p class="titulo-firma">Firma de la Coordinadora de Área</p>
 
-                <div class="caja-upload" (click)="!formularioBloqueado && inputFirma.click()"
+                <div class="caja-upload" (click)="!formularioBloqueado && adjuntarFirma()"
                   [class.tiene-imagen]="etapa7.firmaCoordinador" [class.bloqueado]="formularioBloqueado">
 
                   <div *ngIf="!etapa7.firmaCoordinador" class="contenido-vacio">
@@ -486,8 +484,6 @@
                   </div>
 
                 </div>
-                <input #inputFirma type="file" accept="image/*" (change)="cargarFirmaCoordinador($event)"
-                  style="display: none;" />
               </div>
             </ion-col>
             <ion-col size="6">

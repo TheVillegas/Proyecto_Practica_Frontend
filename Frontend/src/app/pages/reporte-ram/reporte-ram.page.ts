@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AliService } from 'src/app/services/ali-service';
 import { RamService } from 'src/app/services/ram-service';
 import { CatalogosService } from 'src/app/services/catalogos.service';
+import { ImagenUploadService } from 'src/app/services/imagen-upload';
 @Component({
   selector: 'app-reporte-ram',
   templateUrl: './reporte-ram.page.html',
@@ -20,7 +21,8 @@ export class ReporteRamPage implements OnInit {
     private router: Router,
     private catalogosService: CatalogosService,
     private alertController: AlertController,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private imagenUploadService: ImagenUploadService
   ) { }
   seccionActual: String = '';
   codigoALI: string = '';
@@ -163,39 +165,35 @@ export class ReporteRamPage implements OnInit {
     }
   }
 
-  cargarFirmaCoordinador(event: any) {
-    const archivo = event.target.files[0];
+  /**
+   * Adjunta la firma de la coordinadora usando el servicio centralizado
+   */
+  async adjuntarFirma() {
+    const firma = await this.imagenUploadService.seleccionarImagenBase64({
+      maxSize: 2 * 1024 * 1024, // 2MB para firmas
+      accept: 'image/png,image/jpeg,image/jpg',
+      mostrarAlertas: true
+    });
 
-    if (archivo) {
-      if (!archivo.type.startsWith('image/')) {
-        console.error('Por favor suba una imagen');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        // Guardamos el string Base64 en la variable
-        this.etapa7.firmaCoordinador = reader.result as string;
-      };
-      reader.readAsDataURL(archivo);
+    if (firma) {
+      this.etapa7.firmaCoordinador = firma;
+      console.log('Firma adjuntada exitosamente');
     }
   }
 
-  cargarImagenManual(event: any) {
-    const archivo = event.target.files[0];
+  /**
+   * Adjunta la imagen del manual de inocuidad usando el servicio centralizado
+   */
+  async adjuntarImagenManual() {
+    const imagen = await this.imagenUploadService.seleccionarImagenBase64({
+      maxSize: 5 * 1024 * 1024, // 5MB para imágenes de manual
+      accept: 'image/png,image/jpeg,image/jpg',
+      mostrarAlertas: true
+    });
 
-    if (archivo) {
-      if (!archivo.type.startsWith('image/')) {
-        console.error('Por favor suba una imagen');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        // Guardamos el string Base64 en la variable
-        this.etapa5.imagenManual = reader.result as string;
-      };
-      reader.readAsDataURL(archivo);
+    if (imagen) {
+      this.etapa5.imagenManual = imagen;
+      console.log('Imagen del manual adjuntada exitosamente');
     }
   }
 

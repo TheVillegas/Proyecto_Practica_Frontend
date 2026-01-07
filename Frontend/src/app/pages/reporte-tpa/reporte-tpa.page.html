@@ -319,7 +319,7 @@
               <div class="zona-firma-final">
                 <ion-label class="titulo-firma">Firma de la Coordinadora de Área</ion-label>
 
-                <div class="caja-upload" (click)="!formularioBloqueado && inputFirma.click()"
+                <div class="caja-upload" (click)="!formularioBloqueado && adjuntarFirma()"
                   [class.tiene-imagen]="firmaCoordinador" [class.bloqueado]="formularioBloqueado">
 
                   <div *ngIf="!firmaCoordinador" class="contenido-vacio">
@@ -335,8 +335,6 @@
                   </div>
 
                 </div>
-                <input #inputFirma type="file" accept="image/*" (change)="cargarFirmaCoordinador($event)"
-                  style="display: none;" />
               </div>
             </ion-col>
 

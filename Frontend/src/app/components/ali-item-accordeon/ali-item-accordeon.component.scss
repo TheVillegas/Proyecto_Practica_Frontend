@@ -88,8 +88,16 @@
     @apply w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none text-sm min-h-[80px] transition-all resize-y placeholder:text-gray-400 mb-2;
 }
 
+.boton-añadir-imagen {
+    @apply flex justify-start;
+}
+
 .btn-save-container {
     @apply flex justify-end;
+}
+
+.btn-add-imagen {
+    @apply bg-brand-primary hover:bg-ion-primary-dark text-white font-medium rounded-lg shadow-sm transition-colors py-1.5 px-4 text-xs;
 }
 
 .btn-save {
@@ -126,4 +134,45 @@
 
 .status-badge-custom {
     @apply inline-flex items-center justify-center border px-2 py-0.5 rounded text-xs font-medium;
+}
+
+// Estilos para la sección de imágenes adjuntadas
+.imagenes-adjuntadas {
+    @apply mt-4 space-y-2;
+}
+
+.imagenes-title {
+    @apply text-xs font-bold text-gray-500 uppercase tracking-wider mb-3;
+}
+
+.imagen-item {
+    @apply flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg hover:border-brand-primary/50 transition-all;
+}
+
+.imagen-preview {
+    @apply shrink-0;
+}
+
+.thumbnail {
+    @apply w-16 h-16 object-cover rounded-md border border-gray-200;
+}
+
+.imagen-info {
+    @apply flex-1 min-w-0;
+}
+
+.imagen-nombre {
+    @apply block text-sm font-medium text-gray-800 truncate;
+}
+
+.imagen-metadata {
+    @apply block text-xs text-gray-500 mt-0.5;
+}
+
+.btn-eliminar-imagen {
+    @apply shrink-0 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg p-2 transition-colors;
+
+    ion-icon {
+        @apply text-lg;
+    }
 }

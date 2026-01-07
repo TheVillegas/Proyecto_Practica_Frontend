@@ -16,10 +16,13 @@ db.initialize().then(() => {
     const analistasRoutes = require('./routes/analistasRoutes.js');
     const catalogoRoutes = require('./routes/catalogoRoutes.js');
     const muestraAliRoutes = require('./routes/muestraAliRoutes.js');
+    const reporteTPARoutes = require('./routes/reporteTPARoutes.js');
+    //const reporteRAMRoutes = require('./routes/reporteRAMRoutes.js');
 
     app.use('/AsisTec/Usuarios', analistasRoutes);
     app.use('/AsisTec/Catalogos', catalogoRoutes);
     app.use('/AsisTec/MuestraALI', muestraAliRoutes);
+    app.use('/AsisTec/ReporteTPA', reporteTPARoutes);
 
     app.listen(port, () => {
         console.log(`El servidor esta corriendo en el puerto ${port}`);
