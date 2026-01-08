@@ -5,27 +5,49 @@ const MuestraALI = {};
 
 MuestraALI.crearMuestraALI = async (datos, callback) => {
     const { codigo_ali, codigo_otros, observaciones_cliente, observaciones_generales } = datos;
+    let connection;
 
     try {
-        // 1. Crear la muestra ALI
+        // Obtenemos una conexión nativa para manejar la transacción manualmente
+        connection = await db.getConnection();
+
+        // 1. Crear la muestra ALI (sin autoCommit)
         const sql = 'INSERT INTO MUESTRAS_ALI (codigo_ali, codigo_otros, observaciones_cliente, observaciones_generales) VALUES (:codigo_ali, :codigo_otros, :observaciones_cliente, :observaciones_generales)';
-        const result = await db.execute(sql, { codigo_ali, codigo_otros, observaciones_cliente, observaciones_generales }, { autoCommit: false });
 
-        // 2. Crear automáticamente el reporte TPA con estado NO_REALIZADO
-        await ReporteTPA.crearReporteTPAInicial(codigo_ali);
+        const result = await connection.execute(sql, {
+            codigo_ali,
+            codigo_otros,
+            observaciones_cliente,
+            observaciones_generales
+        }, { autoCommit: false });
 
-        // 3. Commit de ambas operaciones
-        await db.execute('COMMIT');
+        // 2. Crear automáticamente el reporte TPA (usando la misma conexión)
+        await ReporteTPA.crearReporteTPAInicial(codigo_ali, connection);
+
+        // 3. Si todo salió bien, hacemos COMMIT de ambas operaciones
+        await connection.commit();
 
         callback(null, result);
+
     } catch (err) {
-        // Rollback en caso de error
-        try {
-            await db.execute('ROLLBACK');
-        } catch (rollbackErr) {
-            console.error('Error en rollback:', rollbackErr);
+        console.error(`Error creando Muestra ALI ${codigo_ali}, realizando rollback:`, err);
+        if (connection) {
+            try {
+                await connection.rollback();
+            } catch (rollbackErr) {
+                console.error("Error al hacer rollback:", rollbackErr);
+            }
         }
         callback(err);
+    } finally {
+        // Siempre liberar la conexión al pool
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (closeErr) {
+                console.error("Error al cerrar conexión:", closeErr);
+            }
+        }
     }
 };
 

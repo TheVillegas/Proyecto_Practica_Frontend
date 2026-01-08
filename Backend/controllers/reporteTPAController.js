@@ -26,22 +26,23 @@ exports.obtenerReporteTPA = async (req, res) => {
 exports.guardarReporteTPA = async (req, res) => {
     try {
         const datos = req.body;
-
         if (!datos.codigoALI) {
             return res.status(400).json({ mensaje: 'El código ALI es requerido' });
         }
 
-        // Verificar que el reporte no esté en estado VERIFICADO
+        // Verificar que el reporte no esté en estado VERIFICADO, excepto si es Admin (rol 1)
         const estadoActual = await ReporteTPA.obtenerEstadoReporte(datos.codigoALI);
 
-        if (estadoActual === 'VERIFICADO') {
+        // Usamos req.user.rol que fue poblado por el authMiddleware (desde header o body)
+        if (estadoActual === 'VERIFICADO' && req.user.rol !== 1) {
             return res.status(403).json({
-                mensaje: 'No se puede modificar un reporte verificado'
+                mensaje: 'No se puede modificar un reporte verificado (requiere permisos de Administrador)'
             });
         }
 
-        // Extraer rutUsuario del body para auditoría
-        const rutUsuario = datos.rutUsuario || null;
+        // Extraer rutUsuario desde el middleware de autenticación
+        const rutUsuario = req.user.rut || datos.rutUsuario || null;
+
 
         const result = await ReporteTPA.guardarReporteCompleto(datos, rutUsuario);
 
@@ -76,13 +77,12 @@ exports.actualizarEstadoReporte = async (req, res) => {
     }
 };
 
-/**
- * Verifica el reporte TPA (marca como VERIFICADO)
- */
 exports.verificarReporte = async (req, res) => {
     try {
         const { codigo_ali } = req.params;
-        const { rut_usuario, observaciones_finales, firma } = req.body;
+        // Obtenemos identidad del middleware, con fallback al body si fuera necesario
+        const rut_usuario = req.user.rut || req.body.rut_usuario;
+        const { observaciones_finales, firma } = req.body;
 
         if (!rut_usuario) {
             return res.status(400).json({ mensaje: 'El RUT del usuario es requerido' });

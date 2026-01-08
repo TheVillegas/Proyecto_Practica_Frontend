@@ -6,8 +6,9 @@ Este es el JSON que el frontend debe enviar al endpoint `POST /AsisTec/ReporteTP
 
 ```json
 {
-  "codigoALI": "2",
-  "rutUsuario": "12345678-9",
+  "codigoALI": "2025",
+  "rutUsuario": "21449676-3",
+  "rolUsuario":"0",
   "estado": "BORRADOR",
   "etapa1": {
     "lugarAlmacenamiento": "Mesón Siembra",

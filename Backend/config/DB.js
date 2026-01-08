@@ -39,4 +39,13 @@ async function execute(sql, binds = {}, options = {}) {
     }
 }
 
-module.exports = { initialize, execute };
+// Wrapper para obtener conexión (necesario para transacciones manuales)
+async function getConnection() {
+    try {
+        return await oracledb.getConnection();
+    } catch (err) {
+        throw err;
+    }
+}
+
+module.exports = { initialize, execute, getConnection, oracledb };

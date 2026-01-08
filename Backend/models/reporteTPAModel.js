@@ -6,36 +6,49 @@ const ReporteTPA = {};
  * Crea un reporte TPA inicial cuando se crea una muestra ALI
  * Estado inicial: NO_REALIZADO
  */
-ReporteTPA.crearReporteTPAInicial = async (codigoALI, idLugarDefecto = null) => {
+ReporteTPA.crearReporteTPAInicial = async (codigoALI, connection = null) => {
+    try {
+        const sql = 'INSERT INTO TPA_REPORTE (codigo_ali, estado_actual) VALUES (:codigo_ali, :estado_actual)';
+        const binds = {
+            codigo_ali: codigoALI,
+            estado_actual: 'NO_REALIZADO'
+        };
+
+        if (connection) {
+            // Si pasamos una conexión, ejecutamos sin autoCommit (la transacción la maneja el padre)
+            return await connection.execute(sql, binds);
+        } else {
+            // Si no hay conexión, usamos el wrapper global con autoCommit
+            return await db.execute(sql, binds, { autoCommit: true });
+        }
+    } catch (err) {
+        console.error(`[ReporteTPA] Error al crear reporte inicial para ALI ${codigoALI}:`, err);
+        throw err;
+    }
+};
+
+/**
+ * Obtiene el estado actual del reporte
+ */
+ReporteTPA.obtenerEstadoReporte = async (codigoALI) => {
     try {
         const sql = `
-            INSERT INTO TPA_REPORTE (
-                codigo_ali, 
-                id_lugar, 
-                estado_actual,
-                observaciones_ingreso,
-                observaciones_finales,
-                firma_digital,
-                observaciones_generales_analistas
-            ) VALUES (
-                :codigo_ali,
-                :id_lugar,
-                'NO_REALIZADO',
-                NULL,
-                NULL,
-                'Sin firma',
-                NULL
-            )
+            SELECT estado_actual 
+            FROM TPA_REPORTE 
+            WHERE codigo_ali = :codigo_ali
         `;
 
-        const result = await db.execute(sql, {
-            codigo_ali: codigoALI,
-            id_lugar: idLugarDefecto || 1 // Lugar por defecto si no se especifica
-        }, { autoCommit: true });
+        const result = await db.execute(sql, { codigo_ali: codigoALI });
 
-        return { success: true, result };
+        if (result.rows.length === 0) {
+            return null;
+        }
+
+        // Al estar configurado oracledb.OUT_FORMAT_OBJECT en DB.js, las filas son objetos
+        // Por defecto Oracle devuelve las llaves en MAYÚSCULAS
+        return result.rows[0].ESTADO_ACTUAL;
     } catch (error) {
-        console.error('Error al crear reporte TPA inicial:', error);
+        console.error('Error al obtener estado del reporte:', error);
         throw error;
     }
 };
@@ -71,13 +84,15 @@ ReporteTPA.obtenerReporteTPA = async (codigoALI) => {
             return null;
         }
 
+        const repData = resultReporte.rows[0];
+
         const reporte = {
-            codigoALI: resultReporte.rows[0][0],
+            codigoALI: repData.CODIGO_ALI,
+            estado: repData.ESTADO,
             etapa1: {
-                lugarAlmacenamiento: resultReporte.rows[0][2],
-                observaciones: resultReporte.rows[0][3]
+                lugarAlmacenamiento: repData.LUGAR_ALMACENAMIENTO,
+                observaciones: repData.OBSERVACIONES_INGRESO
             },
-            estado: resultReporte.rows[0][4],
             etapa2_manipulacion: [],
             etapa3_limpieza: { checklist: [] },
             etapa4_retiro: [],
@@ -88,9 +103,13 @@ ReporteTPA.obtenerReporteTPA = async (codigoALI) => {
                 otrosEquipos: ''
             },
             etapa6_cierre: {
-                observaciones: resultReporte.rows[0][7],
-                firma: resultReporte.rows[0][8]
-            }
+                observaciones: repData.OBSERVACIONES_FINALES,
+                firma: repData.FIRMA_DIGITAL
+            },
+            // Agregamos campos faltantes que podrían servir
+            observacionesGenerales: repData.OBSERVACIONES_GENERALES_ANALISTAS,
+            fechaCierre: repData.FECHA_CIERRE,
+            usuarioCierre: repData.USUARIO_CIERRE
         };
 
         // 2. Obtener sesiones de Etapa 2 (Manipulación)
@@ -112,7 +131,7 @@ ReporteTPA.obtenerReporteTPA = async (codigoALI) => {
         const resultEtapa2 = await connection.execute(sqlEtapa2, { codigo_ali: codigoALI });
 
         for (const row of resultEtapa2.rows) {
-            const idSesion = row[0];
+            const idSesion = row.ID_SESION;
 
             // Obtener equipos de esta sesión
             const sqlEquipos = `
@@ -139,18 +158,18 @@ ReporteTPA.obtenerReporteTPA = async (codigoALI) => {
 
             reporte.etapa2_manipulacion.push({
                 id: idSesion,
-                responsable: row[2],
-                fechaPreparacion: row[3],
-                horaInicio: row[3] ? new Date(row[3]).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }) : '',
-                horaPesado: row[4] ? new Date(row[4]).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }) : '',
-                numeroMuestras: row[5],
-                observacionesEtapa2: row[6],
-                tipoAccion: row[7] === 1 ? 'Pesado' : 'Retiro',
-                equiposSeleccionados: resultEquipos.rows.map(e => e[0]),
+                responsable: row.RESPONSABLE,
+                fechaPreparacion: row.FECHA_INICIO,
+                horaInicio: row.FECHA_INICIO ? new Date(row.FECHA_INICIO).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }) : '',
+                horaPesado: row.FECHA_TERMINO ? new Date(row.FECHA_TERMINO).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }) : '',
+                numeroMuestras: row.NUMERO_MUESTRAS,
+                observacionesEtapa2: row.OBSERVACIONES_SESION,
+                tipoAccion: row.RETIRO_PESADO === 1 ? 'Pesado' : 'Retiro',
+                equiposSeleccionados: resultEquipos.rows.map(e => e.NOMBRE_EQUIPO),
                 listaMateriales: resultMateriales.rows.map((m, idx) => ({
                     id: idx,
-                    tipoMaterial: m[1] || m[2] || m[3] || '',
-                    codigoMaterial: m[1] || m[2] || m[3] || ''
+                    tipoMaterial: m.TIPO_MATERIAL || '',
+                    codigoMaterial: m.CODIGO_MANUAL || ''
                 }))
             });
         }
@@ -168,10 +187,10 @@ ReporteTPA.obtenerReporteTPA = async (codigoALI) => {
         const resultEtapa3 = await connection.execute(sqlEtapa3, { codigo_ali: codigoALI });
 
         reporte.etapa3_limpieza.checklist = resultEtapa3.rows.map(row => ({
-            id: row[0],
-            nombre: row[1],
-            seleccionado: row[2] === 1,
-            bloqueado: row[3] === 1
+            id: row.ID_CHECKLIST,
+            nombre: row.NOMBRE_ITEM,
+            seleccionado: row.SELECCIONADO === 1,
+            bloqueado: row.BLOQUEADO === 1
         }));
 
         // 4. Obtener Etapa 4 (Retiro)
@@ -189,11 +208,11 @@ ReporteTPA.obtenerReporteTPA = async (codigoALI) => {
         const resultEtapa4 = await connection.execute(sqlEtapa4, { codigo_ali: codigoALI });
 
         reporte.etapa4_retiro = resultEtapa4.rows.map(row => ({
-            id: row[0],
-            responsable: row[1],
-            fecha: row[2] ? new Date(row[2]).toISOString().split('T')[0] : '',
-            horaInicio: row[2] ? new Date(row[2]).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }) : '',
-            analisisARealizar: row[3]
+            id: row.ID_RETIRO,
+            responsable: row.RESPONSABLE,
+            fecha: row.FECHA_RETIRO ? new Date(row.FECHA_RETIRO).toISOString().split('T')[0] : '',
+            horaInicio: row.FECHA_RETIRO ? new Date(row.FECHA_RETIRO).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }) : '',
+            analisisARealizar: row.ACCION_REALIZADA
         }));
 
         // 5. Obtener Etapa 5 (Siembra)
@@ -208,8 +227,9 @@ ReporteTPA.obtenerReporteTPA = async (codigoALI) => {
         const resultEtapa5 = await connection.execute(sqlEtapa5, { codigo_ali: codigoALI });
 
         if (resultEtapa5.rows.length > 0) {
-            const idSiembra = resultEtapa5.rows[0][0];
-            reporte.etapa5_siembra.otrosEquipos = resultEtapa5.rows[0][2] || '';
+            const rowSiembra = resultEtapa5.rows[0];
+            const idSiembra = rowSiembra.ID_SIEMBRA;
+            reporte.etapa5_siembra.otrosEquipos = rowSiembra.OTROS_EQUIPOS_TEXTO || '';
 
             // Obtener recursos de siembra (diluyentes, equipos, materiales)
             const sqlRecursos = `
@@ -233,24 +253,24 @@ ReporteTPA.obtenerReporteTPA = async (codigoALI) => {
             const resultRecursos = await connection.execute(sqlRecursos, { id_siembra: idSiembra });
 
             resultRecursos.rows.forEach((row, idx) => {
-                const categoria = row[0];
+                const categoria = row.CATEGORIA_RECURSO;
                 if (categoria === 'DILUYENTE') {
                     reporte.etapa5_siembra.diluyentes.push({
                         id: idx,
-                        nombre: row[8],
-                        codigoDiluyente: row[4]
+                        nombre: row.NOMBRE_DILUYENTE,
+                        codigoDiluyente: row.CODIGO_DILUYENTE
                     });
                 } else if (categoria === 'EQUIPO') {
                     reporte.etapa5_siembra.equipos.push({
                         id: idx,
-                        nombre: row[9],
-                        seleccionado: row[6] === 1
+                        nombre: row.NOMBRE_EQUIPO,
+                        seleccionado: row.SELECCIONADO === 1
                     });
                 } else if (categoria === 'MATERIAL') {
                     reporte.etapa5_siembra.materiales.push({
                         id: idx,
-                        nombre: row[7],
-                        codigoMaterialSiembra: row[2]
+                        nombre: row.NOMBRE_MATERIAL,
+                        codigoMaterialSiembra: row.CODIGO_MATERIAL
                     });
                 }
             });
@@ -271,7 +291,6 @@ ReporteTPA.obtenerReporteTPA = async (codigoALI) => {
         }
     }
 };
-
 /**
  * Guarda o actualiza el reporte TPA completo
  * Usa transacciones para garantizar consistencia
@@ -281,342 +300,148 @@ ReporteTPA.guardarReporteCompleto = async (datos, rutUsuario = null) => {
     try {
         connection = await db.getConnection();
 
-        // Iniciar transacción
+        // Iniciamos transacción mediante savepoint (opcional pero recomendado)
         await connection.execute('SAVEPOINT inicio_guardado');
-
-        const { codigoALI, estado, etapa1, etapa2_manipulacion, etapa3_limpieza,
-            etapa4_retiro, etapa5_siembra, etapa6_cierre } = datos;
-
-        // 1. Actualizar tabla principal TPA_REPORTE (incluyendo campos de auditoría)
-        const sqlUpdateReporte = `
+        //Falta agregar el nombre de la persona que modifico el reporte.
+        const sqlReporteGeneral = `
             UPDATE TPA_REPORTE SET
-                observaciones_ingreso = :observaciones,
-                estado_actual = :estado,
+                estado_actual = :estado_actual,
                 observaciones_finales = :obs_finales,
                 firma_digital = :firma,
-                observaciones_generales_analistas = :obs_generales,
-                usuario_ultima_modificacion = :rut_usuario
+                usuario_ultima_modificacion = :rut_mod
             WHERE codigo_ali = :codigo_ali
         `;
 
-        await connection.execute(sqlUpdateReporte, {
-            codigo_ali: codigoALI,
-            observaciones: etapa1?.observaciones || null,
-            estado: estado || 'BORRADOR',
-            obs_finales: etapa6_cierre?.observaciones || null,
-            firma: etapa6_cierre?.firma || 'Sin firma',
-            obs_generales: datos.observacionesGenerales || null,
-            rut_usuario: rutUsuario
+        await connection.execute(sqlReporteGeneral, {
+            codigo_ali: datos.codigoALI, // Sincronizado con JSON
+            estado_actual: datos.estado || 'BORRADOR',
+            obs_finales: datos.etapa6_cierre?.observaciones || null,
+            firma: datos.etapa6_cierre?.firma || 'Sin firma',
+            rut_mod: rutUsuario
         });
 
-        // 2. Actualizar lugar de almacenamiento si viene en etapa1
-        if (etapa1?.lugarAlmacenamiento) {
+        if (datos.etapa1 !== undefined) {
+            console.log("Guardando datos Etapa 1...");
             const sqlLugar = `
-                SELECT id_lugar FROM LUGARES_ALMACENAMIENTO 
+                SELECT id_lugar
+                FROM LUGARES_ALMACENAMIENTO
                 WHERE nombre_lugar = :nombre_lugar
             `;
-            const resultLugar = await connection.execute(sqlLugar, {
-                nombre_lugar: etapa1.lugarAlmacenamiento
+            const resultadoLugar = await connection.execute(sqlLugar, {
+                nombre_lugar: datos.etapa1.lugarAlmacenamiento // Sincronizado con JSON
             });
 
-            if (resultLugar.rows.length > 0) {
-                const idLugar = resultLugar.rows[0][0];
-                await connection.execute(
-                    'UPDATE TPA_REPORTE SET id_lugar = :id_lugar WHERE codigo_ali = :codigo_ali',
-                    { id_lugar: idLugar, codigo_ali: codigoALI }
-                );
+            if (resultadoLugar.rows.length > 0) {
+                const idLugarReal = resultadoLugar.rows[0].ID_LUGAR; // Oracle es sensible a MAYÚSCULAS
+                await connection.execute(`
+                    UPDATE TPA_REPORTE SET
+                        id_lugar = :id_lugar,
+                        observaciones_ingreso = :obs
+                    WHERE codigo_ali = :codigo_ali
+                `, {
+                    id_lugar: idLugarReal,
+                    codigo_ali: datos.codigoALI,
+                    obs: datos.etapa1.observaciones // Sincronizado con JSON
+                });
             }
         }
+        // 2. Etapa 2: Manipulación (Sesiones, Equipos y Materiales)
+        if (datos.etapa2_manipulacion !== undefined) {
+            console.log("Guardando datos Etapa 2 (Manipulación)...");
 
-        // 3. Limpiar y guardar Etapa 2 (Manipulación)
-        await connection.execute(
-            'DELETE FROM TPA_ETAPA2_SESION WHERE codigo_ali = :codigo_ali',
-            { codigo_ali: codigoALI }
-        );
+            // Limpieza inicial para evitar duplicados
+            await connection.execute(
+                `DELETE FROM TPA_ETAPA2_SESION WHERE codigo_ali = :ali`,
+                { ali: datos.codigoALI }
+            );
 
-        if (etapa2_manipulacion && etapa2_manipulacion.length > 0) {
-            for (const sesion of etapa2_manipulacion) {
-                // Buscar RUT del analista por nombre
-                const sqlRut = `
-                    SELECT rut_analista FROM USUARIOS 
-                    WHERE nombre_apellido_analista = :nombre
-                `;
-                const resultRut = await connection.execute(sqlRut, {
-                    nombre: sesion.responsable
-                });
+            for (const sesion of datos.etapa2_manipulacion) {
+                // a. Buscar RUT del responsable por su nombre (Tabla: USUARIOS)
+                const resAnalista = await connection.execute(
+                    `SELECT rut_analista FROM USUARIOS WHERE nombre_apellido_analista = :nombre`,
+                    { nombre: sesion.responsable }
+                );
 
-                if (resultRut.rows.length === 0) continue;
+                if (resAnalista.rows.length === 0) {
+                    throw new Error(`Analista '${sesion.responsable}' no encontrado.`);
+                }
+                const rutReal = resAnalista.rows[0].RUT_ANALISTA;
 
-                const rutAnalista = resultRut.rows[0][0];
+                // b. Preparar fechas y horas (Combinando fecha + hora del JSON)
+                let fechaInicio = null;
+                let fechaTermino = null;
 
-                // Crear fecha/hora combinadas
-                const fechaInicio = sesion.fechaPreparacion && sesion.horaInicio
-                    ? new Date(`${sesion.fechaPreparacion}T${sesion.horaInicio}`)
-                    : new Date();
+                if (sesion.fechaPreparacion) {
+                    const baseDate = sesion.fechaPreparacion.includes('T')
+                        ? sesion.fechaPreparacion.split('T')[0]
+                        : sesion.fechaPreparacion;
 
-                const fechaTermino = sesion.fechaPreparacion && sesion.horaPesado
-                    ? new Date(`${sesion.fechaPreparacion}T${sesion.horaPesado}`)
-                    : null;
+                    if (sesion.horaInicio) {
+                        fechaInicio = new Date(`${baseDate}T${sesion.horaInicio}:00`);
+                    } else if (sesion.fechaPreparacion.includes('T')) {
+                        fechaInicio = new Date(sesion.fechaPreparacion);
+                    } else {
+                        fechaInicio = new Date(baseDate);
+                    }
 
-                // Insertar sesión
+                    if (sesion.horaPesado) {
+                        fechaTermino = new Date(`${baseDate}T${sesion.horaPesado}:00`);
+                    }
+                }
+
+                // c. Insertar Sesión principal
                 const sqlSesion = `
                     INSERT INTO TPA_ETAPA2_SESION (
-                        codigo_ali, rut_analista, fecha_inicio, fecha_termino,
-                        numero_muestras, observaciones_sesion, retiro_pesado
+                        rut_analista,
+                        fecha_inicio,
+                        fecha_termino,
+                        numero_muestras,
+                        observaciones_sesion,
+                        retiro_pesado,
+                        codigo_ali
                     ) VALUES (
-                        :codigo_ali, :rut, :fecha_inicio, :fecha_termino,
-                        :num_muestras, :obs, :retiro_pesado
-                    ) RETURNING id_sesion INTO :id_sesion
+                        :rut, :f_ini, :f_ter, :num, :obs, :tipo, :ali
+                    ) RETURNING id_sesion INTO :id_s
                 `;
 
-                const bindVars = {
-                    codigo_ali: codigoALI,
-                    rut: rutAnalista,
-                    fecha_inicio: fechaInicio,
-                    fecha_termino: fechaTermino,
-                    num_muestras: sesion.numeroMuestras,
+                const resInsertSesion = await connection.execute(sqlSesion, {
+                    rut: rutReal,
+                    f_ini: fechaInicio,
+                    f_ter: fechaTermino,
+                    num: sesion.numeroMuestras,
                     obs: sesion.observacionesEtapa2,
-                    retiro_pesado: sesion.tipoAccion === 'Pesado' ? 1 : 0,
-                    id_sesion: { dir: db.oracledb.BIND_OUT, type: db.oracledb.NUMBER }
-                };
+                    tipo: sesion.tipoAccion === 'Pesado' ? 1 : 0,
+                    ali: datos.codigoALI,
+                    id_s: { type: db.oracledb.NUMBER, dir: db.oracledb.BIND_OUT }
+                });
 
-                const resultSesion = await connection.execute(sqlSesion, bindVars);
-                const idSesion = resultSesion.outBinds.id_sesion[0];
+                const idSesionReal = resInsertSesion.outBinds.id_s[0];
 
-                // Insertar equipos de la sesión
-                if (sesion.equiposSeleccionados && sesion.equiposSeleccionados.length > 0) {
+                // d. Insertar Equipos Seleccionados (Relación Hijo 1)
+                if (sesion.equiposSeleccionados && Array.isArray(sesion.equiposSeleccionados)) {
                     for (const nombreEquipo of sesion.equiposSeleccionados) {
-                        const sqlEquipoId = `
-                            SELECT id_equipo FROM EQUIPOS_LAB 
-                            WHERE nombre_equipo = :nombre
-                        `;
-                        const resultEquipo = await connection.execute(sqlEquipoId, {
-                            nombre: nombreEquipo
-                        });
-
-                        if (resultEquipo.rows.length > 0) {
-                            const idEquipo = resultEquipo.rows[0][0];
+                        const resEq = await connection.execute(
+                            `SELECT id_equipo FROM EQUIPOS_LAB WHERE nombre_equipo = :nom`,
+                            { nom: nombreEquipo }
+                        );
+                        if (resEq.rows.length > 0) {
                             await connection.execute(
-                                `INSERT INTO TPA_ETAPA2_EQUIPOS (id_sesion, id_equipo) 
-                                 VALUES (:id_sesion, :id_equipo)`,
-                                { id_sesion: idSesion, id_equipo: idEquipo }
+                                `INSERT INTO TPA_ETAPA2_EQUIPOS (id_equipo, id_sesion) VALUES (:id_e, :id_s)`,
+                                { id_e: resEq.rows[0].ID_EQUIPO, id_s: idSesionReal }
                             );
                         }
                     }
                 }
-
-                // Insertar materiales de la sesión
-                if (sesion.listaMateriales && sesion.listaMateriales.length > 0) {
-                    for (const material of sesion.listaMateriales) {
-                        if (!material.tipoMaterial || !material.codigoMaterial) continue;
-
-                        // Intentar buscar en pipetas
-                        const sqlPipeta = `
-                            SELECT id_pipeta FROM MICROPIPETAS 
-                            WHERE codigo_pipeta = :codigo
-                        `;
-                        const resultPipeta = await connection.execute(sqlPipeta, {
-                            codigo: material.tipoMaterial
-                        });
-
-                        // Intentar buscar en instrumentos
-                        const sqlInstrumento = `
-                            SELECT id_instrumento FROM INSTRUMENTOS 
-                            WHERE codigo_instrumento = :codigo
-                        `;
-                        const resultInstrumento = await connection.execute(sqlInstrumento, {
-                            codigo: material.tipoMaterial
-                        });
-
-                        const sqlMaterial = `
-                            INSERT INTO TPA_ETAPA2_MATERIALES (
-                                id_sesion, tipo_material, id_pipeta, id_instrumento, codigo_manual
-                            ) VALUES (
-                                :id_sesion, :tipo, :id_pipeta, :id_instrumento, :codigo_manual
-                            )
-                        `;
-
-                        await connection.execute(sqlMaterial, {
-                            id_sesion: idSesion,
-                            tipo: resultPipeta.rows.length > 0 ? 'PIPETA' :
-                                resultInstrumento.rows.length > 0 ? 'INSTRUMENTO' : 'MANUAL',
-                            id_pipeta: resultPipeta.rows.length > 0 ? resultPipeta.rows[0][0] : null,
-                            id_instrumento: resultInstrumento.rows.length > 0 ? resultInstrumento.rows[0][0] : null,
-                            codigo_manual: material.codigoMaterial
-                        });
-                    }
-                }
-            }
-        }
-
-        // 4. Limpiar y guardar Etapa 3 (Checklist)
-        await connection.execute(
-            'DELETE FROM TPA_ETAPA3_CHECKLIST WHERE codigo_ali = :codigo_ali',
-            { codigo_ali: codigoALI }
-        );
-
-        if (etapa3_limpieza?.checklist && etapa3_limpieza.checklist.length > 0) {
-            for (const item of etapa3_limpieza.checklist) {
-                const sqlChecklist = `
-                    INSERT INTO TPA_ETAPA3_CHECKLIST (
-                        codigo_ali, nombre_item, seleccionado, bloqueado
-                    ) VALUES (
-                        :codigo_ali, :nombre, :seleccionado, :bloqueado
-                    )
-                `;
-
-                await connection.execute(sqlChecklist, {
-                    codigo_ali: codigoALI,
-                    nombre: item.nombre,
-                    seleccionado: item.seleccionado ? 1 : 0,
-                    bloqueado: item.bloqueado ? 1 : 0
-                });
-            }
-        }
-
-        // 5. Limpiar y guardar Etapa 4 (Retiro)
-        await connection.execute(
-            'DELETE FROM TPA_ETAPA4_RETIRO WHERE codigo_ali = :codigo_ali',
-            { codigo_ali: codigoALI }
-        );
-
-        if (etapa4_retiro && etapa4_retiro.length > 0) {
-            for (const retiro of etapa4_retiro) {
-                // Buscar RUT del analista
-                const sqlRut = `
-                    SELECT rut_analista FROM USUARIOS 
-                    WHERE nombre_apellido_analista = :nombre
-                `;
-                const resultRut = await connection.execute(sqlRut, {
-                    nombre: retiro.responsable
-                });
-
-                if (resultRut.rows.length === 0) continue;
-
-                const rutAnalista = resultRut.rows[0][0];
-                const fechaRetiro = retiro.fecha && retiro.horaInicio
-                    ? new Date(`${retiro.fecha}T${retiro.horaInicio}`)
-                    : new Date();
-
-                const sqlRetiro = `
-                    INSERT INTO TPA_ETAPA4_RETIRO (
-                        codigo_ali, rut_analista, fecha_retiro, accion_realizada
-                    ) VALUES (
-                        :codigo_ali, :rut, :fecha, :accion
-                    )
-                `;
-
-                await connection.execute(sqlRetiro, {
-                    codigo_ali: codigoALI,
-                    rut: rutAnalista,
-                    fecha: fechaRetiro,
-                    accion: retiro.analisisARealizar
-                });
-            }
-        }
-
-        // 6. Limpiar y guardar Etapa 5 (Siembra)
-        const sqlDeleteSiembra = `
-            DELETE FROM TPA_ETAPA5_SIEMBRA WHERE codigo_ali = :codigo_ali
-        `;
-        await connection.execute(sqlDeleteSiembra, { codigo_ali: codigoALI });
-
-        if (etapa5_siembra) {
-            const sqlSiembra = `
-                INSERT INTO TPA_ETAPA5_SIEMBRA (
-                    codigo_ali, otros_equipos_texto
-                ) VALUES (
-                    :codigo_ali, :otros_equipos
-                ) RETURNING id_siembra INTO :id_siembra
-            `;
-
-            const bindVarsSiembra = {
-                codigo_ali: codigoALI,
-                otros_equipos: etapa5_siembra.otrosEquipos || '',
-                id_siembra: { dir: db.oracledb.BIND_OUT, type: db.oracledb.NUMBER }
-            };
-
-            const resultSiembra = await connection.execute(sqlSiembra, bindVarsSiembra);
-            const idSiembra = resultSiembra.outBinds.id_siembra[0];
-
-            // Insertar diluyentes
-            if (etapa5_siembra.diluyentes && etapa5_siembra.diluyentes.length > 0) {
-                for (const diluyente of etapa5_siembra.diluyentes) {
-                    const sqlDiluyente = `
-                        SELECT id_diluyente FROM DILUYENTES 
-                        WHERE nombre_diluyente = :nombre
-                    `;
-                    const resultDil = await connection.execute(sqlDiluyente, {
-                        nombre: diluyente.nombre
-                    });
-
-                    if (resultDil.rows.length > 0) {
+                // e. Insertar Lista de Materiales (Relación Hijo 2)
+                if (sesion.listaMateriales && Array.isArray(sesion.listaMateriales)) {
+                    for (const mat of sesion.listaMateriales) {
                         await connection.execute(
-                            `INSERT INTO TPA_ETAPA5_RECURSOS (
-                                id_siembra, categoria_recurso, id_diluyente, codigo_diluyente
-                            ) VALUES (
-                                :id_siembra, 'DILUYENTE', :id_dil, :codigo
-                            )`,
+                            `INSERT INTO TPA_ETAPA2_MATERIALES (id_sesion, tipo_material, codigo_manual) 
+                             VALUES (:id_s, :tipo, :cod)`,
                             {
-                                id_siembra: idSiembra,
-                                id_dil: resultDil.rows[0][0],
-                                codigo: diluyente.codigoDiluyente
-                            }
-                        );
-                    }
-                }
-            }
-
-            // Insertar equipos
-            if (etapa5_siembra.equipos && etapa5_siembra.equipos.length > 0) {
-                for (const equipo of etapa5_siembra.equipos) {
-                    const sqlEquipo = `
-                        SELECT id_incubacion FROM EQUIPOS_INCUBACION 
-                        WHERE nombre_equipo = :nombre
-                    `;
-                    const resultEq = await connection.execute(sqlEquipo, {
-                        nombre: equipo.nombre
-                    });
-
-                    if (resultEq.rows.length > 0) {
-                        await connection.execute(
-                            `INSERT INTO TPA_ETAPA5_RECURSOS (
-                                id_siembra, categoria_recurso, id_incubacion, seleccionado
-                            ) VALUES (
-                                :id_siembra, 'EQUIPO', :id_eq, :seleccionado
-                            )`,
-                            {
-                                id_siembra: idSiembra,
-                                id_eq: resultEq.rows[0][0],
-                                seleccionado: equipo.seleccionado ? 1 : 0
-                            }
-                        );
-                    }
-                }
-            }
-
-            // Insertar materiales
-            if (etapa5_siembra.materiales && etapa5_siembra.materiales.length > 0) {
-                for (const material of etapa5_siembra.materiales) {
-                    const sqlMat = `
-                        SELECT id_material_siembra FROM MATERIAL_SIEMBRA 
-                        WHERE nombre_material = :nombre
-                    `;
-                    const resultMat = await connection.execute(sqlMat, {
-                        nombre: material.nombre
-                    });
-
-                    if (resultMat.rows.length > 0) {
-                        await connection.execute(
-                            `INSERT INTO TPA_ETAPA5_RECURSOS (
-                                id_siembra, categoria_recurso, id_material_siembra, codigo_material
-                            ) VALUES (
-                                :id_siembra, 'MATERIAL', :id_mat, :codigo
-                            )`,
-                            {
-                                id_siembra: idSiembra,
-                                id_mat: resultMat.rows[0][0],
-                                codigo: material.codigoMaterialSiembra
+                                id_s: idSesionReal,
+                                tipo: mat.tipoMaterial,
+                                cod: mat.codigoMaterial
                             }
                         );
                     }
@@ -624,27 +449,26 @@ ReporteTPA.guardarReporteCompleto = async (datos, rutUsuario = null) => {
             }
         }
 
-        // Commit de la transacción
+        // Finalización exitosa
         await connection.commit();
-
-        return { success: true, message: 'Reporte TPA guardado exitosamente' };
+        return { success: true, mensaje: "Reporte TPA guardado exitosamente" };
 
     } catch (error) {
-        console.error('Error al guardar reporte TPA:', error);
         if (connection) {
             try {
                 await connection.execute('ROLLBACK TO SAVEPOINT inicio_guardado');
-            } catch (rollbackErr) {
-                console.error('Error en rollback:', rollbackErr);
+            } catch (rbError) {
+                console.error('Error al hacer rollback:', rbError);
             }
         }
+        console.error('Error al guardar reporte TPA:', error);
         throw error;
     } finally {
         if (connection) {
             try {
                 await connection.close();
-            } catch (err) {
-                console.error('Error al cerrar conexión:', err);
+            } catch (error) {
+                console.error('Error al cerrar conexión:', error);
             }
         }
     }
@@ -704,30 +528,6 @@ ReporteTPA.verificarReporte = async (codigoALI, rutUsuario, observacionesFinales
         return { success: true, result };
     } catch (error) {
         console.error('Error al verificar reporte:', error);
-        throw error;
-    }
-};
-
-/**
- * Obtiene el estado actual del reporte
- */
-ReporteTPA.obtenerEstadoReporte = async (codigoALI) => {
-    try {
-        const sql = `
-            SELECT estado_actual 
-            FROM TPA_REPORTE 
-            WHERE codigo_ali = :codigo_ali
-        `;
-
-        const result = await db.execute(sql, { codigo_ali: codigoALI });
-
-        if (result.rows.length === 0) {
-            return null;
-        }
-
-        return result.rows[0][0];
-    } catch (error) {
-        console.error('Error al obtener estado del reporte:', error);
         throw error;
     }
 };
