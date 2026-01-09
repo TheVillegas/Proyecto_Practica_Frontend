@@ -17,7 +17,7 @@ Este es el JSON que el frontend debe enviar al endpoint `POST /AsisTec/ReporteTP
   "etapa2_manipulacion": [
     {
       "id": 0,
-      "responsable": "Sandy",
+      "responsable": "Matias",
       "fechaPreparacion": "2026-01-06",
       "horaInicio": "19:53",
       "horaPesado": "18:53",
@@ -77,7 +77,7 @@ Este es el JSON que el frontend debe enviar al endpoint `POST /AsisTec/ReporteTP
     },
     {
       "id": 1767819241109,
-      "responsable": "Priscila",
+      "responsable": "Matias",
       "fechaPreparacion": "2026-01-07T20:54:01.109Z",
       "horaInicio": "",
       "horaPesado": "2026-01-07T20:54:01.109Z",
@@ -133,7 +133,7 @@ Este es el JSON que el frontend debe enviar al endpoint `POST /AsisTec/ReporteTP
     },
     {
       "id": 2,
-      "responsable": "Priscila",
+      "responsable": "Matias",
       "fecha": "2026-01-12",
       "horaInicio": "18:58",
       "analisisARealizar": "Analisis 2 "
@@ -302,7 +302,7 @@ Este es el JSON que el backend devuelve cuando se hace `GET /AsisTec/ReporteTPA/
     },
     {
       "id": 2,
-      "responsable": "Priscila",
+      "responsable": "Matias",
       "fecha": "2026-01-12",
       "horaInicio": "18:58",
       "analisisARealizar": "Analisis 2 "

@@ -186,11 +186,10 @@ ReporteTPA.obtenerReporteTPA = async (codigoALI) => {
         `;
         const resultEtapa3 = await connection.execute(sqlEtapa3, { codigo_ali: codigoALI });
 
-        reporte.etapa3_limpieza.checklist = resultEtapa3.rows.map(row => ({
-            id: row.ID_CHECKLIST,
-            nombre: row.NOMBRE_ITEM,
-            seleccionado: row.SELECCIONADO === 1,
-            bloqueado: row.BLOQUEADO === 1
+        reporte.etapa3_limpieza.checklist = resultEtapa3.rows.map(r => ({
+            nombre: r.NOMBRE_ITEM,
+            seleccionado: r.SELECCIONADO === 1,
+            bloqueado: r.BLOQUEADO === 1
         }));
 
         // 4. Obtener Etapa 4 (Retiro)
@@ -211,8 +210,8 @@ ReporteTPA.obtenerReporteTPA = async (codigoALI) => {
             id: row.ID_RETIRO,
             responsable: row.RESPONSABLE,
             fecha: row.FECHA_RETIRO ? new Date(row.FECHA_RETIRO).toISOString().split('T')[0] : '',
-            horaInicio: row.FECHA_RETIRO ? new Date(row.FECHA_RETIRO).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }) : '',
-            analisisARealizar: row.ACCION_REALIZADA
+            horaInicio: row.HORA_INICIO || '',
+            accionRealizada: row.ACCION_REALIZADA
         }));
 
         // 5. Obtener Etapa 5 (Siembra)
@@ -239,7 +238,7 @@ ReporteTPA.obtenerReporteTPA = async (codigoALI) => {
                     r.codigo_material,
                     r.id_diluyente,
                     r.codigo_diluyente,
-                    r.id_incubacion,
+                    r.id_equipo,
                     r.seleccionado,
                     m.nombre_material,
                     d.nombre_diluyente,
@@ -247,7 +246,7 @@ ReporteTPA.obtenerReporteTPA = async (codigoALI) => {
                 FROM TPA_ETAPA5_RECURSOS r
                 LEFT JOIN MATERIAL_SIEMBRA m ON r.id_material_siembra = m.id_material_siembra
                 LEFT JOIN DILUYENTES d ON r.id_diluyente = d.id_diluyente
-                LEFT JOIN EQUIPOS_INCUBACION e ON r.id_incubacion = e.id_incubacion
+                LEFT JOIN EQUIPOS_LAB e ON r.id_equipo = e.id_equipo
                 WHERE r.id_siembra = :id_siembra
             `;
             const resultRecursos = await connection.execute(sqlRecursos, { id_siembra: idSiembra });
@@ -449,6 +448,179 @@ ReporteTPA.guardarReporteCompleto = async (datos, rutUsuario = null) => {
             }
         }
 
+        if (datos.etapa3_limpieza && Array.isArray(datos.etapa3_limpieza.checklist)) {
+            console.log("Guardando datos Etapa 3 ...");
+
+
+            await connection.execute(
+                `DELETE FROM TPA_ETAPA3_CHECKLIST WHERE codigo_ali = :ali`,
+                { ali: datos.codigoALI }
+            );
+
+            for (const item of datos.etapa3_limpieza.checklist) {
+                // Validación opcional: Verificar si el ítem existe en el maestro
+                const resItem = await connection.execute(
+                    `SELECT id_item FROM MAESTRO_CHECKLIST_LIMPIEZA WHERE nombre_item = :nom`,
+                    { nom: item.nombre }
+                );
+
+                if (resItem.rows.length === 0) {
+                    throw new Error(`El item '${item.nombre}' no existe en el maestro de limpieza.`);
+                }
+
+                await connection.execute(`
+                    INSERT INTO TPA_ETAPA3_CHECKLIST (codigo_ali, nombre_item, seleccionado, bloqueado)
+                    VALUES (:ali, :nom_item, :sel, :blo)
+                `,
+                    {
+                        ali: datos.codigoALI,
+                        nom_item: item.nombre,
+                        sel: item.seleccionado ? 1 : 0,
+                        blo: item.bloqueado ? 1 : 0
+                    }
+                );
+            }
+        }
+
+        if (datos.etapa4_retiro !== undefined) {
+            console.log("Guardando datos Etapa 4 ... ");
+
+            await connection.execute(
+                `DELETE FROM TPA_ETAPA4_RETIRO WHERE codigo_ali = :ali`,
+                { ali: datos.codigoALI }
+            );
+
+            for (const datosRetiro of datos.etapa4_retiro) {
+                const resAnalista = await connection.execute(
+                    `SELECT rut_analista FROM USUARIOS WHERE nombre_apellido_analista = :nom`,
+                    { nom: datosRetiro.responsable }
+                );
+
+                if (resAnalista.rows.length === 0) {
+                    throw new Error(`El analista '${datosRetiro.responsable}' no existe en la base de datos.`);
+                }
+
+                await connection.execute(
+                    `INSERT INTO TPA_ETAPA4_RETIRO (
+                        codigo_ali,
+                        rut_analista,
+                        fecha_retiro,
+                        accion_realizada,
+                        hora_inicio
+                    ) VALUES (
+                        :ali,
+                        :rut,
+                        :fecha,
+                        :accion,
+                        :hora_inicio
+                    )`
+                    , {
+                        ali: datos.codigoALI,
+                        rut: resAnalista.rows[0].RUT_ANALISTA,
+                        fecha: new Date(datosRetiro.fecha), // Convertir a objeto Date para Oracle
+                        accion: datosRetiro.analisisARealizar,
+                        hora_inicio: datosRetiro.horaInicio
+                    }
+                );
+            }
+        }
+
+        if (datos.etapa5_siembra !== undefined) {
+            console.log("Guardando datos Etapa 5 (Siembra)... ");
+
+            // 1. Limpieza incremental (Hijos primero, luego Maestro por constraint)
+            await connection.execute(
+                `DELETE FROM TPA_ETAPA5_RECURSOS 
+                 WHERE id_siembra IN (SELECT id_siembra FROM TPA_ETAPA5_SIEMBRA WHERE codigo_ali = :ali)`,
+                { ali: datos.codigoALI }
+            );
+            await connection.execute(
+                `DELETE FROM TPA_ETAPA5_SIEMBRA WHERE codigo_ali = :ali`,
+                { ali: datos.codigoALI }
+            );
+
+            // 2. Insertar en tabla Maestra (SIEMBRA)
+            // No usamos bucle porque etapa5_siembra es un objeto {...}
+            const resSiembra = await connection.execute(
+                `INSERT INTO TPA_ETAPA5_SIEMBRA (codigo_ali, otros_equipos_texto) 
+                 VALUES (:ali, :otros) 
+                 RETURNING id_siembra INTO :id_s`,
+                {
+                    ali: datos.codigoALI,
+                    otros: datos.etapa5_siembra.otrosEquipos || '',
+                    id_s: { type: db.oracledb.NUMBER, dir: db.oracledb.BIND_OUT }
+                }
+            );
+            const idSiembraReal = resSiembra.outBinds.id_s[0];
+
+            // 3. Procesar Listas Secuencialmente
+
+            // --- DILUYENTES ---
+            if (datos.etapa5_siembra.diluyentes && Array.isArray(datos.etapa5_siembra.diluyentes)) {
+                for (const dil of datos.etapa5_siembra.diluyentes) {
+                    const resMast = await connection.execute(
+                        `SELECT id_diluyente FROM DILUYENTES WHERE nombre_diluyente = :nom`,
+                        { nom: dil.nombre }
+                    );
+                    if (resMast.rows.length > 0) {
+                        await connection.execute(
+                            `INSERT INTO TPA_ETAPA5_RECURSOS (id_siembra, categoria_recurso, id_diluyente, codigo_diluyente) 
+                             VALUES (:id_s, 'DILUYENTE', :id_d, :cod)`,
+                            {
+                                id_s: idSiembraReal,
+                                id_d: resMast.rows[0].ID_DILUYENTE,
+                                cod: dil.codigoDiluyente
+                            }
+                        );
+                    }
+                }
+            }
+
+            // --- EQUIPOS (LAB) ---
+            if (datos.etapa5_siembra.equipos && Array.isArray(datos.etapa5_siembra.equipos)) {
+                for (const equipo of datos.etapa5_siembra.equipos) {
+                    const equipoValido = await connection.execute(
+                        `SELECT id_equipo FROM EQUIPOS_LAB WHERE nombre_equipo = :nom`,
+                        { nom: equipo.nombre }
+                    );
+
+
+                    if (equipoValido.rows.length > 0) {
+                        await connection.execute(
+                            `INSERT INTO TPA_ETAPA5_RECURSOS (id_siembra, categoria_recurso, id_equipo, seleccionado) 
+                             VALUES (:id_s, 'EQUIPO', :id_e, :sel)`,
+                            {
+                                id_s: idSiembraReal,
+                                id_e: equipoValido.rows[0].ID_EQUIPO,
+                                sel: equipo.seleccionado ? 1 : 0
+                            }
+                        );
+                    }
+                }
+            }
+
+            // --- MATERIALES ---
+            if (datos.etapa5_siembra.materiales && Array.isArray(datos.etapa5_siembra.materiales)) {
+                for (const mat of datos.etapa5_siembra.materiales) {
+                    const resMast = await connection.execute(
+                        `SELECT id_material_siembra FROM MATERIAL_SIEMBRA WHERE nombre_material = :nom`,
+                        { nom: mat.nombre }
+                    );
+                    if (resMast.rows.length > 0) {
+                        await connection.execute(
+                            `INSERT INTO TPA_ETAPA5_RECURSOS (id_siembra, categoria_recurso, id_material_siembra, codigo_material) 
+                             VALUES (:id_siembra, 'MATERIAL', :id_material_siembra, :codigo_material)`,
+                            {
+                                id_siembra: idSiembraReal,
+                                id_material_siembra: resMast.rows[0].ID_MATERIAL_SIEMBRA,
+                                codigo_material: mat.codigoMaterialSiembra
+                            }
+                        );
+                    }
+                }
+            }
+        }
+
         // Finalización exitosa
         await connection.commit();
         return { success: true, mensaje: "Reporte TPA guardado exitosamente" };
@@ -471,35 +643,6 @@ ReporteTPA.guardarReporteCompleto = async (datos, rutUsuario = null) => {
                 console.error('Error al cerrar conexión:', error);
             }
         }
-    }
-};
-
-/**
- * Actualiza el estado del reporte TPA
- */
-ReporteTPA.actualizarEstadoReporte = async (codigoALI, nuevoEstado) => {
-    try {
-        const estadosValidos = ['NO_REALIZADO', 'BORRADOR', 'VERIFICADO'];
-
-        if (!estadosValidos.includes(nuevoEstado)) {
-            throw new Error(`Estado inválido: ${nuevoEstado}`);
-        }
-
-        const sql = `
-            UPDATE TPA_REPORTE 
-            SET estado_actual = :estado
-            WHERE codigo_ali = :codigo_ali
-        `;
-
-        const result = await db.execute(sql, {
-            codigo_ali: codigoALI,
-            estado: nuevoEstado
-        }, { autoCommit: true });
-
-        return { success: true, result };
-    } catch (error) {
-        console.error('Error al actualizar estado del reporte:', error);
-        throw error;
     }
 };
 

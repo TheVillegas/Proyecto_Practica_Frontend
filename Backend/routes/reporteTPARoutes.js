@@ -9,6 +9,5 @@ router.use(authMiddleware);
 router.get('/:codigo_ali', reporteTPAController.obtenerReporteTPA);
 router.get('/:codigo_ali/estado', reporteTPAController.obtenerEstadoReporte);
 router.post('/generarReporte', reporteTPAController.guardarReporteTPA);
-router.put('/:codigo_ali/estado', reporteTPAController.actualizarEstadoReporte);
 router.put('/:codigo_ali/verificar', reporteTPAController.verificarReporte);
 module.exports = router;
