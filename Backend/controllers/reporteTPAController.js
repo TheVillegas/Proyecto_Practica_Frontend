@@ -30,18 +30,26 @@ exports.guardarReporteTPA = async (req, res) => {
             return res.status(400).json({ mensaje: 'El código ALI es requerido' });
         }
 
-        // Verificar que el reporte no esté en estado VERIFICADO, excepto si es Admin (rol 1)
+        // Obtener estado y rol
         const estadoActual = await ReporteTPA.obtenerEstadoReporte(datos.codigoALI);
+        const { rol } = req.user || { rol: 0 }; // Fallback a 0 si no hay middleware activo aún en pruebas
 
-        // Usamos req.user.rol que fue poblado por el authMiddleware (desde header o body)
-        if (estadoActual === 'VERIFICADO' && req.user.rol !== 1) {
+        // REGLA 1: Bloqueo TOTAL si está verificado
+        if (estadoActual === 'VERIFICADO') {
             return res.status(403).json({
-                mensaje: 'No se puede modificar un reporte verificado (requiere permisos de Administrador)'
+                mensaje: 'El reporte ya ha sido VERIFICADO y no puede modificarse.'
             });
         }
 
-        // Extraer rutUsuario desde el middleware de autenticación
-        const rutUsuario = req.user.rut || datos.rutUsuario || null;
+        // REGLA 2: Bloqueo a Analistas Junior (Rol 0) si está pendiente de revisión
+        if (estadoActual === 'PENDIENTE' && rol === 0) {
+            return res.status(403).json({
+                mensaje: 'El reporte está en estado PENDIENTE de revisión por el supervisor.'
+            });
+        }
+
+        // Si es Rol 1 o el estado es BORRADOR, permitimos continuar
+        const rutUsuario = req.user?.rut || datos.rutUsuario || null;
 
 
         const result = await ReporteTPA.guardarReporteCompleto(datos, rutUsuario);
@@ -50,30 +58,6 @@ exports.guardarReporteTPA = async (req, res) => {
     } catch (error) {
         console.error('Error al guardar reporte TPA:', error);
         res.status(500).json({ mensaje: 'Error al guardar el reporte TPA' });
-    }
-};
-
-/**
- * Actualiza el estado del reporte TPA
- */
-exports.actualizarEstadoReporte = async (req, res) => {
-    try {
-        const { codigo_ali } = req.params;
-        const { estado } = req.body;
-
-        if (!estado) {
-            return res.status(400).json({ mensaje: 'El estado es requerido' });
-        }
-
-        const result = await ReporteTPA.actualizarEstadoReporte(codigo_ali, estado);
-
-        res.status(200).json({
-            mensaje: 'Estado actualizado exitosamente',
-            ...result
-        });
-    } catch (error) {
-        console.error('Error al actualizar estado:', error);
-        res.status(500).json({ mensaje: error.message || 'Error al actualizar el estado' });
     }
 };
 

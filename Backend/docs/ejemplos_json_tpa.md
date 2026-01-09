@@ -192,257 +192,83 @@ Este es el JSON que el frontend debe enviar al endpoint `POST /AsisTec/ReporteTP
 
 ---
 
-## 2. JSON de RESPUESTA al Obtener Reporte TPA Completo
+## 2. JSON para GUARDAR Reporte RAM Completo
 
-Este es el JSON que el backend devuelve cuando se hace `GET /AsisTec/ReporteTPA/:codigo_ali`
+Este es el JSON que el frontend debe enviar al endpoint `POST /AsisTec/ReporteRAM` para guardar un reporte completo.
 
 ```json
 {
-  "codigoALI": "2",
-  "estado": "BORRADOR",
+  "codigoALI": 1432,
+  "estado": "PENDIENTE",
+  
   "etapa1": {
-    "lugarAlmacenamiento": "Mesón Siembra",
-    "observaciones": "Hola Esto es de prueba"
+    "agarPlateCount": "Ram Ruso",
+    "equipoIncubacion": 1,
+    "nMuestra10gr": 3,
+    "nMuestra50gr": 5,
+    "horaInicioHomogenizado": "20:01",
+    "horaTerminoSiembra": "21:30"
   },
-  "etapa2_manipulacion": [
+  "etapa2": {
+    "responsableAnalisis": 5,
+    "responsableIncubacion": "Matias",
+    "fechaInicioIncubacion": "2026-01-13",
+    "fechaFinIncubacion": "2026-02-16",
+    "horaInicioIncubacion": "18:01",
+    "horaFinIncubacion": "20:01",
+    "micropipetaUtilizada": "Pipeta 94-M"
+  },
+  "etapa3_repeticiones": [
     {
-      "id": 1,
-      "responsable": "Sandy",
-      "fechaPreparacion": "2026-01-06T00:00:00.000Z",
-      "horaInicio": "19:53",
-      "horaPesado": "18:53",
-      "numeroMuestras": "1 a 3",
-      "observacionesEtapa2": "Observaciones de prueba 1",
-      "tipoAccion": "Retiro",
-      "equiposSeleccionados": [
-        "Camara Flujo laminar 8-M",
-        "Meson de Transpaso",
-        "Balanza 6-M"
-      ],
-      "listaMateriales": [
-        {
-          "id": 0,
-          "tipoMaterial": "72-M",
-          "codigoMaterial": "dil//05"
-        },
-        {
-          "id": 1,
-          "tipoMaterial": "cuchara",
-          "codigoMaterial": "dill/05"
-        },
-        {
-          "id": 2,
-          "tipoMaterial": "103-M",
-          "codigoMaterial": "dill/04"
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "responsable": "Sandy",
-      "fechaPreparacion": "2026-01-05T00:00:00.000Z",
-      "horaInicio": "18:53",
-      "horaPesado": "19:54",
-      "numeroMuestras": "4",
-      "observacionesEtapa2": "Observaciones 2",
-      "tipoAccion": "Pesado",
-      "equiposSeleccionados": [
-        "Meson de Transpaso",
-        "Camara Flujo laminar 8-M"
-      ],
-      "listaMateriales": [
-        {
-          "id": 0,
-          "tipoMaterial": "98-M",
-          "codigoMaterial": "dill/98"
-        },
-        {
-          "id": 1,
-          "tipoMaterial": "98-M",
-          "codigoMaterial": "dill/05"
-        }
-      ]
+      "numeroMuestra": 1,
+      "disolucion": -1,
+      "dil": 1213,
+      "disolucion2": -2,
+      "dil2": 31313,
+      "numeroColonias": [124144, 1141244, 4141, 41414],
+      "duplicado": {
+        "codigoALI": 1432,
+        "disolucion01": 411414,
+        "dil01": 123123123,
+        "disolucion02": 1413414,
+        "dil02": 4114141,
+        "numeroColonias": [14141441, 4141414, 41412414, 42141414]
+      }
     }
   ],
-  "etapa3_limpieza": {
-    "checklist": [
-      {
-        "id": 1,
-        "nombre": "Mesón",
-        "seleccionado": true,
-        "bloqueado": true
-      },
-      {
-        "id": 2,
-        "nombre": "Balanza 74-M/108-M",
-        "seleccionado": true,
-        "bloqueado": false
-      },
-      {
-        "id": 3,
-        "nombre": "Balanza 6-M/99-M",
-        "seleccionado": true,
-        "bloqueado": false
-      },
-      {
-        "id": 4,
-        "nombre": "Desinfectante en aerosol",
-        "seleccionado": true,
-        "bloqueado": true
-      }
-    ]
+  "etapa4": {
+    "horaInicio": "21:04",
+    "horaFin": "22:05",
+    "temperatura": 35.5,
+    "blancoUfc": 321313,
+    "controlUfc": null,
+    "controlSiembraEcoli": 231123,
+    "controlAmbientalPesado": 12,
+    "ufc": 31231
   },
-  "etapa4_retiro": [
-    {
-      "id": 1,
-      "responsable": "Matias",
-      "fecha": "2026-01-05",
-      "horaInicio": "18:54",
-      "analisisARealizar": "Analisis Objetivo"
-    },
-    {
-      "id": 2,
-      "responsable": "Matias",
-      "fecha": "2026-01-12",
-      "horaInicio": "18:58",
-      "analisisARealizar": "Analisis 2 "
-    }
-  ],
-  "etapa5_siembra": {
-    "diluyentes": [
-      {
-        "id": 0,
-        "nombre": "SPS Tubos",
-        "codigoDiluyente": "dill/121"
-      },
-      {
-        "id": 1,
-        "nombre": "SPS sa 90ml",
-        "codigoDiluyente": "13213"
-      }
-    ],
-    "equipos": [
-      {
-        "id": 0,
-        "nombre": "Baño-5m",
-        "seleccionado": true
-      },
-      {
-        "id": 1,
-        "nombre": "Homogenizador 12-m",
-        "seleccionado": true
-      },
-      {
-        "id": 2,
-        "nombre": "Cuenta Colonias 101-m",
-        "seleccionado": true
-      }
-    ],
-    "materiales": [
-      {
-        "id": 0,
-        "nombre": "Asas Drigalsky",
-        "codigoMaterialSiembra": "dspdfskdsk1123w13"
-      },
-      {
-        "id": 1,
-        "nombre": "Probeta 250 ML",
-        "codigoMaterialSiembra": "11111"
-      }
-    ],
-    "otrosEquipos": ""
+  "etapa5": {
+    "desfavorable": "SÍ",
+    "mercado": "China",
+    "tablaPagina": "w12",
+    "limite": "1323",
+    "fechaEntrega": "2026-01-07",
+    "horaEntrega": "03:13",
+    "imagenManual": "data:image/png;base64,iVBO..."
   },
-  "etapa6_cierre": {
-    "observaciones": "Observaciones Finales",
-    "firma": "Sin firma"
+  "etapa6": {
+    "analisis": "Recuento Aerobios",
+    "controlBlanco": "412",
+    "controlBlancoEstado": "CUMPLE",
+    "controlSiembra": "412",
+    "controlSiembraEstado": "NO_CUMPLE",
+    "duplicadoAli": "321",
+    "duplicadoEstado": "CUMPLE"
+  },
+  "etapa7": {
+    "observacionesFinales": "32112313131",
+    "formaCalculo": "Software",
+    "firmaCoordinador": null
   }
-}
-```
-
----
-
-## 3. JSON de RESPUESTA al Obtener Estado del Reporte
-
-Este es el JSON que el backend devuelve cuando se hace `GET /AsisTec/ReporteTPA/:codigo_ali/estado`
-
-```json
-{
-  "estado": "BORRADOR"
-}
-```
-
-**Posibles valores de estado:**
-- `"NO_REALIZADO"` - Reporte creado pero no iniciado
-- `"BORRADOR"` - Reporte en proceso, permite modificaciones
-- `"VERIFICADO"` - Reporte finalizado y verificado, no modificable
-
----
-
-## 4. JSON para VERIFICAR Reporte
-
-Este es el JSON que el frontend debe enviar al endpoint `PUT /AsisTec/ReporteTPA/:codigo_ali/verificar`
-
-```json
-{
-  "rut_usuario": "12345678-9",
-  "observaciones_finales": "Reporte completado y verificado correctamente. Todos los análisis fueron realizados según protocolo.",
-  "firma": "Firma Digital del Coordinador"
-}
-```
-
-**Respuesta exitosa:**
-```json
-{
-  "success": true,
-  "message": "Reporte verificado exitosamente"
-}
-```
-
----
-
-## 5. JSON para ACTUALIZAR Estado del Reporte
-
-Este es el JSON que el frontend debe enviar al endpoint `PUT /AsisTec/ReporteTPA/:codigo_ali/estado`
-
-```json
-{
-  "estado": "BORRADOR"
-}
-```
-
-**Respuesta exitosa:**
-```json
-{
-  "success": true,
-  "message": "Estado actualizado exitosamente"
-}
-```
-
----
-
-## 6. JSON de RESPUESTA cuando el Reporte NO Existe
-
-Cuando se intenta obtener un reporte que no existe:
-
-**Status:** `404 Not Found`
-
-```json
-{
-  "mensaje": "Reporte TPA no encontrado"
-}
-```
-
----
-
-## 7. JSON de ERROR cuando se intenta Modificar un Reporte VERIFICADO
-
-Cuando se intenta guardar cambios en un reporte que ya está verificado:
-
-**Status:** `403 Forbidden`
-
-```json
-{
-  "mensaje": "No se puede modificar un reporte verificado"
 }
 ```
 
